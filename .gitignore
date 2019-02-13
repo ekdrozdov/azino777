@@ -1,0 +1,6 @@
+packages/*
+.vs/*
+PokerCore/bin/*
+PokerCore/obj/*
+PokerGraphics/bin/*
+PokerGraphics/obj/*
