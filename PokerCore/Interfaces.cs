@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using ReactiveUI;
 using System.Reactive;
 
@@ -37,5 +38,18 @@ namespace PokerCore
         int Bet { get; }
         int Bank { get; }
         int Bank2 { get; }
+    }
+    public interface IGameRules
+    {
+        string RulesHelp { get; }
+        int SmallBlind { get; }
+        int BigBlind { get; }
+        int MaxPlayers { get; }
+    }
+    public interface ITable
+    {
+        ReactiveCommand<string, ITableForPlayer> TryConnect { get; }
+        ITableStateForPlayer State { get; }
+        IGameRules Rules { get; }
     }
 }
