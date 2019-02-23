@@ -10,6 +10,19 @@ namespace PokerCore
     public enum CardRank { c2, c3, c4, c5, c6, c7, c8, c9, c10, J, Q, K, A };
     public enum CardVisibility { Visible, Invisible};
     public enum PlayerGameState { In, Out, AllIn }
+    public interface ICard
+    {
+        CardRank Rank { get; }
+        CardSuit Suit { get; }
+        CardVisibility Visibility { get; }
+    }
+    public interface IDeckOfCards
+    {
+        List<ICard> DeckOfCards { get; }
+
+        ReactiveCommand<Unit, Unit> Reset { get; } //перемешать карты
+        ReactiveCommand<ICard, Unit> TakeCard { get; }
+    }
     public interface IPlayerState
     {
         string Name { get; }
@@ -18,11 +31,15 @@ namespace PokerCore
         int ChairNumber { get; }
         PlayerGameState State { get; }
     }
-    public interface ICard
+    public interface ITableStateForPlayer
     {
-        CardRank Rank { get; }
-        CardSuit Suit { get; }
-        CardVisibility Visibility { get; }
+        IEnumerable<IPlayerState> Players { get; }
+        IEnumerable<ICard> OpenCards { get; }
+        int Dealer { get; }
+        int CurrentRaise { get; }
+        int Bet { get; }
+        int Bank { get; }
+        int Bank2 { get; }
     }
     public interface ITableForPlayer : IPlayerState
     {
@@ -36,16 +53,6 @@ namespace PokerCore
         IEnumerable<ICard> Cards { get; }
 
         ITableStateForPlayer TableState { get; }
-    }
-    public interface ITableStateForPlayer
-    {
-        IEnumerable<IPlayerState> Players { get; }
-        IEnumerable<ICard> OpenCards { get; }
-        int Dealer { get; }
-        int CurrentRaise { get; }
-        int Bet { get; }
-        int Bank { get; }
-        int Bank2 { get; }
     }
     public interface IGameRules
     {
