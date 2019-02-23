@@ -34,15 +34,18 @@ namespace PokerCore
     public interface ITableStateForPlayer
     {
         IEnumerable<IPlayerState> Players { get; }
-        IEnumerable<ICard> OpenCards { get; }
+        IEnumerable<ICard> BoardCards { get; } //карты на столе
         int Dealer { get; }
         int CurrentRaise { get; }
         int Bet { get; }
         int Bank { get; }
-        int Bank2 { get; }
+        int Bank2 { get; } //дополнительный банк, которые нужен после allin
     }
     public interface ITableForPlayer : IPlayerState
     {
+        ITableStateForPlayer TableState { get; }
+        IEnumerable<ICard> HandCards { get; }
+
         ReactiveCommand<string, Unit> SetName { get; }
         ReactiveCommand<int, Unit> AddMoney { get; }
         ReactiveCommand<Unit, Unit> Fold { get; }
@@ -50,9 +53,6 @@ namespace PokerCore
         ReactiveCommand<Unit, Unit> Check { get; }
         ReactiveCommand<int, Unit> Raise { get; }
         ReactiveCommand<Unit, Unit> AllIn { get; }
-        IEnumerable<ICard> Cards { get; }
-
-        ITableStateForPlayer TableState { get; }
     }
     public interface IGameRules
     {
@@ -63,8 +63,9 @@ namespace PokerCore
     }
     public interface ITable
     {
-        ReactiveCommand<string, ITableForPlayer> TryConnect { get; }
-        ITableStateForPlayer State { get; }
+        ITableStateForPlayer TableState { get; }
         IGameRules Rules { get; }
+
+        ReactiveCommand<string, ITableForPlayer> TryConnect { get; }
     }
 }
