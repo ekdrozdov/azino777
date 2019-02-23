@@ -6,6 +6,9 @@ using System.Reactive;
 
 namespace PokerCore
 {
+    public enum CardSuit { Spades, Dimonds, Hearts, Clubs };
+    public enum CardRank { c2, c3, c4, c5, c6, c7, c8, c9, c10, J, Q, K, A };
+    public enum CardVisibility { Visible, Invisible};
     public enum PlayerGameState { In, Out, AllIn }
     public interface IPlayerState
     {
@@ -15,7 +18,12 @@ namespace PokerCore
         int ChairNumber { get; }
         PlayerGameState State { get; }
     }
-    public interface ICard { }
+    public interface ICard
+    {
+        CardRank Rank { get; }
+        CardSuit Suit { get; }
+        CardVisibility Visibility { get; }
+    }
     public interface ITableForPlayer : IPlayerState
     {
         ReactiveCommand<string, Unit> SetName { get; }
