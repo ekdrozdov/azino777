@@ -1,9 +1,11 @@
-﻿<Application x:Class="PokerGraphics.App"
+﻿<Application x:Class="g_2.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:PokerGraphics"
+             xmlns:local="clr-namespace:g_2"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <BitmapImage x:Key="ImageSource1" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource=".\Resources\t.jpg"/>
+
     </Application.Resources>
 </Application>
