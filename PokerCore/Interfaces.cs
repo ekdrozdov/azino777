@@ -6,7 +6,23 @@ using System.Reactive;
 
 namespace PokerCore
 {
+    public enum CardSuit { Spades, Dimonds, Hearts, Clubs };
+    public enum CardRank { c2, c3, c4, c5, c6, c7, c8, c9, c10, J, Q, K, A };
+    public enum CardVisibility { Visible, Invisible};
     public enum PlayerGameState { In, Out, AllIn }
+    public interface ICard
+    {
+        CardRank Rank { get; }
+        CardSuit Suit { get; }
+        CardVisibility Visibility { get; }
+    }
+    public interface IDeckOfCards
+    {
+        List<ICard> DeckOfCards { get; }
+
+        ReactiveCommand<Unit, Unit> Reset { get; } //перемешать карты
+        ReactiveCommand<ICard, Unit> TakeCard { get; }
+    }
     public interface IPlayerState
     {
         string Name { get; }
@@ -15,9 +31,21 @@ namespace PokerCore
         int ChairNumber { get; }
         PlayerGameState State { get; }
     }
-    public interface ICard { }
+    public interface ITableStateForPlayer
+    {
+        IEnumerable<IPlayerState> Players { get; }
+        IEnumerable<ICard> BoardCards { get; } //карты на столе
+        int Dealer { get; }
+        int CurrentRaise { get; }
+        int Bet { get; }
+        int Bank { get; }
+        int Bank2 { get; } //дополнительный банк, которые нужен после allin
+    }
     public interface ITableForPlayer : IPlayerState
     {
+        ITableStateForPlayer TableState { get; }
+        IEnumerable<ICard> HandCards { get; }
+
         ReactiveCommand<string, Unit> SetName { get; }
         ReactiveCommand<int, Unit> AddMoney { get; }
         ReactiveCommand<Unit, Unit> Fold { get; }
@@ -25,19 +53,6 @@ namespace PokerCore
         ReactiveCommand<Unit, Unit> Check { get; }
         ReactiveCommand<int, Unit> Raise { get; }
         ReactiveCommand<Unit, Unit> AllIn { get; }
-        IEnumerable<ICard> Cards { get; }
-
-        ITableStateForPlayer TableState { get; }
-    }
-    public interface ITableStateForPlayer
-    {
-        IEnumerable<IPlayerState> Players { get; }
-        IEnumerable<ICard> OpenCards { get; }
-        int Dealer { get; }
-        int CurrentRaise { get; }
-        int Bet { get; }
-        int Bank { get; }
-        int Bank2 { get; }
     }
     public interface IGameRules
     {
@@ -48,8 +63,9 @@ namespace PokerCore
     }
     public interface ITable
     {
-        ReactiveCommand<string, ITableForPlayer> TryConnect { get; }
-        ITableStateForPlayer State { get; }
+        ITableStateForPlayer TableState { get; }
         IGameRules Rules { get; }
+
+        ReactiveCommand<string, ITableForPlayer> TryConnect { get; }
     }
 }
