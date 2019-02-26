@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:PokerGraphics"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <BitmapImage x:Key="ImageSource1" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource=".\Resources\t.jpg"/>
+
     </Application.Resources>
 </Application>

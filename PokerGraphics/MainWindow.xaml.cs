@@ -23,6 +23,28 @@ namespace PokerGraphics
         public MainWindow()
         {
             InitializeComponent();
+
+            menu.Visibility = Visibility.Visible;
+            grid_sett.Visibility = Visibility.Collapsed;
+            table.Visibility = Visibility.Collapsed;
+        }
+
+        private void button_start_Click(object sender, RoutedEventArgs e)
+        {
+            menu.Visibility = Visibility.Collapsed;
+            grid_sett.Visibility = Visibility.Visible;
+        }
+
+        private void button_done_Click(object sender, RoutedEventArgs e)
+        {
+            grid_sett.Visibility = Visibility.Collapsed;
+            table.Visibility = Visibility.Visible;
+        }
+
+        private void button_out_to_menu_Click(object sender, RoutedEventArgs e)
+        {
+            table.Visibility = Visibility.Collapsed;
+            grid_sett.Visibility = Visibility.Visible;
         }
     }
 }
