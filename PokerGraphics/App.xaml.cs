@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace g_2
+namespace PokerGraphics
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml

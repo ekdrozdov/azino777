@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace g_2.Properties
+namespace PokerGraphics.Properties
 {
 
 
