@@ -119,7 +119,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\PokerCore\PokerCore.csproj">
+      <Project>{afb4df35-cbeb-4323-a49e-7b6ecc5fd713}</Project>
+      <Name>PokerCore</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\t.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

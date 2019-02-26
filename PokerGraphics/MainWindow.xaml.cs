@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PokerCore.ViewModel;
 
 namespace PokerGraphics
 {
@@ -20,6 +21,7 @@ namespace PokerGraphics
     /// </summary>
     public partial class MainWindow : Window
     {
+        Player pl = new Player();
         public MainWindow()
         {
             InitializeComponent();

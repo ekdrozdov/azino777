@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace PokerCore.ViewModel
 {
-    class Player : ITableForPlayer
+    public class Player : ITableForPlayer
     {
         public ReactiveCommand<string, Unit> SetName => throw new NotImplementedException();
 
@@ -34,5 +34,7 @@ namespace PokerCore.ViewModel
         public int ChairNumber => throw new NotImplementedException();
 
         public PlayerGameState State => throw new NotImplementedException();
+
+        public IEnumerable<ICard> HandCards => throw new NotImplementedException();
     }
 }
