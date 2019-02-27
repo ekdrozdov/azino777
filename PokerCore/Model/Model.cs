@@ -152,18 +152,4 @@ namespace PokerCore.Model
 
         int IGameRules.MaxPlayers => throw new NotImplementedException();
     }
-    public class Table: ITable
-    {
-        TableStateForPlayer TableState { get; }
-
-        ITableStateForPlayer ITable.TableState => throw new NotImplementedException();
-
-        GameRules Rules { get; }
-
-        IGameRules ITable.Rules => throw new NotImplementedException();
-
-        ReactiveCommand<string, TableForPlayer> TryConnect { get; }
-
-        ReactiveCommand<string, ITableForPlayer> ITable.TryConnect => throw new NotImplementedException();
-    }
 }

@@ -64,10 +64,10 @@
             <Ellipse Name="opp8" HorizontalAlignment="Left" Height="45" Margin="609,29,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
             <Ellipse Name="opp2" HorizontalAlignment="Left" Height="45" Margin="10,183,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
             <Ellipse Name="opp7" HorizontalAlignment="Left" Height="45" Margin="694,183,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
-            <Button Name="button_extract" Content="Сбросить" HorizontalAlignment="Left" Height="20" Margin="338,504,0,0" VerticalAlignment="Top" Width="69"/>
-            <Button Name="button_add" Content="Поставить:" HorizontalAlignment="Left" Height="20" Margin="412,504,0,0" VerticalAlignment="Top" Width="69"/>
+            <Button Name="button_extract" Content="Сбросить" HorizontalAlignment="Left" Height="20" Margin="338,504,0,0" VerticalAlignment="Top" Width="69" Command="{Binding Fold}"/>
+            <Button Name="button_add" Content="Поставить:" HorizontalAlignment="Left" Height="20" Margin="412,504,0,0" VerticalAlignment="Top" Width="69" Command="{Binding Bet}"/>
             <TextBox Name="textbox_number_of_money" HorizontalAlignment="Left" Height="20" Margin="486,504,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="30"/>
-            <Button Name="button_equalize" Content="Уравнять" HorizontalAlignment="Left" Margin="258,504,0,0" VerticalAlignment="Top" Width="75"/>
+            <Button Name="button_equalize" Content="Уравнять" HorizontalAlignment="Left" Margin="258,504,0,0" VerticalAlignment="Top" Width="75" Command="{Binding Call}"/>
             <Button Name="button_out_to_menu" Content="Меню" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="button_out_to_menu_Click"/>
             <TextBlock Name="name_player" HorizontalAlignment="Left" Margin="350,400,0,0" TextWrapping="Wrap" Text="{Binding ElementName=textbox_name, Path=Text}" VerticalAlignment="Top" RenderTransformOrigin="0.49,0.6" FontSize="18" FontWeight="Bold"/>
             <Rectangle x:Name="card1_opp" HorizontalAlignment="Left" Height="70" Margin="312,10,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
@@ -91,8 +91,7 @@
             <Ellipse Name="diller2" HorizontalAlignment="Left" Height="25" Margin="165,107,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse Name="diller3" HorizontalAlignment="Left" Height="25" Margin="122,194,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse Name="diller4" HorizontalAlignment="Left" Height="25" Margin="122,332,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-
-
+            <Label Content="0" HorizontalAlignment="Left" Margin="437,454,0,0" VerticalAlignment="Top" Width="58"/>
         </Grid>
     </Grid>
 </Window>
