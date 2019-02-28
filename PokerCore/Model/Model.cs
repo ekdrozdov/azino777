@@ -136,20 +136,25 @@ namespace PokerCore.Model
     }
     public class GameRules: IGameRules
     {
+        public GameRules(int maxPlayers)
+        {
+            _maxPlayers = maxPlayers;
+        }
+
         string RulesHelp { get; }
 
         string IGameRules.RulesHelp => throw new NotImplementedException();
 
-        int SmallBlind { get; }
+        int _SmallBlind;
 
-        int IGameRules.SmallBlind => throw new NotImplementedException();
+        public int SmallBlind { get; }
 
         int BigBlind { get; }
 
         int IGameRules.BigBlind => throw new NotImplementedException();
 
-        int MaxPlayers { get; }
+        int _maxPlayers;
 
-        int IGameRules.MaxPlayers => throw new NotImplementedException();
+        public int MaxPlayers { get => _maxPlayers; }
     }
 }
