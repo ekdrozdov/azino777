@@ -38,7 +38,6 @@ namespace PokerGraphics
 
         public void PokerInitialize()
         {
-            userName = "bot00";
             pokerGame = new PokerCore.Model.PokerM(userName, 10);
             pokerTable = new PokerVM(pokerGame);
         }
@@ -46,12 +45,12 @@ namespace PokerGraphics
         public MainWindow()
         {
             InitializeComponent();
-            PokerInitialize();
-            this.WhenActivated(disposer =>
-            {
-                //his.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
-                DataContext = ViewModel;
-            });
+            
+            DataContext = this;
+            //this.WhenActivated(disposer =>
+            //{
+            //    //his.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
+            //});
 
             menu.Visibility = Visibility.Visible;
             grid_sett.Visibility = Visibility.Collapsed;
@@ -62,12 +61,15 @@ namespace PokerGraphics
         {
             menu.Visibility = Visibility.Collapsed;
             grid_sett.Visibility = Visibility.Visible;
+            userName = "bot00";
         }
 
         private void button_done_Click(object sender, RoutedEventArgs e)
         {
             grid_sett.Visibility = Visibility.Collapsed;
             table.Visibility = Visibility.Visible;
+
+            PokerInitialize();
         }
 
         private void button_out_to_menu_Click(object sender, RoutedEventArgs e)
