@@ -8,17 +8,12 @@ namespace PokerCore.Model
 {
     public class Card: ICard
     {
-        CardRank Rank { get; }
+        public CRank CSuit Card => 
+        CardRank _rank;
+        public CardRank Rank { get => _rank; }
 
-        CardRank ICard.Rank => throw new NotImplementedException();
-
-        CardSuit Suit { get; }
-
-        CardSuit ICard.Suit => throw new NotImplementedException();
-
-        CardVisibility Visibility { get; }
-
-        CardVisibility ICard.Visibility => throw new NotImplementedException();
+        CardSuit _suit;
+        public CardSuit Suit { get => _suit; }
     }
     public class DeckofCards: IDeckOfCards
     {
@@ -141,17 +136,13 @@ namespace PokerCore.Model
             _maxPlayers = maxPlayers;
             _rulesHelp = IGameRules.RulesHelp();
         }
-
         string _rulesHelp;
-
         string RulesHelp { get => _rulesHelp; }
 
         string IGameRules.RulesHelp => System.IO.File.ReadAllText(@"PokerCore\\resources\\Rules.txt", Encoding.Default).Replace("\n", " ");
 
         public string Rules { }
-
         int _maxPlayers;
-
         public int MaxPlayers { get => _maxPlayers; }
     }
 }

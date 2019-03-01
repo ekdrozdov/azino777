@@ -31,4 +31,6 @@ namespace PokerCore.Model
             return tableStateForPlayer;
         }
     }
+
+
 }

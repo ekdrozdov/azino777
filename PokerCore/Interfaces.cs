@@ -15,10 +15,6 @@ namespace PokerCore
         CardSuit Suit { get; }
     }
 
-    public interface ICardForPlayer : ICard
-    {
-        HUI CardHui;
-    }
     public interface ICardDeck
     {
         List<ICard> CardDeck { get; }
@@ -32,21 +28,27 @@ namespace PokerCore
         string Name { get; }
         int Cash { get; }
         int PlayerBet { get; } // Вы уже вложили в банк за текущий раунд
-        int ChairNumber { get; }
         PlayerGameState State { get; }
     }
 
     public interface ITableBase
     {
-        IEnumerable<IPlayerState> Players { get; }
+        IEnumerable<int, IPlayerState> Players { get; }
         IEnumerable<ICard> BoardCards { get; }
         int Dealer { get; }
+        int CurPlayer { get; }
         int SmallBlind { get; }
         int BigBlind { get; }
         int CurrentRaise { get; }
         int CurrentBet { get; }
         int Bank { get; }
         int Bank2 { get; } //дополнительный банк, которые нужен после allin
+    }
+
+    public interface ITableReal : ITableBase
+    {
+        IEnumerable<int, ICard> HandCards { get; }
+        ICardDeck Deck { get; }
     }
 
     public interface IVisibility
