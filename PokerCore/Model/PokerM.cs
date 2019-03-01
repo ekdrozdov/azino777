@@ -11,14 +11,14 @@ namespace PokerCore.Model
         static GameRules gameRules = new GameRules(10);
         static TableStateForPlayer tableStateForPlayer = new TableStateForPlayer();
 
-        public static ReactiveCommand<string, ITableForPlayer> TryConnect(string name, int cash)
+        public static ITableForPlayer TryConnect(string name)
         {
             if (gameRules.MaxPlayers < players.Count)
             {
                 players.Add(new Player());
-                return ReactiveCommand.Create<string, ITableForPlayer>(x => new TableForPlayer());
+                return new TableForPlayer();
             }
-            return ReactiveCommand.Create<string, ITableForPlayer>(x => new TableForPlayer());
+            return new TableForPlayer();
         }
 
         public static IGameRules GetRules()
