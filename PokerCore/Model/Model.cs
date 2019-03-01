@@ -19,6 +19,11 @@ namespace PokerCore.Model
 
     public class CardDeck: ICardDeck
     {
+        public CardDeck()
+        {
+
+        }
+
         private List<Card> _restCards;
 
         public List<ICard> RestCards { get; }
@@ -35,31 +40,57 @@ namespace PokerCore.Model
 
     public class PlayerState: IPlayerState
     {
+        public PlayerState()
+        {
 
+        }
+
+        string _name;
+        public string Name { get => _name; }
+
+        int _cash;
+        public int Cash { get => _cash; }
+
+        int _playerBet;
+        public int PlayerBet { get => _playerBet; }
+
+        PlayerGameState _state;
+        public PlayerGameState State { get => _state; }
     }
 
-    public class PlayerState: IPlayerState
+    public class TableBase: ITableBase
     {
-        string Name { get; }
+        Dictionary<int, PlayerState> _players;
+        public Dictionary<int, IPlayerState> Players { get; }
 
-        string IPlayerState.Name => throw new NotImplementedException();
+        List<Card> _boardCards;
+        public IEnumerable<ICard> BoardCards { get; }
 
-        int Cash { get; }
+        int _dealer;
+        public int Dealer { get => _dealer; }
 
-        int IPlayerState.Cash => throw new NotImplementedException();
+        int _curPlayer;
+        public int CurPlayer { get => _curPlayer; }
 
-        int PlayerBet { get; } // Вы уже вложили в банк за текущий раунд
+        int _smallBlind;
+        public int SmallBlind { get => _smallBlind; }
 
-        int IPlayerState.PlayerBet => throw new NotImplementedException();
+        int _bigBlind;
+        public int BigBlind { get => _bigBlind; }
 
-        int ChairNumber { get; }
+        int _currentRaise;
+        public int CurrentRaise { get => _currentRaise; }
 
-        int IPlayerState.ChairNumber => throw new NotImplementedException();
+        int _currentBet;
+        public int CurrentBet { get => _currentBet; }
 
-        PlayerGameState State { get; }
+        int _bank;
+        public int Bank { get => _bank; }
 
-        PlayerGameState IPlayerState.State => throw new NotImplementedException();
+        int _bank2;
+        public int Bank2 { get => _bank2; }
     }
+
     public class TableStateForPlayer: ITableStateForPlayer
     {
         IEnumerable<PlayerState> Players { get; }
