@@ -6,9 +6,9 @@ using ReactiveUI;
 
 namespace PokerCore.Model
 {
-    public class Card: ICard
+    public class Card : ICard
     {
-        public CRank CSuit Card => 
+        public Card( CardRank rank, CardSuit suit) { _rank = rank; _suit = suit; }
         CardRank _rank;
         public CardRank Rank { get => _rank; }
 
