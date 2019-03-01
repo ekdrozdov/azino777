@@ -139,19 +139,16 @@ namespace PokerCore.Model
         public GameRules(int maxPlayers)
         {
             _maxPlayers = maxPlayers;
+            _rulesHelp = IGameRules.RulesHelp();
         }
 
-        string RulesHelp { get; }
+        string _rulesHelp;
 
-        string IGameRules.RulesHelp => throw new NotImplementedException();
+        string RulesHelp { get => _rulesHelp; }
 
-        int _SmallBlind;
+        string IGameRules.RulesHelp => System.IO.File.ReadAllText(@"PokerCore\\resources\\Rules.txt", Encoding.Default).Replace("\n", " ");
 
-        public int SmallBlind { get; }
-
-        int BigBlind { get; }
-
-        int IGameRules.BigBlind => throw new NotImplementedException();
+        public string Rules { }
 
         int _maxPlayers;
 

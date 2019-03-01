@@ -14,11 +14,16 @@ namespace PokerCore
         CardRank Rank { get; }
         CardSuit Suit { get; }
     }
+
+    public interface ICardForPlayer : ICard
+    {
+        HUI CardHui;
+    }
     public interface ICardDeck
     {
         List<ICard> CardDeck { get; }
 
-        void Reset();
+        void Shuffle();
         ICard TakeCard();
     }
 
@@ -44,10 +49,10 @@ namespace PokerCore
         int Bank2 { get; } //дополнительный банк, которые нужен после allin
     }
 
-    public interface ITableReal : ITableBase
+    public interface IVisibility
     {
-        IEnumerable<ICard>[] PlayersHands { get; }
-        ICardDeck Deck { get; }
+        public enum Visibility { Visible, Invisible }
+        private Visibility CurrentVisibility;
     }
 
     public interface ITableForPlayer : IPlayerState

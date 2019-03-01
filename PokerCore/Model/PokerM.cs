@@ -8,10 +8,10 @@ namespace PokerCore.Model
     public static class PokerM
     {
         static List<Player> players = new List<Player>();
-        static GameRules gameRules = new GameRules(8);
+        static GameRules gameRules = new GameRules(10);
         static TableStateForPlayer tableStateForPlayer = new TableStateForPlayer();
 
-        public static ReactiveCommand<string, ITableForPlayer> TryConnect(string name)
+        public static ReactiveCommand<string, ITableForPlayer> TryConnect(string name, int cash)
         {
             if (gameRules.MaxPlayers < players.Count)
             {
