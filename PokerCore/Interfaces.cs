@@ -9,6 +9,7 @@ namespace PokerCore
     public enum CardSuit { Spades, Dimonds, Hearts, Clubs };
     public enum CardRank { c2, c3, c4, c5, c6, c7, c8, c9, c10, J, Q, K, A };
     public enum PlayerGameState { In, Out, AllIn }
+    public enum Visibility { Visible, Invisible }
     public interface ICard
     {
         CardRank Rank { get; }
@@ -17,7 +18,7 @@ namespace PokerCore
 
     public interface ICardDeck
     {
-        List<ICard> CardDeck { get; }
+        List<ICard> RestCards { get; }
 
         void Shuffle();
         ICard TakeCard();
@@ -33,7 +34,7 @@ namespace PokerCore
 
     public interface ITableBase
     {
-        IEnumerable<int, IPlayerState> Players { get; }
+        Dictionary<int, IPlayerState> Players { get; }
         IEnumerable<ICard> BoardCards { get; }
         int Dealer { get; }
         int CurPlayer { get; }
@@ -47,14 +48,15 @@ namespace PokerCore
 
     public interface ITableReal : ITableBase
     {
-        IEnumerable<int, ICard> HandCards { get; }
+        Dictionary<int, ICard> HandCards { get; }
         ICardDeck Deck { get; }
+
+        List<int> GetStrongestCombination();
     }
 
     public interface IVisibility
     {
-        public enum Visibility { Visible, Invisible }
-        private Visibility CurrentVisibility;
+        Visibility CurrentVisibility { get; }
     }
 
     public interface ITableForPlayer : IPlayerState

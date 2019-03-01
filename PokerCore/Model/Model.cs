@@ -9,26 +9,35 @@ namespace PokerCore.Model
     public class Card : ICard
     {
         public Card( CardRank rank, CardSuit suit) { _rank = rank; _suit = suit; }
+
         CardRank _rank;
         public CardRank Rank { get => _rank; }
 
         CardSuit _suit;
         public CardSuit Suit { get => _suit; }
     }
-    public class DeckofCards: IDeckOfCards
+
+    public class CardDeck: ICardDeck
     {
-        List<Card> DeckOfCards { get; }
+        private List<Card> _restCards;
 
-        List<ICard> IDeckOfCards.DeckOfCards => throw new NotImplementedException();
+        public List<ICard> RestCards { get; }
 
-        ReactiveCommand<Unit, Unit> Reset { get; } //перемешать карты
+        public ICard TakeCard()
+        {
+            Card Taked = _restCards[_restCards.Count - 1];
+            _restCards.RemoveAt(_restCards.Count - 1);
+            return Taked;
+        }
 
-        ReactiveCommand<Unit, Unit> IDeckOfCards.Reset => throw new NotImplementedException();
-
-        ReactiveCommand<Card, Unit> TakeCard { get; }
-
-        ReactiveCommand<ICard, Unit> IDeckOfCards.TakeCard => throw new NotImplementedException();
+        public void Shuffle() { }
     }
+
+    public class PlayerState: IPlayerState
+    {
+
+    }
+
     public class PlayerState: IPlayerState
     {
         string Name { get; }
