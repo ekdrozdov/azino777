@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PokerCore"
+        xmlns:local="clr-namespace:PokerGraphics"
         mc:Ignorable="d"
         Title="MainWindow" Height="568.206" Width="756.701">
     <Grid>
@@ -67,7 +67,7 @@
             <Button Name="button_extract" Content="Сбросить" HorizontalAlignment="Left" Height="20" Margin="338,504,0,0" VerticalAlignment="Top" Width="69" Command="{Binding Fold}"/>
             <Button Name="button_add" Content="Поставить:" HorizontalAlignment="Left" Height="20" Margin="412,504,0,0" VerticalAlignment="Top" Width="69" Command="{Binding Bet}"/>
             <TextBox Name="textbox_number_of_money" HorizontalAlignment="Left" Height="20" Margin="486,504,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="30"/>
-            <Button Name="button_equalize" Content="Уравнять" HorizontalAlignment="Left" Margin="258,504,0,0" VerticalAlignment="Top" Width="75" Command="{Binding TryConnect}" CommandParameter="Bot00"/>
+            <Button Name="button_equalize" Content="Уравнять" HorizontalAlignment="Left" Margin="258,504,0,0" VerticalAlignment="Top" Width="75" Command="{Binding pokerTable.TryConnect}" CommandParameter="Bot00"/>
             <Button Name="button_out_to_menu" Content="Меню" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="button_out_to_menu_Click"/>
             <TextBlock Name="name_player" HorizontalAlignment="Left" Margin="350,400,0,0" TextWrapping="Wrap" Text="{Binding ElementName=textbox_name, Path=Text}" VerticalAlignment="Top" RenderTransformOrigin="0.49,0.6" FontSize="18" FontWeight="Bold"/>
             <Rectangle x:Name="card1_opp" HorizontalAlignment="Left" Height="70" Margin="312,10,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>

@@ -24,24 +24,33 @@ namespace PokerGraphics
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IViewFor<PokerVM>, IReactiveObject//[dfnftn dm.
+    public partial class MainWindow : Window, IViewFor<PokerVM>
     {
-        public readonly PokerVM pokerTable = new PokerVM();
+        PokerVM pokerTable;
+        PokerCore.Model.PokerM pokerGame;
 
         public PokerVM ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
         object IViewFor.ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
-        public IObservable<string> obser;
+
         public event PropertyChangedEventHandler PropertyChanged;
         public event ReactiveUI.PropertyChangingEventHandler PropertyChanging;
+        private string userName;
+
+        public void PokerInitialize()
+        {
+            userName = "bot00";
+            pokerGame = new PokerCore.Model.PokerM(userName, 10);
+            pokerTable = new PokerVM(pokerGame);
+        }
 
         public MainWindow()
         {
             InitializeComponent();
-
+            PokerInitialize();
             this.WhenActivated(disposer =>
             {
-                //this.WhenAnyValue(t => t.pokerTable).Subscribe(v => DataContext = v).DisposeWith(disposer);
-
+                //his.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
+                DataContext = ViewModel;
             });
 
             menu.Visibility = Visibility.Visible;

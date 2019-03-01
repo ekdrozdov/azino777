@@ -5,18 +5,21 @@ using ReactiveUI;
 
 namespace PokerCore.Model
 {
-    public static class PokerM
+    public class PokerM
     {
-        static List<Player> players = new List<Player>(2);
-        static GameRules gameRules = new GameRules(10);
-        static TableStateForPlayer tableStateForPlayer = new TableStateForPlayer();
+        List<Player> players;
+        GameRules gameRules;
+        TableStateForPlayer tableStateForPlayer;
 
-        public static void Initialization()
+        public PokerM(string name, int maxplayer)
         {
-            players.Add(new Player("Илья"));
+            tableStateForPlayer = new TableStateForPlayer();
+            gameRules = new GameRules(maxplayer);
+            players = new List<Player>(maxplayer);
+            players.Add(new Player(name));
         }
 
-        public static ITableForPlayer TryConnect(string name)
+        public ITableForPlayer TryConnect(string name)
         {
             if (gameRules.MaxPlayers < players.Count)
             {
@@ -26,12 +29,12 @@ namespace PokerCore.Model
             return new TableForPlayer();
         }
 
-        public static IGameRules GetRules()
+        public IGameRules GetRules()
         {
             return gameRules;
         }
 
-        public static ITableStateForPlayer GetTableStateForPlayer()
+        public ITableStateForPlayer GetTableStateForPlayer()
         {
             return tableStateForPlayer;
         }
