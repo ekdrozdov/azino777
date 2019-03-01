@@ -11,7 +11,7 @@ namespace PokerCore.ViewModel
         public ITableStateForPlayer TableState { get => PokerM.GetTableStateForPlayer(); set => throw new NotImplementedException(); }
         public IGameRules Rules { get => PokerM.GetRules(); set => throw new NotImplementedException(); }
 
-        public ReactiveCommand<string, ITableForPlayer> TryConnect => 
+        public ReactiveCommand<string, ITableForPlayer> TryConnect { get; } =
             ReactiveCommand.Create<string, ITableForPlayer>(x => PokerM.TryConnect(x));
     }
 }

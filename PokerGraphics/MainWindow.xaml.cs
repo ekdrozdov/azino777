@@ -24,13 +24,13 @@ namespace PokerGraphics
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IViewFor<PokerVM>, IReactiveObject
+    public partial class MainWindow : Window, IViewFor<PokerVM>, IReactiveObject//[dfnftn dm.
     {
-        public readonly PokerVM pokerTable;
+        public readonly PokerVM pokerTable = new PokerVM();
 
         public PokerVM ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
         object IViewFor.ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
-
+        public IObservable<string> obser;
         public event PropertyChangedEventHandler PropertyChanged;
         public event ReactiveUI.PropertyChangingEventHandler PropertyChanging;
 
@@ -41,7 +41,6 @@ namespace PokerGraphics
             this.WhenActivated(disposer =>
             {
                 //this.WhenAnyValue(t => t.pokerTable).Subscribe(v => DataContext = v).DisposeWith(disposer);
-
 
             });
 

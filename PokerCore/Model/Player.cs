@@ -15,5 +15,10 @@ namespace PokerCore.Model
         public int ChairNumber { get; set; }
 
         public PlayerGameState State { get; set; }
+
+        public Player(string name)
+        {
+            Name = name;
+        }
     }
 }
