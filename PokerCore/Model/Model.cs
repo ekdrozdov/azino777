@@ -103,8 +103,8 @@ namespace PokerCore.Model
         { }
         public void Fold()
         { }
-        public void Call()
-        { }
+        public Unit Call()
+        { return new Unit(); }
         public void Check()
         {
 
@@ -148,7 +148,7 @@ namespace PokerCore.Model
         public int Bank2 { get => _bank2; set { _bank2 = value; } }
     }
 
-    public class TableForPlayer : ITableForPlayer
+    public class TableForPlayer : IPlayer
     {
         public TableForPlayer()
         {
@@ -197,8 +197,8 @@ namespace PokerCore.Model
         { }
         public void Fold()
         { }
-        public void Call()
-        { }
+        public Unit Call()
+        { return new Unit(); }
         public void Check()
         {
 
