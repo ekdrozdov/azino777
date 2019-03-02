@@ -5,32 +5,59 @@ using ReactiveUI;
 
 namespace PokerCore.Model
 {
-    public static class PokerM
+    public class PokerM : ITableReal
     {
-        static List<Player> players = new List<Player>();
-        static GameRules gameRules = new GameRules(10);
-        static TableStateForPlayer tableStateForPlayer = new TableStateForPlayer();
+        List<Player> players;
+        GameRules gameRules;
 
-        public static ReactiveCommand<string, ITableForPlayer> TryConnect(string name, int cash)
+        public PokerM(string name, int maxplayer, int startbank)
+        {
+            bank = startbank;
+            gameRules = new GameRules(maxplayer);
+            players = new List<Player>(maxplayer);
+            players.Add(new Player(name));
+        }
+
+        public Dictionary<int, ICard> HandCards => throw new NotImplementedException();
+
+        public ICardDeck Deck => throw new NotImplementedException();
+
+        public IGameRules Rules { get => gameRules; }
+
+        public Dictionary<int, IPlayerState> Players => throw new NotImplementedException();
+
+        public IEnumerable<ICard> BoardCards => throw new NotImplementedException();
+
+        public int Dealer => throw new NotImplementedException();
+
+        public int CurPlayer => throw new NotImplementedException();
+
+        public int SmallBlind => throw new NotImplementedException();
+
+        public int BigBlind => throw new NotImplementedException();
+
+        public int CurrentRaise => throw new NotImplementedException();
+
+        public int CurrentBet => throw new NotImplementedException();
+        int bank;
+        public int Bank { get => bank; }
+
+        public int Bank2 => throw new NotImplementedException();
+
+
+        public IEnumerable<int> GetStrongestCombination()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryConnect(string name)
         {
             if (gameRules.MaxPlayers < players.Count)
             {
-                players.Add(new Player());
-                return ReactiveCommand.Create<string, ITableForPlayer>(x => new TableForPlayer());
+                players.Add(new Player(name));
             }
-            return ReactiveCommand.Create<string, ITableForPlayer>(x => new TableForPlayer());
+            return true;
         }
 
-        public static IGameRules GetRules()
-        {
-            return gameRules;
-        }
-
-        public static ITableStateForPlayer GetTableStateForPlayer()
-        {
-            return tableStateForPlayer;
-        }
     }
-
-
 }

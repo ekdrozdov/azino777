@@ -24,26 +24,33 @@ namespace PokerGraphics
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IViewFor<PokerTable>, IReactiveObject
+    public partial class MainWindow : Window, IViewFor<PokerVM>
     {
-        public ReadOnlyObservableCollection<PokerTable> pokerTable;
+        PokerVM pokerTable;
+        PokerCore.Model.PokerM pokerGame;
 
-        public PokerTable ViewModel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        object IViewFor.ViewModel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public PokerVM ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
+        object IViewFor.ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event ReactiveUI.PropertyChangingEventHandler PropertyChanging;
 
+        public void PokerInitialize(string name, int startbank)
+        {
+            pokerGame = new PokerCore.Model.PokerM(name, 10, startbank);
+            pokerTable = new PokerVM(pokerGame);
+            pokerGame.TryConnect("Илья");
+        }
+
         public MainWindow()
         {
             InitializeComponent();
-
-            this.WhenActivated(disposer =>
-            {
-                this.WhenAnyValue(t => t.pokerTable).Subscribe(v => DataContext = v).DisposeWith(disposer);
-
-
-            });
+            
+            DataContext = this;
+            //this.WhenActivated(disposer =>
+            //{
+            //    //his.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
+            //});
 
             menu.Visibility = Visibility.Visible;
             grid_sett.Visibility = Visibility.Collapsed;
@@ -60,6 +67,16 @@ namespace PokerGraphics
         {
             grid_sett.Visibility = Visibility.Collapsed;
             table.Visibility = Visibility.Visible;
+            try
+            {
+                PokerInitialize(textbox_name.Text, Int32.Parse(textbox_first_bank.Text));
+            }
+            catch (Exception ex)
+            {
+                textbox_number_of_money.Text = "Ты шо дурак, введи целое число";
+                grid_sett.Visibility = Visibility.Visible;
+                table.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void button_out_to_menu_Click(object sender, RoutedEventArgs e)
