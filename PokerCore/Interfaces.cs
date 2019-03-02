@@ -51,7 +51,7 @@ namespace PokerCore
         Dictionary<int, ICard> HandCards { get; }
         ICardDeck Deck { get; }
 
-        List<int> GetStrongestCombination();
+        IEnumerable<int> GetStrongestCombination();
     }
 
     public interface IVisibility
@@ -59,18 +59,17 @@ namespace PokerCore
         Visibility CurrentVisibility { get; }
     }
 
-    public interface ITableForPlayer : IPlayerState
+    public interface ITableForPlayer : IPlayerState, ITableBase
     {
-        ITableBase TableState { get; }
         IEnumerable<ICard> HandCards { get; }
 
-        ReactiveCommand<string, Unit> SetName { get; }
-        ReactiveCommand<int, Unit> AddMoney { get; }
-        ReactiveCommand<Unit, Unit> Fold { get; }
-        ReactiveCommand<Unit, Unit> Call { get; }
-        ReactiveCommand<Unit, Unit> Check { get; }
-        ReactiveCommand<int, Unit> Raise { get; }
-        ReactiveCommand<Unit, Unit> AllIn { get; }
+        void SetName();
+        void AddCash(int cash);
+        void Fold();
+        void Call();
+        void Check();
+        void Raise(int raise);
+        void AllIn();
     }
     public interface IGameRules
     {
