@@ -42,7 +42,7 @@
                 <ColumnDefinition Width="200*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Начальный банк: " VerticalAlignment="Top"/>
-            <TextBox Name="textbox_first_bank" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="112,9,0,0" Grid.Row="2" TextWrapping="Wrap" Text="500" VerticalAlignment="Top" Width="43"/>
+            <TextBox Name="textbox_first_bank" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="112,9,0,0" Grid.Row="2" TextWrapping="Wrap" Text="500" VerticalAlignment="Top" Width="100"/>
             <Button Name="button_done" Content="Готово" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="198" Height="37" Click="button_done_Click"/>
 
 

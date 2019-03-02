@@ -25,8 +25,9 @@ namespace PokerCore.Model
         int bank2;
         public int Bank2 { get => bank2; }
 
-        public PokerM(string name, int maxplayer)
+        public PokerM(string name, int maxplayer, int startbank)
         {
+            bank = startbank;
             tableStateForPlayer = new TableStateForPlayer();
             gameRules = new GameRules(maxplayer);
             players = new List<Player>(maxplayer);

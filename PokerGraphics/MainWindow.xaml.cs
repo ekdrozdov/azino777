@@ -34,11 +34,10 @@ namespace PokerGraphics
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event ReactiveUI.PropertyChangingEventHandler PropertyChanging;
-        private string userName;
 
-        public void PokerInitialize()
+        public void PokerInitialize(string name, int startbank)
         {
-            pokerGame = new PokerCore.Model.PokerM(userName, 10);
+            pokerGame = new PokerCore.Model.PokerM(name, 10, startbank);
             pokerTable = new PokerVM(pokerGame);
         }
 
@@ -61,15 +60,23 @@ namespace PokerGraphics
         {
             menu.Visibility = Visibility.Collapsed;
             grid_sett.Visibility = Visibility.Visible;
-            userName = "bot00";
         }
 
         private void button_done_Click(object sender, RoutedEventArgs e)
         {
             grid_sett.Visibility = Visibility.Collapsed;
             table.Visibility = Visibility.Visible;
-
-            PokerInitialize();
+            try
+            {
+                PokerInitialize(textbox_name.Text, Int32.Parse(textbox_first_bank.Text));
+            }
+            catch (Exception ex)
+            {
+                textbox_number_of_money.Text = "Ты шо дурак, введи целое число";
+                grid_sett.Visibility = Visibility.Visible;
+                table.Visibility = Visibility.Collapsed;
+            }
+            
         }
 
         private void button_out_to_menu_Click(object sender, RoutedEventArgs e)
