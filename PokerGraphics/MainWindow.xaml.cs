@@ -39,6 +39,7 @@ namespace PokerGraphics
         {
             pokerGame = new PokerCore.Model.PokerM(name, 10, startbank);
             pokerTable = new PokerVM(pokerGame);
+            pokerGame.TryConnect("Илья");
         }
 
         public MainWindow()
@@ -76,7 +77,6 @@ namespace PokerGraphics
                 grid_sett.Visibility = Visibility.Visible;
                 table.Visibility = Visibility.Collapsed;
             }
-            
         }
 
         private void button_out_to_menu_Click(object sender, RoutedEventArgs e)

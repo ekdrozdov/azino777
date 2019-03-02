@@ -5,55 +5,60 @@ using ReactiveUI;
 
 namespace PokerCore.Model
 {
-    public class PokerM : ITableStateForPlayer
+    public class PokerM : ITableReal
     {
         List<Player> players;
         GameRules gameRules;
-        TableStateForPlayer tableStateForPlayer;
-
-        public IEnumerable<IPlayerState> Players { get => players; }
-
-        public IEnumerable<ICard> BoardCards => throw new NotImplementedException();
-        int dealer;
-        public int Dealer { get => dealer; }
-        int currentRaise;
-        public int CurrentRaise { get => currentRaise; }
-        int bet;
-        public int Bet { get => bet; }
-        int bank;
-        public int Bank { get => bank; }
-        int bank2;
-        public int Bank2 { get => bank2; }
 
         public PokerM(string name, int maxplayer, int startbank)
         {
             bank = startbank;
-            tableStateForPlayer = new TableStateForPlayer();
             gameRules = new GameRules(maxplayer);
             players = new List<Player>(maxplayer);
             players.Add(new Player(name));
         }
 
-        public ITableForPlayer TryConnect(string name)
+        public Dictionary<int, ICard> HandCards => throw new NotImplementedException();
+
+        public ICardDeck Deck => throw new NotImplementedException();
+
+        public IGameRules Rules { get => gameRules; }
+
+        public Dictionary<int, IPlayerState> Players => throw new NotImplementedException();
+
+        public IEnumerable<ICard> BoardCards => throw new NotImplementedException();
+
+        public int Dealer => throw new NotImplementedException();
+
+        public int CurPlayer => throw new NotImplementedException();
+
+        public int SmallBlind => throw new NotImplementedException();
+
+        public int BigBlind => throw new NotImplementedException();
+
+        public int CurrentRaise => throw new NotImplementedException();
+
+        public int CurrentBet => throw new NotImplementedException();
+        int bank;
+        public int Bank { get => bank; }
+
+        public int Bank2 => throw new NotImplementedException();
+
+        ReactiveCommand<string, bool> ITableReal.TryConnect => throw new NotImplementedException();
+
+        public IEnumerable<int> GetStrongestCombination()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryConnect(string name)
         {
             if (gameRules.MaxPlayers < players.Count)
             {
                 players.Add(new Player(name));
-                return new TableForPlayer();
+                return true;
             }
-            return new TableForPlayer();
-        }
-
-        public IGameRules GetRules()
-        {
-            return gameRules;
-        }
-
-        public ITableStateForPlayer GetTableStateForPlayer()
-        {
-            return tableStateForPlayer;
+            return false;
         }
     }
-
-
 }

@@ -52,6 +52,9 @@ namespace PokerCore
         ICardDeck Deck { get; }
 
         IEnumerable<int> GetStrongestCombination();
+
+        IGameRules Rules { get; }
+        ReactiveCommand<string, bool> TryConnect { get; }
     }
 
     public interface IVisibility
@@ -75,12 +78,5 @@ namespace PokerCore
     {
         string RulesHelp { get; }
         int MaxPlayers { get; }
-    }
-    public interface ITable
-    {
-        ITableReal TableState { get; }
-        IGameRules Rules { get; }
-
-        ReactiveCommand<string, ITableForPlayer> TryConnect { get; }
     }
 }
