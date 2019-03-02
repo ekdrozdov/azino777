@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using PokerCore.ViewModel;
-using ReactiveUI;
-using DynamicData;
-using System.Reactive.Disposables;
 
 namespace PokerGraphics
 {
@@ -45,7 +39,7 @@ namespace PokerGraphics
         public MainWindow()
         {
             InitializeComponent();
-            
+
             DataContext = this;
             //this.WhenActivated(disposer =>
             //{
@@ -83,16 +77,7 @@ namespace PokerGraphics
         {
             table.Visibility = Visibility.Collapsed;
             grid_sett.Visibility = Visibility.Visible;
-        }
 
-        public void RaisePropertyChanging(ReactiveUI.PropertyChangingEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RaisePropertyChanged(PropertyChangedEventArgs args)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -6,8 +6,16 @@
         xmlns:local="clr-namespace:PokerGraphics"
         mc:Ignorable="d"
         Title="MainWindow" Height="568.206" Width="756.701">
+    <Window.Resources>
+        <ControlTemplate TargetType="Button" x:Key="ell">
+            <Border CornerRadius="25" BorderBrush="LightGreen" BorderThickness="5"
+                    Background="Transparent" Height="45" Width="45" >
+                <ContentControl Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Content="" />
+            </Border>
+        </ControlTemplate>
+    </Window.Resources>
     <Grid>
-        <Grid Background="Gray" Name="menu">
+        <Grid Visibility="Hidden" Background="Gray" Name="menu">
             <Grid.RowDefinitions>
                 <RowDefinition Height="59*"/>
                 <RowDefinition Height="25*"/>
@@ -22,12 +30,20 @@
                 <ColumnDefinition Width="200*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="4,2,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Name: " VerticalAlignment="Top" Height="16" Width="38"/>
-            <TextBox Name="textbox_name" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="42,1,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="111"/>
-            <Button Name="button_start" Content="Start" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" Width="198" Height="43" Click="button_start_Click"/>
-            <Button Name="button_exit" Content="Exit" Grid.Column="1" HorizontalAlignment="Left" Height="37" Grid.Row="4" VerticalAlignment="Top" Width="198"/>
+            <TextBox Name="textbox_name" 
+                     Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="42,1,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="111"/>
+            <Button Name="button_start" 
+                    Content="Start"
+                    Command="{Binding }"
+                    Grid.Column="1" 
+                    HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" Width="198" Height="43" Click="button_start_Click"/>
+            <Button Name="button_exit" 
+                    Content="Exit" 
+                    
+                    Grid.Column="1" HorizontalAlignment="Left" Height="37" Grid.Row="4" VerticalAlignment="Top" Width="198"/>
 
         </Grid>
-        <Grid Name="grid_sett" Background="Gray">
+        <Grid Visibility="Hidden" Name="grid_sett" Background="Gray">
             <Grid.RowDefinitions>
                 <RowDefinition Height="59*"/>
                 <RowDefinition Height="25*"/>
@@ -47,7 +63,7 @@
 
 
         </Grid>
-        <Grid Name="table">
+        <Grid Name="table" Visibility="Visible">
             <Grid.Background>
                 <ImageBrush ImageSource="{DynamicResource ImageSource1}"/>
             </Grid.Background>
@@ -58,14 +74,8 @@
             <Rectangle Name="center_card5" HorizontalAlignment="Left" Height="70" Margin="470,182,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
             <Rectangle Name="card1" HorizontalAlignment="Left" Height="70" Margin="367,429,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
             <Rectangle Name="card2" HorizontalAlignment="Left" Height="70" Margin="312,429,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Ellipse Name="opp4" HorizontalAlignment="Left" Height="45" Margin="122,454,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
-            <Ellipse Name="opp5" HorizontalAlignment="Left" Height="45" Margin="609,454,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
-            <Ellipse Name="opp1" HorizontalAlignment="Left" Height="45" Margin="122,29,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
-            <Ellipse Name="opp8" HorizontalAlignment="Left" Height="45" Margin="609,29,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
-            <Ellipse Name="opp2" HorizontalAlignment="Left" Height="45" Margin="10,183,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
-            <Ellipse Name="opp7" HorizontalAlignment="Left" Height="45" Margin="694,183,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
-            <Button Name="button_extract" Content="Сбросить" HorizontalAlignment="Left" Height="20" Margin="338,504,0,0" VerticalAlignment="Top" Width="69" Command="{Binding Fold}"/>
-            <Button Name="button_add" Content="Поставить:" HorizontalAlignment="Left" Height="20" Margin="412,504,0,0" VerticalAlignment="Top" Width="69" Command="{Binding Bet}"/>
+            <Button Name="button_extract" Content="Сбросить" HorizontalAlignment="Left" Height="20" Margin="338,504,0,0" VerticalAlignment="Top" Width="69"/>
+            <Button Name="button_add" Content="Поставить:" HorizontalAlignment="Left" Height="20" Margin="412,504,0,0" VerticalAlignment="Top" Width="69"/>
             <TextBox Name="textbox_number_of_money" HorizontalAlignment="Left" Height="20" Margin="486,504,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="30"/>
             <Button Name="button_equalize" Content="Уравнять" HorizontalAlignment="Left" Margin="258,504,0,0" VerticalAlignment="Top" Width="75" Command="{Binding ViewModel.TryConnect}" CommandParameter="Bot00"/>
             <Button Name="button_out_to_menu" Content="Меню" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="button_out_to_menu_Click"/>
@@ -73,8 +83,6 @@
             <Rectangle x:Name="card1_opp" HorizontalAlignment="Left" Height="70" Margin="312,10,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
             <Rectangle x:Name="card2_opp" HorizontalAlignment="Left" Height="70" Margin="367,10,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
             <TextBlock Name="opponent" HorizontalAlignment="Left" Margin="350,86,0,0" TextWrapping="Wrap" Text="Илья" VerticalAlignment="Top"/>
-            <Ellipse Name="opp6" HorizontalAlignment="Left" Height="45" Margin="694,332,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
-            <Ellipse Name="opp3" HorizontalAlignment="Left" Height="45" Margin="10,332,0,0" Stroke="#FF00FF0C" StrokeThickness="5" VerticalAlignment="Top" Width="45" Fill="#00000000"/>
             <TextBlock Name="main_bank" HorizontalAlignment="Left" Margin="312,156,0,0" TextWrapping="Wrap" Text="Общий банк: " VerticalAlignment="Top"/>
             <TextBox Name="money_in_main_bank" HorizontalAlignment="Left" Height="23" Margin="387,155,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="78"/>
             <TextBlock Name="little_bland" HorizontalAlignment="Left" Margin="212,257,0,0" TextWrapping="Wrap" Text="Малый блайнд: " VerticalAlignment="Top"/>
@@ -91,7 +99,38 @@
             <Ellipse Name="diller2" HorizontalAlignment="Left" Height="25" Margin="165,107,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse Name="diller3" HorizontalAlignment="Left" Height="25" Margin="122,194,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse Name="diller4" HorizontalAlignment="Left" Height="25" Margin="122,332,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Label Content="0" HorizontalAlignment="Left" Margin="437,454,0,0" VerticalAlignment="Top" Width="58"/>
+            <Button Name="opp1"
+                    Content=""
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="122,29,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+            <Button Name="opp2"
+                    Content=""
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="10,183,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+            <Button Name="opp3"
+                    Content=""
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="10,332,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+            <Button Name="opp4"
+                    Content=""
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="122,454,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+            <Button Name="opp5"
+                    Content=""
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="609,454,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+            <Button Name="opp6"
+                    Content=""
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="694,332,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+            <Button Name="opp7"
+                    Content=""
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="694,183,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+            <Button Name="opp8"
+                    Content=""
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="609,29,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
         </Grid>
     </Grid>
 </Window>
