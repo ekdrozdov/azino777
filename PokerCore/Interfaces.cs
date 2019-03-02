@@ -24,7 +24,7 @@ namespace PokerCore
         ICard TakeCard();
     }
 
-    public interface IPlayerState
+    public interface IPlayerState : ITableForPlayer
     {
         string Name { get; }
         int Cash { get; }
@@ -52,9 +52,9 @@ namespace PokerCore
         ICardDeck Deck { get; }
 
         IEnumerable<int> GetStrongestCombination();
-
         IGameRules Rules { get; }
-        ReactiveCommand<string, bool> TryConnect { get; }
+
+        void TryConnect(string name);
     }
 
     public interface IVisibility
@@ -62,8 +62,9 @@ namespace PokerCore
         Visibility CurrentVisibility { get; }
     }
 
-    public interface ITableForPlayer : IPlayerState, ITableBase
+    public interface ITableForPlayer : ITableBase
     {
+        ITableBase TableState { get; }
         IEnumerable<ICard> HandCards { get; }
 
         void SetName();
@@ -78,5 +79,10 @@ namespace PokerCore
     {
         string RulesHelp { get; }
         int MaxPlayers { get; }
+    }
+    public interface ITable
+    {
+        ITableReal TableState { get; }
+        
     }
 }
