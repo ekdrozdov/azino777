@@ -6,164 +6,221 @@ using ReactiveUI;
 
 namespace PokerCore.Model
 {
-    public class Card: ICard
+    public class Card : ICard
     {
-        CardRank Rank { get; }
+        public Card( CardRank rank, CardSuit suit) { _rank = rank; _suit = suit; }
 
-        CardRank ICard.Rank => throw new NotImplementedException();
+        CardRank _rank;
+        public CardRank Rank { get => _rank; }
 
-        CardSuit Suit { get; }
-
-        CardSuit ICard.Suit => throw new NotImplementedException();
-
-        CardVisibility Visibility { get; }
-
-        CardVisibility ICard.Visibility => throw new NotImplementedException();
+        CardSuit _suit;
+        public CardSuit Suit { get => _suit; }
     }
-    public class DeckofCards: IDeckOfCards
+
+    public class CardDeck: ICardDeck
     {
-        List<Card> DeckOfCards { get; }
+        public CardDeck()
+        {
 
-        List<ICard> IDeckOfCards.DeckOfCards => throw new NotImplementedException();
+        }
 
-        ReactiveCommand<Unit, Unit> Reset { get; } //перемешать карты
+        private List<Card> _restCards;
 
-        ReactiveCommand<Unit, Unit> IDeckOfCards.Reset => throw new NotImplementedException();
+        public List<ICard> RestCards { get; }
 
-        ReactiveCommand<Card, Unit> TakeCard { get; }
+        public ICard TakeCard()
+        {
+            Card Taked = _restCards[_restCards.Count - 1];
+            _restCards.RemoveAt(_restCards.Count - 1);
+            return Taked;
+        }
 
-        ReactiveCommand<ICard, Unit> IDeckOfCards.TakeCard => throw new NotImplementedException();
+        public void Shuffle() { }
     }
+
     public class PlayerState: IPlayerState
     {
-        string Name { get; }
+        public PlayerState()
+        {
 
-        string IPlayerState.Name => throw new NotImplementedException();
+        }
 
-        int Cash { get; }
+        string _name;
+        public string Name { get => _name; }
 
-        int IPlayerState.Cash => throw new NotImplementedException();
+        int _cash;
+        public int Cash { get => _cash; set { _cash = value; } }
 
-        int PlayerBet { get; } // Вы уже вложили в банк за текущий раунд
+        int _playerBet;
+        public int PlayerBet { get => _playerBet; set { _playerBet = value; } }
 
-        int IPlayerState.PlayerBet => throw new NotImplementedException();
-
-        int ChairNumber { get; }
-
-        int IPlayerState.ChairNumber => throw new NotImplementedException();
-
-        PlayerGameState State { get; }
-
-        PlayerGameState IPlayerState.State => throw new NotImplementedException();
+        PlayerGameState _state;
+        public PlayerGameState State { get => _state; set { _state = value; } }
     }
-    public class TableStateForPlayer: ITableStateForPlayer
+
+    public class TableBase: ITableBase
     {
-        IEnumerable<PlayerState> Players { get; }
+        Dictionary<int, PlayerState> _players;
+        public Dictionary<int, IPlayerState> Players { get; }
 
-        IEnumerable<IPlayerState> ITableStateForPlayer.Players => throw new NotImplementedException();
+        List<Card> _boardCards;
+        public IEnumerable<ICard> BoardCards { get => _boardCards; }
 
-        IEnumerable<Card> BoardCards { get; } //карты на столе
+        int _dealer;
+        public int Dealer { get => _dealer; }
 
-        IEnumerable<ICard> ITableStateForPlayer.BoardCards => throw new NotImplementedException();
+        int _curPlayer;
+        public int CurPlayer { get => _curPlayer; }
 
-        int Dealer { get; }
+        int _smallBlind;
+        public int SmallBlind { get => _smallBlind; }
 
-        int ITableStateForPlayer.Dealer => throw new NotImplementedException();
+        int _bigBlind;
+        public int BigBlind { get => _bigBlind; }
 
-        int CurrentRaise { get; }
+        int _currentRaise;
+        public int CurrentRaise { get => _currentRaise; }
 
-        int ITableStateForPlayer.CurrentRaise => throw new NotImplementedException();
+        int _currentBet;
+        public int CurrentBet { get => _currentBet; }
 
-        int Bet { get; }
+        int _bank;
+        public int Bank { get => _bank; }
 
-        int ITableStateForPlayer.Bet => throw new NotImplementedException();
-
-        int Bank { get; }
-
-        int ITableStateForPlayer.Bank => throw new NotImplementedException();
-
-        int Bank2 { get; } //дополнительный банк, которые нужен после allin
-
-        int ITableStateForPlayer.Bank2 => throw new NotImplementedException();
+        int _bank2;
+        public int Bank2 { get => _bank2; }
     }
-    public class TableForPlayer: ITableForPlayer
+
+    public class TableForPlayer : ITableForPlayer
     {
-        public string Name => throw new NotImplementedException();
+        public TableForPlayer()
+        {
+            
+        }
 
-        public int Cash => throw new NotImplementedException();
+        string _name;
+        public string Name { get => _name; }
 
-        public int PlayerBet => throw new NotImplementedException();
+        int _cash;
+        public int Cash { get => _cash; set { _cash = value; } }
 
-        public int ChairNumber => throw new NotImplementedException();
+        int _playerBet;
+        public int PlayerBet { get => _playerBet; set { _playerBet = value; } }
 
-        public PlayerGameState State => throw new NotImplementedException();
+        PlayerGameState _state;
+        public PlayerGameState State { get => _state; set { _state = value; } }
 
-        TableStateForPlayer TableState { get; }
+        Dictionary<int, PlayerState> _players;
+        public Dictionary<int, IPlayerState> Players { get; }
 
-        ITableStateForPlayer ITableForPlayer.TableState => throw new NotImplementedException();
+        List<Card> _boardCards;
+        public IEnumerable<ICard> BoardCards { get => _boardCards; }
 
-        IEnumerable<Card> HandCards { get; }
+        int _dealer;
+        public int Dealer { get => _dealer; }
 
-        IEnumerable<ICard> ITableForPlayer.HandCards => throw new NotImplementedException();
+        int _curPlayer;
+        public int CurPlayer { get => _curPlayer; }
 
-        ReactiveCommand<string, Unit> SetName { get; }
+        int _smallBlind;
+        public int SmallBlind { get => _smallBlind; }
 
-        ReactiveCommand<string, Unit> ITableForPlayer.SetName => throw new NotImplementedException();
+        int _bigBlind;
+        public int BigBlind { get => _bigBlind; }
 
-        ReactiveCommand<int, Unit> AddMoney { get; }
+        int _currentRaise;
+        public int CurrentRaise { get => _currentRaise; }
 
-        ReactiveCommand<int, Unit> ITableForPlayer.AddMoney => throw new NotImplementedException();
+        int _currentBet;
+        public int CurrentBet { get => _currentBet; }
 
-        ReactiveCommand<Unit, Unit> Fold { get; }
+        int _bank;
+        public int Bank { get => _bank; }
 
-        ReactiveCommand<Unit, Unit> ITableForPlayer.Fold => throw new NotImplementedException();
+        int _bank2;
+        public int Bank2 { get => _bank2; }
 
-        ReactiveCommand<Unit, Unit> Call { get; }
+        TableBase _tableState;
+        public ITableBase TableState { get; }
 
-        ReactiveCommand<Unit, Unit> ITableForPlayer.Call => throw new NotImplementedException();
+        List<Card> _handCards;
+        public IEnumerable<ICard> HandCards { get; }
 
-        ReactiveCommand<Unit, Unit> Check { get; }
+        public void SetName()
+        { }
+        public void AddCash(int cash)
+        { }
+        public void Fold()
+        { }
+        public void Call()
+        { }
+        public void Check()
+        {
 
-        ReactiveCommand<Unit, Unit> ITableForPlayer.Check => throw new NotImplementedException();
+        }
+        public void Raise(int raise)
+        { }
+        public void AllIn()
+        { }
 
-        ReactiveCommand<int, Unit> Raise { get; }
-
-        ReactiveCommand<int, Unit> ITableForPlayer.Raise => throw new NotImplementedException();
-
-        ReactiveCommand<Unit, Unit> AllIn { get; }
-
-        ReactiveCommand<Unit, Unit> ITableForPlayer.AllIn => throw new NotImplementedException();
     }
+
+    public class TableReal : ITableReal
+    {
+        Dictionary<int, PlayerState> _players;
+        public Dictionary<int, IPlayerState> Players { get; }
+
+        List<Card> _boardCards;
+        public IEnumerable<ICard> BoardCards { get => _boardCards; }
+
+        int _dealer;
+        public int Dealer { get => _dealer; }
+
+        int _curPlayer;
+        public int CurPlayer { get => _curPlayer; }
+
+        int _smallBlind;
+        public int SmallBlind { get => _smallBlind; }
+
+        int _bigBlind;
+        public int BigBlind { get => _bigBlind; }
+
+        int _currentRaise;
+        public int CurrentRaise { get => _currentRaise; }
+
+        int _currentBet;
+        public int CurrentBet { get => _currentBet; }
+
+        int _bank;
+        public int Bank { get => _bank; }
+
+        int _bank2;
+        public int Bank2 { get => _bank2; }
+
+        CardDeck _deck;
+        public ICardDeck Deck { get; }
+
+        public IEnumerable<int> GetStrongestCombination()
+        {
+            List<int> smth = new List<int>() { 1, 2 };
+            return smth;
+        }
+
+        Dictionary<int, Card> _handCards;
+        public Dictionary<int, ICard> HandCards { get; }
+
+    }
+    
     public class GameRules: IGameRules
     {
-        string RulesHelp { get; }
+        public GameRules(int maxPlayers)
+        {
+            _maxPlayers = maxPlayers;
+        }
+        string _rulesHelp => System.IO.File.ReadAllText(@"PokerCore\\resources\\Rules.txt", Encoding.Default).Replace("\n", " ");
+        public string RulesHelp { get => _rulesHelp; }
 
-        string IGameRules.RulesHelp => throw new NotImplementedException();
-
-        int SmallBlind { get; }
-
-        int IGameRules.SmallBlind => throw new NotImplementedException();
-
-        int BigBlind { get; }
-
-        int IGameRules.BigBlind => throw new NotImplementedException();
-
-        int MaxPlayers { get; }
-
-        int IGameRules.MaxPlayers => throw new NotImplementedException();
-    }
-    public class Table: ITable
-    {
-        TableStateForPlayer TableState { get; }
-
-        ITableStateForPlayer ITable.TableState => throw new NotImplementedException();
-
-        GameRules Rules { get; }
-
-        IGameRules ITable.Rules => throw new NotImplementedException();
-
-        ReactiveCommand<string, TableForPlayer> TryConnect { get; }
-
-        ReactiveCommand<string, ITableForPlayer> ITable.TryConnect => throw new NotImplementedException();
+        int _maxPlayers;
+        public int MaxPlayers { get => _maxPlayers; }
     }
 }

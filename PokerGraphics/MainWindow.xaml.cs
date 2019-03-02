@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +14,36 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PokerCore.ViewModel;
+using ReactiveUI;
+using DynamicData;
+using System.Reactive.Disposables;
 
 namespace PokerGraphics
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IViewFor<PokerTable>, IReactiveObject
     {
+        public ReadOnlyObservableCollection<PokerTable> pokerTable;
+
+        public PokerTable ViewModel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        object IViewFor.ViewModel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event ReactiveUI.PropertyChangingEventHandler PropertyChanging;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            this.WhenActivated(disposer =>
+            {
+                this.WhenAnyValue(t => t.pokerTable).Subscribe(v => DataContext = v).DisposeWith(disposer);
+
+
+            });
 
             menu.Visibility = Visibility.Visible;
             grid_sett.Visibility = Visibility.Collapsed;
@@ -45,6 +66,16 @@ namespace PokerGraphics
         {
             table.Visibility = Visibility.Collapsed;
             grid_sett.Visibility = Visibility.Visible;
+        }
+
+        public void RaisePropertyChanging(ReactiveUI.PropertyChangingEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RaisePropertyChanged(PropertyChangedEventArgs args)
+        {
+            throw new NotImplementedException();
         }
     }
 }
