@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ReactiveUI;
+using PokerCore.ViewModel;
+using System.ComponentModel;
 
 namespace PokerGraphics
 {

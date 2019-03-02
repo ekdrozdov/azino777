@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reactive;
 
 namespace PokerCore.Model
 {
@@ -60,7 +61,7 @@ namespace PokerCore.Model
             throw new NotImplementedException();
         }
 
-        public void Call()
+        public Unit Call()
         {
             throw new NotImplementedException();
         }

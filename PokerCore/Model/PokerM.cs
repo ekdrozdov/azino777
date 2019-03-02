@@ -7,15 +7,15 @@ namespace PokerCore.Model
 {
     public class PokerM : ITableReal
     {
-        List<Player> players;
+        Dictionary<int, Player> players;
         GameRules gameRules;
 
         public PokerM(string name, int maxplayer, int startbank)
         {
             bank = startbank;
             gameRules = new GameRules(maxplayer);
-            players = new List<Player>(maxplayer);
-            players.Add(new Player(name));
+            players = new Dictionary<int, Player>(maxplayer);
+            players[0] = new Player(name);
         }
 
         public Dictionary<int, ICard> HandCards => throw new NotImplementedException();
@@ -54,9 +54,10 @@ namespace PokerCore.Model
         {
             if (gameRules.MaxPlayers < players.Count)
             {
-                players.Add(new Player(name));
+                players.Add(players.Count, new Player(name));
+                return true;
             }
-            return true;
+            return false;
         }
 
     }
