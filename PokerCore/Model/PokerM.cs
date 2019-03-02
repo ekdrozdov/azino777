@@ -44,7 +44,6 @@ namespace PokerCore.Model
 
         public int Bank2 => throw new NotImplementedException();
 
-        ReactiveCommand<string, bool> ITableReal.TryConnect => throw new NotImplementedException();
 
         public IEnumerable<int> GetStrongestCombination()
         {
@@ -56,9 +55,9 @@ namespace PokerCore.Model
             if (gameRules.MaxPlayers < players.Count)
             {
                 players.Add(new Player(name));
-                return true;
             }
-            return false;
+            return true;
         }
+
     }
 }
