@@ -38,7 +38,7 @@ namespace PokerCore.Model
         public void Shuffle()
         {
 
-            _restCards = _restCards.Sort
+            //_restCards = _restCards.Sort();
         }
     }
 

@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using ReactiveUI;
 using PokerCore.Model;
+using System.Reactive;
 
 namespace PokerCore.ViewModel
 {
-    public class PokerVM : ReactiveObject, ITableReal
+    public class PokerVM : ReactiveObject, ITableVM
     {
         public PokerVM(PokerM m)
         {
             pokerM = m;
-            TryConnect = ReactiveCommand.Create<string, bool>(x => pokerM.TryConnect(x));
+            tryConnect = ReactiveCommand.Create<string, bool>(x => pokerM.TryConnect(x));
         }
 
         private PokerM pokerM;
         public IGameRules Rules { get => pokerM.Rules; set => throw new NotImplementedException(); }
 
-        public ReactiveCommand<string, bool> TryConnect { get; }
+        
 
         public Dictionary<int, ICard> HandCards => throw new NotImplementedException();
 
@@ -42,6 +43,9 @@ namespace PokerCore.ViewModel
         public int Bank => throw new NotImplementedException();
 
         public int Bank2 => throw new NotImplementedException();
+
+        ReactiveCommand<string, bool> tryConnect;
+        public ReactiveCommand<string, bool> TryConnect { get => tryConnect; }
 
         public IEnumerable<int> GetStrongestCombination()
         {

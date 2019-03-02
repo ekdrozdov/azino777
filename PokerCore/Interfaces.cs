@@ -54,12 +54,16 @@ namespace PokerCore
         IEnumerable<int> GetStrongestCombination();
         IGameRules Rules { get; }
 
-        void TryConnect(string name);
     }
 
     public interface IVisibility
     {
         Visibility CurrentVisibility { get; }
+    }
+
+    public interface ITableVM : ITableReal
+    {
+        ReactiveCommand<string, bool> TryConnect { get; }
     }
 
     public interface ITableForPlayer : ITableBase
