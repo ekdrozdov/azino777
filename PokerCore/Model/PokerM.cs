@@ -5,28 +5,28 @@ using ReactiveUI;
 
 namespace PokerCore.Model
 {
-    public class PokerM : ITableReal
+    public class PokerM
     {
-        Dictionary<int, Player> players;
-        GameRules gameRules;
+        Dictionary<int, Player> _players;
+        GameRules _gameRules;
+        List<Card> _boardCards;
+        CardDeck _cardDeck;
+        int _curPlayer;
+        int _dealer;
+        int _smallBlind;
+        int _bigBlind;
+        int _curBet;
+        int _curRaise;
+        int _allBank;
+        List<(int, int)> _dividedBanks;
 
         public PokerM(string name, int maxplayer, int startbank)
         {
-            bank = startbank;
-            gameRules = new GameRules(maxplayer);
-            players = new Dictionary<int, Player>(maxplayer);
-            players[0] = new Player(name);
+            _allBank = startbank;
+            //gameRules = new GameRules(maxplayer);
+            //players = new Dictionary<int, Player>(maxplayer);
+            //players[0] = new Player(name);
         }
-
-        public Dictionary<int, ICard> HandCards => throw new NotImplementedException();
-
-        public ICardDeck Deck => throw new NotImplementedException();
-
-        public IGameRules Rules { get => gameRules; }
-
-        public Dictionary<int, IPlayerState> Players => throw new NotImplementedException();
-
-        public IEnumerable<ICard> BoardCards => throw new NotImplementedException();
 
         public int Dealer => throw new NotImplementedException();
 
@@ -39,26 +39,54 @@ namespace PokerCore.Model
         public int CurrentRaise => throw new NotImplementedException();
 
         public int CurrentBet => throw new NotImplementedException();
-        int bank;
-        public int Bank { get => bank; }
 
-        public int Bank2 => throw new NotImplementedException();
+        public int AllBank { get => _allBank; }
 
+        public List<(int, int)> DividedBanks { get; }
+
+        public ICardDeck Deck => throw new NotImplementedException();
+
+        public GameRules Rules { get => _gameRules; }
+
+        public Dictionary<int, PlayerState> Players => throw new NotImplementedException();
+
+        public List<ICard> BoardCards => throw new NotImplementedException();
+
+        List<(int, (ICard, ICard))> HandCards;
 
         public IEnumerable<int> GetStrongestCombination()
         {
             throw new NotImplementedException();
         }
 
-        public bool TryConnect(string name)
+        public void AddBank()
         {
-            if (gameRules.MaxPlayers < players.Count)
-            {
-                players.Add(players.Count, new Player(name));
-                return true;
-            }
+
+        }
+
+        public void BankDivision()
+        {
+
+        }
+
+        public bool EndAction()
+        {
             return false;
         }
 
+        public bool TryConnect(string name)
+        {
+            //if (gameRules.MaxPlayers < players.Count)
+            //{
+            //    players.Add(players.Count, new Player(name));
+            //    return true;
+            //}
+            return false;
+        }
+
+        public void Disconnect(int key)
+        {
+
+        }
     }
 }

@@ -5,50 +5,19 @@ using System.Reactive;
 
 namespace PokerCore.Model
 {
-    class Player : IPlayerState
+    class Player
     {
-        public string Name { get; set; }
+        PlayerState _myState;
+        public PlayerState MyState { get; set; }
 
-        public int Cash { get; set; }
+        (Card, Card) _handCards;
+        public (ICard, ICard) HandCards => throw new NotImplementedException();
 
-        public int PlayerBet { get; set; }
+        TableForPlayer _table;
 
-        public int ChairNumber { get; set; }
-
-        public PlayerGameState State { get; set; }
-
-        public ITableBase TableState => throw new NotImplementedException();
-
-        public IEnumerable<ICard> HandCards => throw new NotImplementedException();
-
-        public Dictionary<int, IPlayerState> Players => throw new NotImplementedException();
-
-        public IEnumerable<ICard> BoardCards => throw new NotImplementedException();
-
-        public int Dealer => throw new NotImplementedException();
-
-        public int CurPlayer => throw new NotImplementedException();
-
-        public int SmallBlind => throw new NotImplementedException();
-
-        public int BigBlind => throw new NotImplementedException();
-
-        public int CurrentRaise => throw new NotImplementedException();
-
-        public int CurrentBet => throw new NotImplementedException();
-
-        public int Bank => throw new NotImplementedException();
-
-        public int Bank2 => throw new NotImplementedException();
-
-        public Player(string name)
+        public Player(string name, int cash)
         {
-            Name = name;
-        }
-
-        public void SetName()
-        {
-            throw new NotImplementedException();
+            //Name = name;
         }
 
         public void AddCash(int cash)
