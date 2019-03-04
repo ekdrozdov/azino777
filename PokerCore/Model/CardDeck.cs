@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PokerCore.Model
 {
-    public class CardDeck : ICardDeck
+    public class CardDeck
     {
         public CardDeck()
         {

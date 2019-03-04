@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PokerCore.Model
 {
-    public class GameRules : IGameRules
+    public class GameRules
     {
         public GameRules(int maxPlayers)
         {

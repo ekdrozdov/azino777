@@ -4,6 +4,7 @@ using System.Text;
 using ReactiveUI;
 using System.Reactive;
 
+//DEPRECATED
 namespace PokerCore
 {
     public enum CardSuit { Spades, Dimonds, Hearts, Clubs };
