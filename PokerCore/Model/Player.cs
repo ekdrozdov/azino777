@@ -5,7 +5,7 @@ using System.Reactive;
 
 namespace PokerCore.Model
 {
-    class Player
+    public class Player
     {
         PlayerState _myState;
         public PlayerState MyState { get; set; }

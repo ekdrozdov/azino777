@@ -4,65 +4,37 @@ using System.Text;
 
 namespace PokerCore.Model
 {
-    public class TableForPlayer : IPlayer
+    public class TableForPlayer
     {
+        PokerM _playerView;
+
         public TableForPlayer()
         {
 
         }
+        public int Dealer { get => _playerView.Dealer; }
 
-        Dictionary<int, PlayerState> _players;
-        public Dictionary<int, IPlayerState> Players { get; }
+        public int CurPlayer { get; }
 
-        List<Card> _boardCards;
-        public IEnumerable<ICard> BoardCards { get => _boardCards; }
+        public int SmallBlind { get; }
 
-        int _dealer;
-        public int Dealer { get => _dealer; }
+        public int BigBlind { get; }
 
-        int _curPlayer;
-        public int CurPlayer { get => _curPlayer; }
+        public int CurrentRaise { get; set; }
 
-        int _smallBlind;
-        public int SmallBlind { get => _smallBlind; }
+        public int CurrentBet { get; set; }
 
-        int _bigBlind;
-        public int BigBlind { get => _bigBlind; }
+        public List<int> Banks { get; set; }
 
-        int _currentRaise;
-        public int CurrentRaise { get => _currentRaise; }
+        public Dictionary<int, PlayerState> Players { get; }
 
-        int _currentBet;
-        public int CurrentBet { get => _currentBet; }
+        public List<ICard> BoardCards { get; }
 
-        int _bank;
-        public int Bank { get => _bank; }
+        public (ICard, ICard) HandCards { get; }
 
-        int _bank2;
-        public int Bank2 { get => _bank2; }
-
-        TableBase _tableState;
-        public ITableBase TableState { get => _tableState; }
-
-        List<Card> _handCards;
-        public IEnumerable<ICard> HandCards { get => _handCards; }
-
-        public void SetName()
-        { }
-        public void AddCash(int cash)
-        { }
-        public void Fold()
-        { }
-        public Unit Call()
-        { return new Unit(); }
-        public void Check()
+        public void AddBank(int cash)
         {
 
         }
-        public void Raise(int raise)
-        { }
-        public void AllIn()
-        { }
-
     }
 }
