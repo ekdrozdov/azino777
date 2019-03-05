@@ -11,7 +11,7 @@ namespace PokerCore.Model
         public PlayerState MyState { get; set; }
 
         (Card, Card) _handCards;
-        public (ICard, ICard) HandCards => throw new NotImplementedException();
+        public (Card, Card) HandCards { get => _handCards; }
 
         TableForPlayer _table;
 

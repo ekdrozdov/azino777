@@ -8,33 +8,33 @@ namespace PokerCore.Model
     {
         PokerM _playerView;
 
-        public TableForPlayer()
+        public TableForPlayer(PokerM playerView)
         {
-
+            _playerView = playerView;
         }
         public int Dealer { get => _playerView.Dealer; }
 
-        public int CurPlayer { get; }
+        public int CurPlayer { get => _playerView.CurPlayer; }
 
-        public int SmallBlind { get; }
+        public int SmallBlind { get => _playerView.SmallBlind; }
 
-        public int BigBlind { get; }
+        public int BigBlind { get => _playerView.BigBlind; }
 
-        public int CurrentRaise { get; set; }
+        public int CurrentRaise { get => _playerView.CurrentRaise; set { _playerView.CurrentRaise = value; } }
 
-        public int CurrentBet { get; set; }
+        public int CurrentBet { get => _playerView.CurrentBet; set { _playerView.CurrentBet = value; } }
 
-        public List<int> Banks { get; set; }
+        public List<(int, int)> Banks { get => _playerView.DividedBanks; set { _playerView.DividedBanks = value; } }
 
-        public Dictionary<int, PlayerState> Players { get; }
+        public Dictionary<int, Player> Players { get => _playerView.Players; }
 
-        public List<ICard> BoardCards { get; }
+        public List<Card> BoardCards { get => _playerView.BoardCards; }
 
-        public (ICard, ICard) HandCards { get; }
+        public (Card, Card) HandCards { get => _playerView.Players[CurPlayer].HandCards; }
 
-        public void AddBank(int cash)
+        public void AddBank(int bankBeforeBet)
         {
-
+            _playerView.DividedBanks.Add((_playerView.CurPlayer, bankBeforeBet));
         }
     }
 }
