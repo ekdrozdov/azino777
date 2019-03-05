@@ -3,14 +3,25 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Text;
 using ReactiveUI;
+using PokerCore.Model;
 
 namespace PokerCore.ViewModel
 {
-    class AI
+    public class AI : Player
     {
-        private ITableStateForPlayer table;
+        enum gameState { preFlop, Flop, Tern, River, Kciker }
+        enum playerState { fold, check, call, raise }
 
-        private double TrustRatio = 0.5;
+        Dictionary<int, double> _aggresivity;
+        double _myAggresive = 0.5;
+
+        double _firstChoiseKoef, _secondChoiseKoef, _thirdChoiseKoef;
+
+        private double _trustRatio = 0.5;
+
+        public AI(string name, int cash) : base(name, cash)
+        {
+        }
 
         private double GetOuts()
         {
@@ -36,9 +47,25 @@ namespace PokerCore.ViewModel
             return 0;
         }
 
+
         private void MakeTurn()
+        {
+            //моделирование многих ситуаций
+            Dictionary<int, (Card, Card)> Cards;
+            Dictionary<int, (PlayerState, int)> PlayersInfo;
+            gameState curState;
+
+        }
+
+        private double GetWinProb()
         {
 
         }
+
+        private void UpdateAggresivity()
+        {
+
+        }
+
     }
 }
