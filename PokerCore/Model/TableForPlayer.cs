@@ -6,7 +6,7 @@ namespace PokerCore.Model
 {
     public class TableForPlayer
     {
-        public PokerM _playerView;
+        PokerM _playerView;
 
         public TableForPlayer()
         {
@@ -20,11 +20,11 @@ namespace PokerCore.Model
 
         public int BigBlind { get => _playerView.BigBlind; }
 
-        public int CurrentRaise { get => _playerView.CurrentRaise; set; }
+        public int CurrentRaise { get => _playerView.CurrentRaise; set { _playerView.CurrentRaise = value; } }
 
-        public int CurrentBet { get => _playerView.CurrentBet; set; }
+        public int CurrentBet { get => _playerView.CurrentBet; set { _playerView.CurrentBet = value; } }
 
-        public List<(int, int)> Banks { get => _playerView.DividedBanks; set; }
+        public List<(int, int)> Banks { get => _playerView.DividedBanks; set { _playerView.DividedBanks = value; } }
 
         public Dictionary<int, Player> Players { get => _playerView.Players; }
 
@@ -32,9 +32,9 @@ namespace PokerCore.Model
 
         public (Card, Card) HandCards { get => _playerView.Players[CurPlayer].HandCards; }
 
-        public void AddBank(int cash)
+        public void AddBank(int bankBeforeBet)
         {
-
+            _playerView.DividedBanks.Add((_playerView.CurPlayer, bankBeforeBet));
         }
     }
 }
