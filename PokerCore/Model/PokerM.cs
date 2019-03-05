@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using ReactiveUI;
+using System.Linq;
 
 namespace PokerCore.Model
 {
@@ -545,12 +546,53 @@ namespace PokerCore.Model
 
         public void BankDivision()
         {
-
+            List<int> winners = GetStrongestCombination().AsList<int>;
+            GetStrongestCombination();
         }
 
         public bool EndAction()
         {
-            return false;
+            int bet = _players[0].MyState.PlayerBet;
+            bool lastStage = true;
+            // Check, if this Action was last in round
+            foreach (KeyValuePair<int, Player> player in _players)
+            {
+                if (player.Value.MyState.State == PlayerGameState.In && player.Value.MyState.PlayerBet != bet)
+                {
+                    lastStage = false;
+                    continue;
+                }
+            }
+
+            if (lastStage)
+            { switch (_boardCards.Count)
+                {
+                    case 0:
+                        _cardDeck.Shuffle();
+                        for (int i = 0; i < 3; i++)
+                            _boardCards.Add(_cardDeck.TakeCard());
+                        for (int i = _dealer; i < _players.Count; i++)
+                        {
+
+                        }
+                        IEnumerator<Player> h = _players.GetEnumerator;
+                        _curPlayer = ;
+                        break;
+
+                    case 5:
+
+                        break;
+
+                    default:
+                        _boardCards.Add(_cardDeck.TakeCard());
+                        break;
+                }
+                return true;
+            }
+            else
+            {
+
+            }
         }
 
         public bool TryConnect(string name, int cash)
