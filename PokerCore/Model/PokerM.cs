@@ -74,19 +74,19 @@ namespace PokerCore.Model
             return false;
         }
 
-        public bool TryConnect(string name)
+        public bool TryConnect(string name, int cash)
         {
-            //if (gameRules.MaxPlayers < players.Count)
-            //{
-            //    players.Add(players.Count, new Player(name));
-            //    return true;
-            //}
+            if (_players.Count  < _gameRules.MaxPlayers)
+            {
+                _players.Add(_players.Count, new Player(name, cash));
+                return true;
+            }
             return false;
         }
 
         public void Disconnect(int key)
         {
-
+            _players.Remove(key);
         }
 
         public string GetTextureName(CardRank rank, CardSuit suit)

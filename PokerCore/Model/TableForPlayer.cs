@@ -6,7 +6,7 @@ namespace PokerCore.Model
 {
     public class TableForPlayer
     {
-        PokerM _playerView;
+        public PokerM _playerView;
 
         public TableForPlayer()
         {
@@ -24,7 +24,7 @@ namespace PokerCore.Model
 
         public int CurrentBet { get => _playerView.CurrentBet; set; }
 
-        public List<int> Banks { get; set; }
+        public List<(int, int)> Banks { get => _playerView.DividedBanks; set; }
 
         public Dictionary<int, Player> Players { get => _playerView.Players; }
 
