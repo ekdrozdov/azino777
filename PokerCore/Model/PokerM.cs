@@ -36,13 +36,13 @@ namespace PokerCore.Model
 
         public int BigBlind { get => _bigBlind; }
 
-        public int CurrentRaise { get => _curRaise; }
+        public int CurrentRaise { get => _curRaise; set => _curRaise = value; }
 
-        public int CurrentBet { get => _curBet; }
+        public int CurrentBet { get => _curBet; set => _curBet = value; }
 
         public int AllBank { get => _allBank; }
 
-        public List<(int, int)> DividedBanks { get => _dividedBanks; }
+        public List<(int, int)> DividedBanks { get => _dividedBanks; set => _dividedBanks = value; }
 
         public CardDeck Deck { get => _cardDeck; }
 
