@@ -36,7 +36,7 @@ namespace PokerGraphics
         {
             pokerGame = new PokerCore.Model.PokerM(name, 10, startbank);
             pokerTable = new PokerVM(pokerGame);
-            pokerGame.TryConnect("Илья");
+            pokerGame.TryConnect("Илья", 100);
         }
 
         public MainWindow()
