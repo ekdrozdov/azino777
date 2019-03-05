@@ -59,11 +59,6 @@ namespace PokerCore.Model
             throw new NotImplementedException();
         }
 
-        public void AddBank(int bankBeforeBet)
-        {
-            _dividedBanks.Add((_curPlayer, bankBeforeBet));
-        }
-
         public void BankDivision()
         {
 
