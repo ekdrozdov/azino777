@@ -15,7 +15,7 @@ namespace PokerCore.ViewModel
         (Card, Card) _handCards;
         public (Card, Card) HandCards { get => _handCards; set => this.RaiseAndSetIfChanged(ref _handCards, value); }
 
-        TableForPlayer _table;
+        protected TableForPlayer _table;
 
         public Player(string name, int cash)
         {

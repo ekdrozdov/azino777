@@ -24,6 +24,7 @@ namespace PokerCore
         K   = 13,
         A   = 14
     };
+    public enum GameState { fold = 0, check, call, raise }
     public enum PlayerGameState { In, Out, AllIn }
     public enum Visibility { Visible, Invisible }
     public interface ICard
