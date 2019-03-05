@@ -28,31 +28,31 @@ namespace PokerCore.Model
             //players[0] = new Player(name);
         }
 
-        public int Dealer => throw new NotImplementedException();
+        public int Dealer { get => _dealer; }
 
-        public int CurPlayer => throw new NotImplementedException();
+        public int CurPlayer { get => _curPlayer; }
 
-        public int SmallBlind => throw new NotImplementedException();
+        public int SmallBlind { get => _smallBlind; }
 
-        public int BigBlind => throw new NotImplementedException();
+        public int BigBlind { get => _bigBlind; }
 
-        public int CurrentRaise => throw new NotImplementedException();
+        public int CurrentRaise { get => _curRaise; }
 
-        public int CurrentBet => throw new NotImplementedException();
+        public int CurrentBet { get => _curBet; }
 
         public int AllBank { get => _allBank; }
 
-        public List<(int, int)> DividedBanks { get; }
+        public List<(int, int)> DividedBanks { get => _dividedBanks; }
 
-        public ICardDeck Deck => throw new NotImplementedException();
+        public CardDeck Deck { get => _cardDeck; }
 
         public GameRules Rules { get => _gameRules; }
 
-        public Dictionary<int, PlayerState> Players => throw new NotImplementedException();
+        public Dictionary<int, Player> Players { get => _players; }
 
-        public List<ICard> BoardCards => throw new NotImplementedException();
+        public List<Card> BoardCards { get => _boardCards; }
 
-        List<(int, (ICard, ICard))> HandCards;
+        List<(int, (Card, Card))> HandCards;
 
         public IEnumerable<int> GetStrongestCombination()
         {
