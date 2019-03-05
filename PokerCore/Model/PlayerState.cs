@@ -6,10 +6,7 @@ namespace PokerCore.Model
 {
     public class PlayerState
     {
-        public PlayerState(string name, int cash)
-        {
-
-        }
+        public PlayerState(string name, int cash) { _name = name; _cash = cash; }
 
         string _name;
         public string Name { get => _name; }
