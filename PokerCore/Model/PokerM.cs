@@ -546,12 +546,25 @@ namespace PokerCore.Model
 
         public void BankDivision()
         {
-            List<int> winners = GetStrongestCombination().AsList<int>;
-            GetStrongestCombination();
+            Dictionary<int, PlayerState> pretendents = new Dictionary<int, PlayerState>();
+            foreach (KeyValuePair<int, Player> player in _players)
+                pretendents.Add(player.Key, player.Value.MyState);
+            List<int> winners = GetStrongestCombination(pretendents);
+            foreach (int winner in winners)
+            {
+                foreach ((int,int) divider in _dividedBanks)
+                {
+                    
+                }
+            }
+
         }
 
         public bool EndAction()
         {
+            (Card, Card) playerCards;
+            List<int> keys = _players.Keys.ToList();
+            int addKey;
             int bet = _players[0].MyState.PlayerBet;
             bool lastStage = true;
             // Check, if this Action was last in round
@@ -568,30 +581,78 @@ namespace PokerCore.Model
             { switch (_boardCards.Count)
                 {
                     case 0:
-                        _cardDeck.Shuffle();
-                        for (int i = 0; i < 3; i++)
+                        // Lay out 3 cards on board
+                        for (int i = 0; i < 3; i++) 
                             _boardCards.Add(_cardDeck.TakeCard());
-                        for (int i = _dealer; i < _players.Count; i++)
-                        {
 
-                        }
-                        IEnumerator<Player> h = _players.GetEnumerator;
-                        _curPlayer = ;
+                        // Give a turn to a player left to dealer
+                        _curPlayer = TakeNextKey(_dealer); 
                         break;
 
                     case 5:
+                        // determinate the winners and give them cash
+                        BankDivision(); 
+
+                        // clear board from cards
+                        _boardCards.Clear();
+
+                        // Get new deck andd shuffle cards to start new game
+                        _cardDeck = new CardDeck();
+                        _cardDeck.Shuffle();
+
+                        // give each player new cards if he have cash, else cick him
+                        foreach (KeyValuePair<int, Player> player in _players)
+                            if (player.Value.MyState.Cash < _bigBlind)
+                                Disconnect(player.Key);
+                            else {
+                                playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+                                HandCards.Add((player.Key, playerCards));
+                                player.Value.HandCards = (playerCards);
+                            }
+
+                        // set new dealer left to old dealer
+                        _dealer = TakeNextKey(_dealer);
+
+                        // make mandatory bets
+                        addKey = TakeNextKey(_dealer);
+                        _players[addKey].MyState.Cash -= _smallBlind;
+                        addKey = TakeNextKey(addKey);
+                        _players[addKey].MyState.Cash -= _bigBlind;
+
+                        // choose first player
+                        _curPlayer = TakeNextKey(addKey); 
 
                         break;
 
                     default:
+                        // Lay out 1 card on board 
                         _boardCards.Add(_cardDeck.TakeCard());
+
+                        // Give a turn to a player left to dealer
+                        _curPlayer = TakeNextKey(_dealer); 
                         break;
                 }
-                return true;
+
             }
             else
             {
+                // search for player in game
+                do
+                {
+                    addKey = TakeNextKey(_dealer);
+                } while (_players[addKey].MyState.State != PlayerGameState.In);
+                _curPlayer = addKey;
+            }
 
+            return true;
+            int TakeNextKey(int key) // return the key of next player
+            {
+                int nextKey;
+                int playerInd = keys.IndexOf(key);
+                if (playerInd < _players.Count - 1)
+                    nextKey = keys[playerInd + 1];
+                else nextKey = keys[0];
+                return nextKey;
             }
         }
 
