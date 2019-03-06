@@ -546,18 +546,53 @@ namespace PokerCore.Model
 
         public void BankDivision()
         {
-            Dictionary<int, PlayerState> pretendents = new Dictionary<int, PlayerState>();
+            List<int> pretendents = new List<int>();
             foreach (KeyValuePair<int, Player> player in _players)
-                pretendents.Add(player.Key, player.Value.MyState);
-            List<int> winners = GetStrongestCombination(pretendents);
-            foreach (int winner in winners)
+                pretendents.Add(player.Key);
+            List<int> winners;
+            int personCash;
+            bool findSomebody;
+
+            while (_dividedBanks.Count != 0)
             {
-                foreach ((int,int) divider in _dividedBanks)
+                findSomebody = false;
+                winners = GetStrongestCombination(pretendents);
+                for (int i = 0; i < _dividedBanks.Count && !findSomebody; i++)
+                    for (int j = 0; j < winners.Count && !findSomebody; j++)
+                        if (_dividedBanks[i].Item1.Equals(winners[j]))
+                        {
+                           // get winning for each player
+                            personCash = _dividedBanks[i].Item2 / winners.Count;
+                            // delete it from bank
+                            _allBank -= DividedBanks[i].Item2;
+                            // gave every winner his money
+                            foreach (int winner in winners)
+                                _players[winner].MyState.Cash += personCash;
+                            // clear the winners list to start new iteration
+                            winners.Clear();
+
+                            // remove players, that wouldn't win from pretendents and _dividedBanks
+                            for (int c = 0; c < i; c++)
+                            {
+                                _dividedBanks.RemoveAt(c);
+                                pretendents.Remove(_dividedBanks[c].Item1);
+
+                            }
+                            // Correct _dividedBanks for next stages
+                            _dividedBanks.ForEach(delegate ((int, int) banks) { banks.Item2 -= _dividedBanks[0].Item2; });
+                            _dividedBanks.RemoveAt(0);
+                            
+                            // marks that bank was divided
+                            findSomebody = true;
+                        }
+                if (!findSomebody)
                 {
-                    
+                    _dividedBanks.Clear();
+                    personCash = _allBank / winners.Count;
+                    foreach (int winner in winners)
+                        _players[winner].MyState.Cash += personCash;
                 }
             }
-
         }
 
         public bool EndAction()
