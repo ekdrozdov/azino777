@@ -617,8 +617,13 @@ namespace PokerCore.Model
                 {
                     case 0:
                         // Lay out 3 cards on board
-                        for (int i = 0; i < 3; i++) 
+                        for (int i = 0; i < 3; i++)
                             _boardCards.Add(_cardDeck.TakeCard());
+
+                        // each player's bet and board max bet set to 0
+                        foreach (KeyValuePair<int, Player>player in _players)
+                            player.Value.MyState.PlayerBet = 0;
+                        _curBet = 0;
 
                         // Give a turn to a player left to dealer
                         _curPlayer = TakeNextKey(_dealer); 
@@ -635,7 +640,7 @@ namespace PokerCore.Model
                         _cardDeck = new CardDeck();
                         _cardDeck.Shuffle();
 
-                        // give each player new cards if he have cash, else cick him
+                        // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
                         foreach (KeyValuePair<int, Player> player in _players)
                             if (player.Value.MyState.Cash < _bigBlind)
                                 Disconnect(player.Key);
@@ -643,16 +648,25 @@ namespace PokerCore.Model
                                 playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
                                 HandCards.Add((player.Key, playerCards));
                                 player.Value.HandCards = (playerCards);
+                                player.Value.MyState.State = PlayerGameState.In;
                             }
 
                         // set new dealer left to old dealer
                         _dealer = TakeNextKey(_dealer);
 
+                        // each player's bet and board max bet set to 0, also Raise
+                        foreach (KeyValuePair<int, Player> player in _players)
+                            player.Value.MyState.PlayerBet = 0;
+                        _curBet = 0;
+                        _curRaise = 0;
+
                         // make mandatory bets
                         addKey = TakeNextKey(_dealer);
                         _players[addKey].MyState.Cash -= _smallBlind;
+                        _players[addKey].MyState.PlayerBet = _smallBlind;
                         addKey = TakeNextKey(addKey);
                         _players[addKey].MyState.Cash -= _bigBlind;
+                        _players[addKey].MyState.PlayerBet = _bigBlind;
 
                         // choose first player
                         _curPlayer = TakeNextKey(addKey); 
@@ -662,6 +676,11 @@ namespace PokerCore.Model
                     default:
                         // Lay out 1 card on board 
                         _boardCards.Add(_cardDeck.TakeCard());
+
+                        // each player's bet and board max bet set to 0
+                        foreach (KeyValuePair<int, Player> player in _players)
+                            player.Value.MyState.PlayerBet = 0;
+                        _curBet = 0;
 
                         // Give a turn to a player left to dealer
                         _curPlayer = TakeNextKey(_dealer); 
