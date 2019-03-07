@@ -18,36 +18,49 @@ namespace PokerCore.Model
         public Player(string name, int cash)
         {
             //Name = name;
+            _myState.Cash = cash;
         }
 
         public void AddCash(int cash)
         {
-            throw new NotImplementedException();
+            _myState.Cash = cash;
         }
 
         public void Fold()
         {
-            throw new NotImplementedException();
+            _myState.PlayerBet = 0;
         }
 
-        public Unit Call()
+        public Unit Call(int bet)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int BetDifferense = bet - _myState.PlayerBet;
+                if (_myState.Cash >= BetDifferense)
+                {
+                    _myState.Cash -= BetDifferense;
+                    _myState.PlayerBet += BetDifferense;
+                }
+            }
+            catch {
+                // "У вас недостаточно средств, чтобы сделать ставку"
+            }
+            
         }
 
-        public void Check()
+        public void Check(int bet)
         {
-            throw new NotImplementedException();
+            if (bet == 0) _myState.PlayerBet = 0;
         }
 
         public void Raise(int raise)
         {
-            throw new NotImplementedException();
+            _myState.PlayerBet = raise;
         }
 
         public void AllIn()
         {
-            throw new NotImplementedException();
+            _myState.PlayerBet = _myState.Cash;
         }
     }
 }
