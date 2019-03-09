@@ -6,7 +6,7 @@ namespace PokerCore.Model
 {
     public class CycleListNode
     {
-        int val { get; }
+        public int val { get; }
         public CycleListNode Next { get; set; }
         public CycleListNode(int _val, CycleListNode a)
         {
@@ -41,6 +41,17 @@ namespace PokerCore.Model
             {
                 _data.Add(new CycleListNode(_val, new CycleListNode()));
             }
+        }
+
+        public void AddRange(List<int> a)
+        {
+            foreach (int el in a)
+                AddLast(el);
+        }
+
+        public CycleListNode GetNode(int elem)
+        {
+            return _data.Find(x => x.val == elem);
         }
     }
 }

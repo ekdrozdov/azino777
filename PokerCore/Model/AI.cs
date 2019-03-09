@@ -70,16 +70,15 @@ namespace PokerCore.ViewModel
             Parallel.For(0, nThreads, ind =>
             {
                 //инициализация
-                List<int> threadBanks;
+                List<(int,int)> threadBanks;
                 Dictionary<int, (Card, Card)> Cards = new Dictionary<int, (Card, Card)>();
-                Dictionary<int, PlayerState> PlayersInfo = new Dictionary<int, PlayerState>();//плохо
+                Dictionary<int, Player> PlayersInfo = new Dictionary<int, Player>();//плохо
                 gameTurn curState;
-                List<int> playersOrder;
+                CycleList playersOrder = new CycleList();
 
                 threadBanks = _table.Banks;
                 curState = gameTurn.preFlop;//придумать как выбрать текущую
                 PlayersInfo = _table.Players;
-                playersOrder = new List<int>(PlayersInfo.Count);
                 foreach (var item in PlayersInfo)//плохо
                 {
                     if (item.Key == MyState.MySeat)
@@ -89,19 +88,17 @@ namespace PokerCore.ViewModel
                 }
                 playersOrder.AddRange(PlayersInfo.SkipWhile(x => x.Key != MyState.MySeat).Select(x => x.Key).ToList());
                 playersOrder.AddRange(PlayersInfo.TakeWhile(x => x.Key != MyState.MySeat).Select(x => x.Key).ToList());
-                int i, n = playersOrder.Count;
+                var curPlayer = playersOrder.GetNode(MyState.MySeat);
                 //поехали моделировать
                 while (curState != gameTurn.Kciker)
                 {
-                    i = 0;
                     while (StateEnd())
                     {
-                        PlayersInfo[playersOrder[i % n]].
+                        
 
-
+                        curPlayer = curPlayer.Next;
                     }
                 }
-                //
             });
         }
 
