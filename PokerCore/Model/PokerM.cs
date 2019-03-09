@@ -620,13 +620,7 @@ namespace PokerCore.Model
                         for (int i = 0; i < 3; i++)
                             _boardCards.Add(_cardDeck.TakeCard());
 
-                        // each player's bet and board max bet set to 0
-                        foreach (KeyValuePair<int, Player>player in _players)
-                            player.Value.MyState.PlayerBet = 0;
-                        _curBet = 0;
-
-                        // Give a turn to a player left to dealer
-                        _curPlayer = TakeNextKey(_dealer); 
+                        NewStageStart();
                         break;
 
                     case 5:
@@ -647,7 +641,7 @@ namespace PokerCore.Model
                             else {
                                 playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
                                 HandCards.Add((player.Key, playerCards));
-                                player.Value.HandCards = (playerCards);
+                                //player.Value.HandCards = (playerCards);
                                 player.Value.MyState.State = PlayerGameState.In;
                             }
 
@@ -655,9 +649,7 @@ namespace PokerCore.Model
                         _dealer = TakeNextKey(_dealer);
 
                         // each player's bet and board max bet set to 0, also Raise
-                        foreach (KeyValuePair<int, Player> player in _players)
-                            player.Value.MyState.PlayerBet = 0;
-                        _curBet = 0;
+                        NewStageStart();
                         _curRaise = 0;
 
                         // make mandatory bets
@@ -677,13 +669,7 @@ namespace PokerCore.Model
                         // Lay out 1 card on board 
                         _boardCards.Add(_cardDeck.TakeCard());
 
-                        // each player's bet and board max bet set to 0
-                        foreach (KeyValuePair<int, Player> player in _players)
-                            player.Value.MyState.PlayerBet = 0;
-                        _curBet = 0;
-
-                        // Give a turn to a player left to dealer
-                        _curPlayer = TakeNextKey(_dealer); 
+                        NewStageStart();
                         break;
                 }
 
@@ -707,6 +693,17 @@ namespace PokerCore.Model
                     nextKey = keys[playerInd + 1];
                 else nextKey = keys[0];
                 return nextKey;
+            }
+
+            void NewStageStart()
+            {
+                // each player's bet and board max bet set to 0
+                foreach (KeyValuePair<int, Player> player in _players)
+                    player.Value.MyState.PlayerBet = 0;
+                _curBet = 0;
+
+                // Give a turn to a player left to dealer
+                _curPlayer = TakeNextKey(_dealer);
             }
         }
 
