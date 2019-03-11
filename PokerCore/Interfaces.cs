@@ -96,7 +96,7 @@ namespace PokerCore
         ITableBase TableState { get; }
         IEnumerable<ICard> HandCards { get; }
 
-        Unit Call();
+        void Call();
         void Fold();
         void Raise(int raise);
         void Check();
