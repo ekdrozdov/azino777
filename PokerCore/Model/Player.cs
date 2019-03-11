@@ -11,7 +11,7 @@ namespace PokerCore.Model
         public PlayerState MyState { get; set; }
 
         (Card, Card) _handCards;
-        public (Card, Card) HandCards { get => _handCards; }
+        public (Card, Card) HandCards { get => _handCards; set { _handCards = (value); } }
 
         TableForPlayer _table;
 

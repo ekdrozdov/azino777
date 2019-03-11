@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using ReactiveUI;
+using System.Linq;
 
 namespace PokerCore.Model
 {
@@ -21,12 +22,23 @@ namespace PokerCore.Model
         int _allBank;
         List<(int, int)> _dividedBanks;
 
-        public PokerM(string name, int maxplayer, int startbank)
+        public PokerM(string name, int startbank, int smallBlind, int bigBlind)
         {
-            _allBank = startbank;
-            //gameRules = new GameRules(maxplayer);
-            //players = new Dictionary<int, Player>(maxplayer);
-            //players[0] = new Player(name);
+            _players = new Dictionary<int, Player>();
+            _gameRules = new GameRules(10);
+            _boardCards = new List<Card>();
+            _dividedBanks = new List<(int, int)>();
+            _cardDeck = new CardDeck();
+
+            Player real = new Player(name, startbank);
+            _players.Add(0, real);
+            _curBet = 0;
+            _curRaise = bigBlind;
+            _allBank = 0;
+            _dealer = 0;
+            _curPlayer = 0;
+            _bigBlind = bigBlind;
+            _smallBlind = smallBlind;
         }
 
         public int Dealer { get => _dealer; }
@@ -545,12 +557,165 @@ namespace PokerCore.Model
 
         public void BankDivision()
         {
+            List<int> pretendents = new List<int>();
+            foreach (KeyValuePair<int, Player> player in _players)
+                pretendents.Add(player.Key);
+            List<int> winners;
+            int personCash;
+            bool findSomebody;
 
+            do
+            {
+                findSomebody = false;
+                winners = GetStrongestCombination().ToList();
+                for (int i = 0; i < _dividedBanks.Count && !findSomebody; i++)
+                    for (int j = 0; j < winners.Count && !findSomebody; j++)
+                        if (_dividedBanks[i].Item1.Equals(winners[j]))
+                        {
+                            // get winning for each player
+                            personCash = _dividedBanks[i].Item2 / winners.Count;
+                            // delete it from bank
+                            _allBank -= DividedBanks[i].Item2;
+                            // gave every winner his money
+                            foreach (int winner in winners)
+                                _players[winner].MyState.Cash += personCash;
+                            // clear the winners list to start new iteration
+                            winners.Clear();
+
+                            // remove players, that wouldn't win from pretendents and _dividedBanks
+                            for (int c = 0; c < i; c++)
+                            {
+                                _dividedBanks.RemoveAt(c);
+                                pretendents.Remove(_dividedBanks[c].Item1);
+
+                            }
+                            // Correct _dividedBanks for next stages
+                            _dividedBanks.ForEach(delegate ((int, int) banks) { banks.Item2 -= _dividedBanks[0].Item2; });
+                            _dividedBanks.RemoveAt(0);
+
+                            // marks that bank was divided
+                            findSomebody = true;
+                        }
+                if (!findSomebody)
+                {
+                    _dividedBanks.Clear();
+                    personCash = _allBank / winners.Count;
+                    foreach (int winner in winners)
+                        _players[winner].MyState.Cash += personCash;
+                }
+            } while (_dividedBanks.Count != 0);
         }
 
         public bool EndAction()
         {
-            return false;
+            (Card, Card) playerCards;
+            List<int> keys = _players.Keys.ToList();
+            int addKey;
+            int bet = _players[0].MyState.PlayerBet;
+            bool lastStage = true;
+            // Check, if this Action was last in round
+            foreach (KeyValuePair<int, Player> player in _players)
+            {
+                if (player.Value.MyState.State == PlayerGameState.In && player.Value.MyState.PlayerBet != bet)
+                {
+                    lastStage = false;
+                    break;
+                }
+            }
+
+            if (lastStage)
+            { switch (_boardCards.Count)
+                {
+                    case 0:
+                        // Lay out 3 cards on board
+                        for (int i = 0; i < 3; i++)
+                            _boardCards.Add(_cardDeck.TakeCard());
+
+                        NewStageStart();
+                        break;
+
+                    case 5:
+                        // determinate the winners and give them cash
+                        BankDivision(); 
+
+                        // clear board from cards
+                        _boardCards.Clear();
+
+                        // Get new deck andd shuffle cards to start new game
+                        _cardDeck = new CardDeck();
+                        _cardDeck.Shuffle();
+
+                        // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
+                        foreach (KeyValuePair<int, Player> player in _players)
+                            if (player.Value.MyState.Cash < _bigBlind)
+                                Disconnect(player.Key);
+                            else {
+                                playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+                                HandCards.Add((player.Key, playerCards));
+                                //player.Value.HandCards = (playerCards);
+                                player.Value.MyState.State = PlayerGameState.In;
+                            }
+
+                        // set new dealer left to old dealer
+                        _dealer = TakeNextKey(_dealer);
+
+                        // each player's bet and board max bet set to 0, also Raise set to bigBlind
+                        NewStageStart();
+                        _curRaise = _bigBlind;
+
+                        // make mandatory bets
+                        addKey = TakeNextKey(_dealer);
+                        _players[addKey].MyState.Cash -= _smallBlind;
+                        _players[addKey].MyState.PlayerBet = _smallBlind;
+                        addKey = TakeNextKey(addKey);
+                        _players[addKey].MyState.Cash -= _bigBlind;
+                        _players[addKey].MyState.PlayerBet = _bigBlind;
+
+                        // choose first player
+                        _curPlayer = TakeNextKey(addKey); 
+
+                        break;
+
+                    default:
+                        // Lay out 1 card on board 
+                        _boardCards.Add(_cardDeck.TakeCard());
+
+                        NewStageStart();
+                        break;
+                }
+
+            }
+            else
+            {
+                // search for player in game
+                do
+                {
+                    addKey = TakeNextKey(_dealer);
+                } while (_players[addKey].MyState.State != PlayerGameState.In);
+                _curPlayer = addKey;
+            }
+
+            return true;
+            int TakeNextKey(int key) // return the key of next player
+            {
+                int nextKey;
+                int playerInd = keys.IndexOf(key);
+                if (playerInd < _players.Count - 1)
+                    nextKey = keys[playerInd + 1];
+                else nextKey = keys[0];
+                return nextKey;
+            }
+
+            void NewStageStart()
+            {
+                // each player's bet and board max bet set to 0
+                foreach (KeyValuePair<int, Player> player in _players)
+                    player.Value.MyState.PlayerBet = 0;
+                _curBet = 0;
+
+                // Give a turn to a player left to dealer
+                _curPlayer = TakeNextKey(_dealer);
+            }
         }
 
         public bool TryConnect(string name, int cash)

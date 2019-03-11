@@ -24,7 +24,7 @@ namespace PokerCore.Model
 
         public List<Card> RestCards { get => _restCards; }
 
-        public ICard TakeCard()
+        public Card TakeCard()
         {
             Card Taken = _restCards[_restCards.Count - 1];
             _restCards.RemoveAt(_restCards.Count - 1);
