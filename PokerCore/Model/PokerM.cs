@@ -22,12 +22,23 @@ namespace PokerCore.Model
         int _allBank;
         List<(int, int)> _dividedBanks;
 
-        public PokerM(string name, int maxplayer, int startbank)
+        public PokerM(string name, int startbank, int smallBlind, int bigBlind)
         {
-            _allBank = startbank;
-            //gameRules = new GameRules(maxplayer);
-            //players = new Dictionary<int, Player>(maxplayer);
-            //players[0] = new Player(name);
+            _players = new Dictionary<int, Player>();
+            _gameRules = new GameRules(10);
+            _boardCards = new List<Card>();
+            _dividedBanks = new List<(int, int)>();
+            _cardDeck = new CardDeck();
+
+            Player real = new Player(name, startbank);
+            _players.Add(0, real);
+            _curBet = 0;
+            _curRaise = bigBlind;
+            _allBank = 0;
+            _dealer = 0;
+            _curPlayer = 0;
+            _bigBlind = bigBlind;
+            _smallBlind = smallBlind;
         }
 
         public int Dealer { get => _dealer; }
@@ -648,9 +659,9 @@ namespace PokerCore.Model
                         // set new dealer left to old dealer
                         _dealer = TakeNextKey(_dealer);
 
-                        // each player's bet and board max bet set to 0, also Raise
+                        // each player's bet and board max bet set to 0, also Raise set to bigBlind
                         NewStageStart();
-                        _curRaise = 0;
+                        _curRaise = _bigBlind;
 
                         // make mandatory bets
                         addKey = TakeNextKey(_dealer);
