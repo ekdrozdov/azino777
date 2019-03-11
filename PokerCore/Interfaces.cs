@@ -8,7 +8,22 @@ using System.Reactive;
 namespace PokerCore
 {
     public enum CardSuit { Spades, Dimonds, Hearts, Clubs };
-    public enum CardRank { c2, c3, c4, c5, c6, c7, c8, c9, c10, J, Q, K, A };
+    public enum CardRank
+    {
+        c2  = 2,
+        c3  = 3,
+        c4  = 4,
+        c5  = 5,
+        c6  = 6,
+        c7  = 7,
+        c8  = 8,
+        c9  = 9,
+        c10 = 10,
+        J   = 11,
+        Q   = 12,
+        K   = 13,
+        A   = 14
+    };
     public enum PlayerGameState { In, Out, AllIn }
     public enum Visibility { Visible, Invisible }
     public interface ICard
