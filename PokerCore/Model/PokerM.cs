@@ -567,7 +567,7 @@ namespace PokerCore.Model
             do
             {
                 findSomebody = false;
-                winners = GetStrongestCombination(pretendents);
+                winners = GetStrongestCombination().ToList();
                 for (int i = 0; i < _dividedBanks.Count && !findSomebody; i++)
                     for (int j = 0; j < winners.Count && !findSomebody; j++)
                         if (_dividedBanks[i].Item1.Equals(winners[j]))
