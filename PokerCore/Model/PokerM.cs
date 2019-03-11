@@ -564,7 +564,7 @@ namespace PokerCore.Model
             int personCash;
             bool findSomebody;
 
-            while (_dividedBanks.Count != 0)
+            do
             {
                 findSomebody = false;
                 winners = GetStrongestCombination(pretendents);
@@ -572,7 +572,7 @@ namespace PokerCore.Model
                     for (int j = 0; j < winners.Count && !findSomebody; j++)
                         if (_dividedBanks[i].Item1.Equals(winners[j]))
                         {
-                           // get winning for each player
+                            // get winning for each player
                             personCash = _dividedBanks[i].Item2 / winners.Count;
                             // delete it from bank
                             _allBank -= DividedBanks[i].Item2;
@@ -592,7 +592,7 @@ namespace PokerCore.Model
                             // Correct _dividedBanks for next stages
                             _dividedBanks.ForEach(delegate ((int, int) banks) { banks.Item2 -= _dividedBanks[0].Item2; });
                             _dividedBanks.RemoveAt(0);
-                            
+
                             // marks that bank was divided
                             findSomebody = true;
                         }
@@ -603,7 +603,7 @@ namespace PokerCore.Model
                     foreach (int winner in winners)
                         _players[winner].MyState.Cash += personCash;
                 }
-            }
+            } while (_dividedBanks.Count != 0);
         }
 
         public bool EndAction()
@@ -619,7 +619,7 @@ namespace PokerCore.Model
                 if (player.Value.MyState.State == PlayerGameState.In && player.Value.MyState.PlayerBet != bet)
                 {
                     lastStage = false;
-                    continue;
+                    break;
                 }
             }
 
