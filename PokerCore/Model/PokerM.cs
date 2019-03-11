@@ -52,8 +52,8 @@ namespace PokerCore.Model
         public int CurrentRaise { get => _curRaise; set => _curRaise = value; }
 
         public int CurrentBet { get => _curBet; set => _curBet = value; }
-
-        public int AllBank { get => _allBank; }
+              
+        public int AllBank { get => _allBank; set => _allBank = value; }
 
         public List<(int, int)> DividedBanks { get => _dividedBanks; set => _dividedBanks = value; }
 

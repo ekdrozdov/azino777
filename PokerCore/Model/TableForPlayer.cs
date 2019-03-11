@@ -24,8 +24,10 @@ namespace PokerCore.Model
 
         public int CurrentBet { get => _playerView.CurrentBet; set { _playerView.CurrentBet = value; } }
 
-        public List<(int, int)> Banks { get => _playerView.DividedBanks; set { _playerView.DividedBanks = value; } }
+        public int AllBank { get => _playerView.AllBank; set => _playerView.AllBank = value; }
 
+        public List<(int, int)> Banks { get => _playerView.DividedBanks; set { _playerView.DividedBanks = value; } }
+        
         public Dictionary<int, Player> Players { get => _playerView.Players; }
 
         public List<Card> BoardCards { get => _playerView.BoardCards; }
