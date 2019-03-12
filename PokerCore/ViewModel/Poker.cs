@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace PokerCore.Model
 {
-    public class PokerM
+    public class Poker
     {
         Dictionary<int, Player> _players;
         GameRules _gameRules;
@@ -22,7 +22,7 @@ namespace PokerCore.Model
         int _allBank;
         List<(int, int)> _dividedBanks;
 
-        public PokerM(string name, int startbank, int smallBlind, int bigBlind)
+        public Poker(string name, int startbank, int smallBlind, int bigBlind)
         {
             _players = new Dictionary<int, Player>();
             _gameRules = new GameRules(10);

@@ -24,7 +24,7 @@ namespace PokerGraphics
     public partial class MainWindow : Window, IViewFor<PokerVM>
     {
         PokerVM pokerTable;
-        PokerCore.Model.PokerM pokerGame;
+        PokerCore.Model.Poker pokerGame;
 
         public PokerVM ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
         object IViewFor.ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
@@ -34,7 +34,7 @@ namespace PokerGraphics
 
         public void PokerInitialize(string name, int startbank)
         {
-            pokerGame = new PokerCore.Model.PokerM(name, 100, 10, 50);
+            pokerGame = new PokerCore.Model.Poker(name, 100, 10, 50);
             pokerTable = new PokerVM(pokerGame);
             //pokerGame.TryConnect("Илья");
         }
