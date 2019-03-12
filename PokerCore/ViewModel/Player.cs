@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reactive;
+using ReactiveUI;
 
 namespace PokerCore.Model
 {
-    public class Player
+    public class Player: ReactiveObject
     {
         PlayerState _myState;
         public PlayerState MyState { get; set; }

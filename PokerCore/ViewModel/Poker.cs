@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace PokerCore.Model
 {
-    public class Poker
+    public class Poker: ReactiveObject
     {
         Dictionary<int, Player> _players;
         GameRules _gameRules;
