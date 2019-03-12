@@ -4,8 +4,9 @@ using System.Collections;
 using System.Text;
 using ReactiveUI;
 using System.Linq;
+using PokerCore.Model;
 
-namespace PokerCore.Model
+namespace PokerCore.ViewModel
 {
     public class Poker: ReactiveObject
     {
