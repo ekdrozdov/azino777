@@ -49,13 +49,13 @@ namespace PokerCore.Model
 
         public int BigBlind { get => _bigBlind; }
 
-        public int CurrentRaise { get => _curRaise; set => _curRaise = value; }
+        public int CurrentRaise { get => _curRaise; set => this.RaiseAndSetIfChanged(ref _curRaise, value); }
 
-        public int CurrentBet { get => _curBet; set => _curBet = value; }
+        public int CurrentBet { get => _curBet; set => this.RaiseAndSetIfChanged(ref _curBet, value); }
               
-        public int AllBank { get => _allBank; set => _allBank = value; }
+        public int AllBank { get => _allBank; set => this.RaiseAndSetIfChanged(ref _allBank, value); }
 
-        public List<(int, int)> DividedBanks { get => _dividedBanks; set => _dividedBanks = value; }
+        public List<(int, int)> DividedBanks { get => _dividedBanks; set => this.RaiseAndSetIfChanged(ref _dividedBanks, value); }
 
         public CardDeck Deck { get => _cardDeck; }
 
