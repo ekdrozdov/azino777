@@ -20,19 +20,13 @@ namespace PokerCore.Model
             name = "card";
 
             foreach (string suits in Enum.GetNames(typeof(CardSuit)))
-            {
                 if (suits.Equals(suit.ToString()))
                 {
                     name += suits;
                     foreach (string ranks in Enum.GetNames(typeof(CardRank)))
-                    {
                         if (ranks.Equals(suit.ToString()))
-                        {
                             name += ranks;
-                        }
-                    }
                 }
-            }
 
             name += ".png";
             return name;
