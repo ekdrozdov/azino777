@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reactive;
+using ReactiveUI;
 
 namespace PokerCore.Model
 {
-    public class Player
+    public class Player: ReactiveObject
     {
         PlayerState _myState;
-        public PlayerState MyState { get; set; }
+        public PlayerState MyState { get => _myState; set => this.RaiseAndSetIfChanged(ref _myState, value); }
 
         (Card, Card) _handCards;
-        public (Card, Card) HandCards { get => _handCards; set { _handCards = (value); } }
+        public (Card, Card) HandCards { get => _handCards; set => this.RaiseAndSetIfChanged(ref _handCards, value); }
 
         TableForPlayer _table;
 

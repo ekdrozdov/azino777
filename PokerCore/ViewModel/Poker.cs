@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace PokerCore.Model
 {
-    public class PokerM
+    public class Poker: ReactiveObject
     {
         Dictionary<int, Player> _players;
         GameRules _gameRules;
@@ -22,7 +22,7 @@ namespace PokerCore.Model
         int _allBank;
         List<(int, int)> _dividedBanks;
 
-        public PokerM(string name, int startbank, int smallBlind, int bigBlind)
+        public Poker(string name, int startbank, int smallBlind, int bigBlind)
         {
             _players = new Dictionary<int, Player>();
             _gameRules = new GameRules(10);
@@ -49,13 +49,13 @@ namespace PokerCore.Model
 
         public int BigBlind { get => _bigBlind; }
 
-        public int CurrentRaise { get => _curRaise; set => _curRaise = value; }
+        public int CurrentRaise { get => _curRaise; set => this.RaiseAndSetIfChanged(ref _curRaise, value); }
 
-        public int CurrentBet { get => _curBet; set => _curBet = value; }
+        public int CurrentBet { get => _curBet; set => this.RaiseAndSetIfChanged(ref _curBet, value); }
               
-        public int AllBank { get => _allBank; set => _allBank = value; }
+        public int AllBank { get => _allBank; set => this.RaiseAndSetIfChanged(ref _allBank, value); }
 
-        public List<(int, int)> DividedBanks { get => _dividedBanks; set => _dividedBanks = value; }
+        public List<(int, int)> DividedBanks { get => _dividedBanks; set => this.RaiseAndSetIfChanged(ref _dividedBanks, value); }
 
         public CardDeck Deck { get => _cardDeck; }
 
@@ -731,30 +731,6 @@ namespace PokerCore.Model
         public void Disconnect(int key)
         {
             _players.Remove(key);
-        }
-
-        public string GetTextureName(CardRank rank, CardSuit suit)
-        {
-            string name;
-            name = "card";
-
-            foreach (string suits in Enum.GetNames(typeof(CardSuit)))
-            {
-                if (suits.Equals(suit.ToString()))
-                {
-                    name += suits;
-                    foreach (string ranks in Enum.GetNames(typeof(CardRank)))
-                    {
-                        if (ranks.Equals(suit.ToString()))
-                        {
-                            name += ranks;
-                        }
-                    }
-                }
-            }
-
-            name += ".png";
-            return name;
         }
     }
 }

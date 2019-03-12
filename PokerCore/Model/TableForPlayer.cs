@@ -6,9 +6,9 @@ namespace PokerCore.Model
 {
     public class TableForPlayer
     {
-        PokerM _playerView;
+        Poker _playerView;
 
-        public TableForPlayer(PokerM playerView)
+        public TableForPlayer(Poker playerView)
         {
             _playerView = playerView;
         }
