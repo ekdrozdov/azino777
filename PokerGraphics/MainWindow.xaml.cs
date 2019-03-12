@@ -21,12 +21,11 @@ namespace PokerGraphics
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IViewFor<PokerVM>
+    public partial class MainWindow : Window, IViewFor<Poker>
     {
-        PokerVM pokerTable;
-        PokerCore.Model.Poker pokerGame;
+        Poker pokerTable;
 
-        public PokerVM ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
+        public Poker ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
         object IViewFor.ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -34,9 +33,7 @@ namespace PokerGraphics
 
         public void PokerInitialize(string name, int startbank)
         {
-            pokerGame = new PokerCore.Model.Poker(name, 100, 10, 50);
-            pokerTable = new PokerVM(pokerGame);
-            //pokerGame.TryConnect("Илья");
+            pokerTable = new Poker("",1000,10,50);
         }
 
         public MainWindow()
@@ -44,10 +41,10 @@ namespace PokerGraphics
             InitializeComponent();
 
             DataContext = this;
-            //this.WhenActivated(disposer =>
-            //{
-            //    //his.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
-            //});
+            this.WhenActivated(disposer =>
+            {
+                //this.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
+            });
 
             menu.Visibility = Visibility.Visible;
             grid_sett.Visibility = Visibility.Collapsed;

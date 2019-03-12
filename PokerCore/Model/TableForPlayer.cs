@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PokerCore.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

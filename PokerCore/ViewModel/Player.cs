@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reactive;
 using ReactiveUI;
+using PokerCore.Model;
 
-namespace PokerCore.Model
+namespace PokerCore.ViewModel
 {
     public class Player: ReactiveObject
     {
