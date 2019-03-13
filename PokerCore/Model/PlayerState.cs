@@ -1,12 +1,13 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace PokerCore.Model
 {
-    public class PlayerState
+    public class PlayerState : ReactiveObject
     {
-        public PlayerState(string name, int cash) { _name = name; _cash = cash; }
+        public PlayerState(string name, int cash) { _name = name; _cash = cash; HandCards = (new Card(CardRank.Q, CardSuit.Dimonds), new Card(CardRank.c4, CardSuit.Spades)); }
 
         string _name;
         public string Name { get => _name; set => _name = value; }
@@ -22,5 +23,10 @@ namespace PokerCore.Model
 
         PlayerGameState _state;
         public PlayerGameState State { get => _state; set => _state = value;  }
+
+        (Card, Card) _handCards;
+        public (Card, Card) HandCards { get => _handCards; set => this.RaiseAndSetIfChanged(ref _handCards, value); }
+        public string FirstCardName { get => _handCards.Item1.GetTextureName(); }
+        public string SecondCardName { get => _handCards.Item2.GetTextureName(); }
     }
 }
