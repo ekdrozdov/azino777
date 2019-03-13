@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PokerGraphics"
         mc:Ignorable="d"
-        Title="MainWindow" Height="568.206" Width="756.701">
+        Title="MainWindow" Height="721.206" Width="1094.201">
     <Window.Resources>
         <ControlTemplate TargetType="Button" x:Key="ell">
             <Border CornerRadius="25" BorderBrush="LightGreen" BorderThickness="5"
@@ -13,9 +13,12 @@
                 <ContentControl Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Content="" />
             </Border>
         </ControlTemplate>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
     </Window.Resources>
     <Grid>
-        <Grid Visibility="Hidden" Background="Gray" Name="menu">
+        <Grid Visibility="Collapsed" Background="Gray" Name="menu">
             <Grid.RowDefinitions>
                 <RowDefinition Height="59*"/>
                 <RowDefinition Height="25*"/>
@@ -31,19 +34,20 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="4,2,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Name: " VerticalAlignment="Top" Height="16" Width="38"/>
             <TextBox Name="textbox_name" 
-                     Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="42,1,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="111"/>
+                     Text="{Binding NamePlayer}"
+                     Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="42,1,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="111"/>
             <Button Name="button_start" 
                     Content="Start"
-                    Command="{Binding }"
+                    Command="{Binding StartClick}"
                     Grid.Column="1" 
-                    HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" Width="198" Height="43" Click="button_start_Click"/>
+                    HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" Width="198" Height="43"/>
             <Button Name="button_exit" 
                     Content="Exit" 
-                    
+                    Command="{Binding Exit}"
                     Grid.Column="1" HorizontalAlignment="Left" Height="37" Grid.Row="4" VerticalAlignment="Top" Width="198"/>
 
         </Grid>
-        <Grid Visibility="Hidden" Name="grid_sett" Background="Gray">
+        <Grid Visibility="Collapsed" Name="grid_sett" Background="Gray">
             <Grid.RowDefinitions>
                 <RowDefinition Height="59*"/>
                 <RowDefinition Height="25*"/>
@@ -57,82 +61,392 @@
                 <ColumnDefinition Width="200*"/>
                 <ColumnDefinition Width="200*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Начальный банк: " VerticalAlignment="Top"/>
-            <TextBox Name="textbox_first_bank" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="112,9,0,0" Grid.Row="2" TextWrapping="Wrap" Text="500" VerticalAlignment="Top" Width="100"/>
-            <Button Name="button_done" Content="Готово" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="198" Height="37" Click="button_done_Click"/>
-
-
+            <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" TextWrapping="Wrap" 
+                       Text="Начальный банк: " 
+                       VerticalAlignment="Top"/>
+            <TextBox Name="textbox_first_bank" 
+                     Text="{Binding FirstBank}"
+                     Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="112,9,0,0" Grid.Row="2" TextWrapping="Wrap"  VerticalAlignment="Top" Width="43"/>
+            <Button Name="button_done" 
+                    Content="Готово" 
+                    Command="{Binding Done}"
+                    Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="198" Height="37"/>
         </Grid>
         <Grid Name="table" Visibility="Visible">
             <Grid.Background>
                 <ImageBrush ImageSource="{DynamicResource ImageSource1}"/>
             </Grid.Background>
-            <Rectangle Name="center_card1" HorizontalAlignment="Left" Height="70" Margin="250,182,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle Name="center_card2" HorizontalAlignment="Left" Height="70" Margin="305,182,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle Name="center_card3" HorizontalAlignment="Left" Height="70" Margin="360,182,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle Name="center_card4" HorizontalAlignment="Left" Height="70" Margin="415,182,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle Name="center_card5" HorizontalAlignment="Left" Height="70" Margin="470,182,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle Name="card1" HorizontalAlignment="Left" Height="70" Margin="367,429,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle Name="card2" HorizontalAlignment="Left" Height="70" Margin="312,429,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Button Name="button_extract" Content="Сбросить" HorizontalAlignment="Left" Height="20" Margin="338,504,0,0" VerticalAlignment="Top" Width="69"/>
-            <Button Name="button_add" Content="Поставить:" HorizontalAlignment="Left" Height="20" Margin="412,504,0,0" VerticalAlignment="Top" Width="69"/>
-            <TextBox Name="textbox_number_of_money" HorizontalAlignment="Left" Height="20" Margin="486,504,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="30"/>
-            <Button Name="button_equalize" Content="Уравнять" HorizontalAlignment="Left" Margin="258,504,0,0" VerticalAlignment="Top" Width="75" Command="{Binding ViewModel}"/>
-            <Button Name="button_out_to_menu" Content="Меню" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="button_out_to_menu_Click"/>
-            <TextBlock Name="name_player" HorizontalAlignment="Left" Margin="350,400,0,0" TextWrapping="Wrap" Text="{Binding ElementName=textbox_name, Path=Text}" VerticalAlignment="Top" RenderTransformOrigin="0.49,0.6" FontSize="18" FontWeight="Bold"/>
-            <Rectangle x:Name="card1_opp" HorizontalAlignment="Left" Height="70" Margin="312,10,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle x:Name="card2_opp" HorizontalAlignment="Left" Height="70" Margin="367,10,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <TextBlock Name="opponent" HorizontalAlignment="Left" Margin="350,86,0,0" TextWrapping="Wrap" Text="Илья" VerticalAlignment="Top"/>
-            <TextBlock Name="main_bank" HorizontalAlignment="Left" Margin="312,156,0,0" TextWrapping="Wrap" Text="Общий банк: " VerticalAlignment="Top"/>
-            <TextBox Name="money_in_main_bank" HorizontalAlignment="Left" Height="23" Margin="387,155,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="78"/>
-            <TextBlock Name="little_bland" HorizontalAlignment="Left" Margin="212,257,0,0" TextWrapping="Wrap" Text="Малый блайнд: " VerticalAlignment="Top"/>
-            <TextBox Name="money_in_little_bland" HorizontalAlignment="Left" Height="23" Margin="300,256,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="62"/>
-            <TextBlock Name="big_bland" HorizontalAlignment="Left" Margin="373,257,0,0" TextWrapping="Wrap" Text="Большой блайнд: " VerticalAlignment="Top"/>
-            <TextBox Name="money_in_big_bland" HorizontalAlignment="Left" Height="23" Margin="477,256,0,0" TextWrapping="Wrap" Text="200" VerticalAlignment="Top" Width="55"/>
-            <Ellipse Name="diller10" HorizontalAlignment="Left" Height="25" Margin="544,107,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller9" HorizontalAlignment="Left" Height="25" Margin="589,194,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller8" HorizontalAlignment="Left" Height="25" Margin="589,342,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller7" HorizontalAlignment="Left" Height="25" Margin="544,372,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller6" HorizontalAlignment="Left" Height="25" Margin="352,370,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller1" HorizontalAlignment="Left" Height="25" Margin="350,107,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller5" HorizontalAlignment="Left" Height="25" Margin="165,372,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller2" HorizontalAlignment="Left" Height="25" Margin="165,107,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller3" HorizontalAlignment="Left" Height="25" Margin="122,194,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse Name="diller4" HorizontalAlignment="Left" Height="25" Margin="122,332,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Rectangle Name="center_card1" HorizontalAlignment="Left" Height="70" Margin="421,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
+            <Rectangle Name="center_card2" HorizontalAlignment="Left" Height="70" Margin="476,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
+            <Rectangle Name="center_card3" HorizontalAlignment="Left" Height="70" Margin="531,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
+            <Rectangle Name="center_card4" HorizontalAlignment="Left" Height="70" Margin="586,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
+            <Rectangle Name="center_card5" HorizontalAlignment="Left" Height="70" Margin="641,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
+            <Rectangle Name="card1" HorizontalAlignment="Left" Height="70" Margin="567,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform X="0" Y="0"/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.player0.SecondCardName}"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle Name="card2" HorizontalAlignment="Left" Height="70" Margin="512,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform X="0" Y="0"/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.player0.FirstCardName}"/>
+                </Rectangle.Fill>
+
+            </Rectangle>
+
+            <Button Name="button_extract" 
+                    Content="Сбросить" 
+                    Command="{Binding Extract}"
+                    HorizontalAlignment="Left" Height="20" Margin="438,590,0,0" VerticalAlignment="Top" Width="69"/>
+            <Button Name="button_add" 
+                    Content="Поставить:"
+                    Command="{Binding AddMoney}"
+                    HorizontalAlignment="Left" Height="20" Margin="622,565,0,0" VerticalAlignment="Top" Width="69"/>
+            <TextBox Name="textbox_number_of_money" 
+                     Text="{Binding NumOfMoney}" 
+                     HorizontalAlignment="Left" Height="20" Margin="641,590,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="30"/>
+            <Button Name="button_equalize" 
+                    Content="Уравнять" 
+                    Command="{Binding Equalize}"
+                    HorizontalAlignment="Left" Margin="438,565,0,0" VerticalAlignment="Top" Width="69"/>
+            <Button Name="button_out_to_menu" 
+                    Content="Меню" 
+                    Command="{Binding ShowMenuSett}"
+                    HorizontalAlignment="Left" VerticalAlignment="Top" Width="75"/>
+            <TextBlock Name="main_bank" HorizontalAlignment="Left" Margin="475,233,0,0" TextWrapping="Wrap" Text="Общий банк: " VerticalAlignment="Top"/>
+            <TextBox Name="money_in_main_bank" 
+                     Text="{Binding ViewModel.AllBank}"
+                     HorizontalAlignment="Left" Height="23" Margin="550,232,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="78"/>
+            <TextBlock Name="little_bland" HorizontalAlignment="Left" Margin="390,372,0,0" TextWrapping="Wrap" Text="Малый блайнд: " VerticalAlignment="Top"/>
+            <TextBox Name="money_in_little_bland" 
+                     Text="{Binding ViewModel.SmallBlind, Mode=OneWay}"
+                     HorizontalAlignment="Left" Height="23" Margin="478,371,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="62"/>
+            <TextBlock Name="big_bland" HorizontalAlignment="Left" Margin="551,372,0,0" TextWrapping="Wrap" Text="Большой блайнд: " VerticalAlignment="Top"/>
+            <TextBox Name="money_in_big_bland" 
+                     Text="{Binding ViewModel.BigBlind, Mode=OneWay}"
+                     HorizontalAlignment="Left" Height="23" Margin="655,371,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="55"/>
+            <Ellipse Name="diller10" HorizontalAlignment="Left" Height="25" Margin="843,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller9" HorizontalAlignment="Left" Height="25" Margin="926,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller8" HorizontalAlignment="Left" Height="25" Margin="926,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller7" HorizontalAlignment="Left" Height="25" Margin="802,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller6" HorizontalAlignment="Left" Height="26" Margin="556,523,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller1" HorizontalAlignment="Left" Height="25" Margin="551,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller5" HorizontalAlignment="Left" Height="25" Margin="267,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller2" HorizontalAlignment="Left" Height="25" Margin="267,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller3" HorizontalAlignment="Left" Height="25" Margin="122,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse Name="diller4" HorizontalAlignment="Left" Height="25" Margin="122,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <!-- Зеленые кнопки -->
+            <Button x:Name="opp0"
+                    Content=""
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Template="{StaticResource ell}"
+                    HorizontalAlignment="Left" Margin="543,88,0,0" VerticalAlignment="Top" Width="44" Height="45" Panel.ZIndex="3"/>
             <Button Name="opp1"
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="122,29,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="257,88,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button Name="opp2"
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="10,183,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="46,214,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button Name="opp3"
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="10,332,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="46,408,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button Name="opp4"
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="122,454,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="257,565,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button Name="opp5"
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="609,454,0,0" VerticalAlignment="Top" Width="45" Height="45"
-                    Command="{Binding ViewModel.TryConnect}" CommandParameter="opp5"/>
+                    CommandParameter="{Binding }"
+                    HorizontalAlignment="Left" Margin="794,565,0,0" VerticalAlignment="Top" Width="44" Height="45"/>
             <Button Name="opp6"
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="694,332,0,0" VerticalAlignment="Top" Width="45" Height="45"
-                    />
+                    HorizontalAlignment="Left" Margin="998,408,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button Name="opp7"
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="694,183,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="998,214,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button Name="opp8"
+                    Visibility="{Binding }"
+                    Command="{Binding }"
+                    Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="609,29,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="833,88,0,0" VerticalAlignment="Top" Width="44" Height="45"/>
+            <!-- Конец зеленых кнопок -->
+
+            <!-- Карты противников -->
+            <!--   Карты opp1   -->
+            <Rectangle x:Name="card1_opp" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="512,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="card2_opp" 
+                       HorizontalAlignment="Left" Height="70" Margin="567,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp1   -->
+
+            <!--   Карты opp1   -->
+            <Rectangle x:Name="c1o1" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="227,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o1" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="282,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp1   -->
+
+            <!--   Карты opp2   -->
+            <Rectangle x:Name="c1o2" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="43,174,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o2" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="43,229,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp2   -->
+
+            <!--   Карты opp3   -->
+            <Rectangle x:Name="c1o3" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="42,368,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o3" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="42,423,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp3   -->
+
+            <!--   Карты opp4   -->
+            <Rectangle x:Name="c1o4" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="227,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o4" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="282,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp4   -->
+
+            <!--   Карты opp5   -->
+            <Rectangle x:Name="c1o5" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="763,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o5" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="818,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp5   -->
+
+            <!--   Карты opp6   -->
+            <Rectangle x:Name="c1o6" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="996,368,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o6" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="997,423,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp6   -->
+
+            <!--   Карты opp7   -->
+            <Rectangle x:Name="c1o7" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="997,176,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o7" 
+                       Visibility="{Binding }"
+                       HorizontalAlignment="Left" Height="70" Margin="997,229,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp7   -->
+
+            <!--   Карты opp8   -->
+            <Rectangle x:Name="c1o8" 
+                Visibility="{Binding ''}"
+                HorizontalAlignment="Left" Height="70" Margin="802,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o8" 
+                Visibility="{Binding ''}"
+                HorizontalAlignment="Left" Height="70" Margin="857,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/cardBack_blue1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Конец opp8   -->
+
+            <!--  User Controls -->
+            <!--<local:PlayerView x:Name="i7" Height="50" Margin="960,490,10,150" uName="It worked7!" Cash="111"/>
+            <local:PlayerView x:Name="i8" Height="50" Margin="960,132,10,508" uName="It worked7!" Cash="111"/>
+            <local:PlayerView x:Name="i1" Height="50" Margin="224,10,746,630" uName="It worked1!" Cash="111"/>
+            <local:PlayerView x:Name="i9" Height="50" Margin="799,10,171,630" uName="It worked9!" Cash="111"/>
+            <local:PlayerView x:Name="i2" Height="50" Margin="16,128,954,512" uName="It worked2!" Cash="111"/>
+            <local:PlayerView x:Name="i3" Height="50" Margin="16,490,954,150" uName="It worked3!" Cash="111"/>
+            <local:PlayerView x:Name="i4" Height="50" Margin="224,630,746,10" uName="It worked4!" Cash="111"/>
+            <local:PlayerView x:Name="i6" Height="50" Margin="757,630,213,10" uName="It worked6!" Cash="111"/>-->
+
+            <!--<local:PlayerView x:Name="i0" Height="50" Margin="506,10,464,630"  uName="{Binding ViewModel.player1.Name}" Cash="{Binding ViewModel.player1.Cash}"/>-->
+            <!--<local:PlayerView x:Name="player" Height="50" Margin="506,630,464,10" uName="{Binding ViewModel.player0.Name}" Cash="{Binding ViewModel.player0.Cash}"/>-->
+            <UserControl Content="{Binding views[0]}"></UserControl>
+            <!--  End User Controls-->
         </Grid>
     </Grid>
 </Window>

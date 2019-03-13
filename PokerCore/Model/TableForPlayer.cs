@@ -33,7 +33,7 @@ namespace PokerCore.Model
 
         public List<Card> BoardCards { get => _playerView.BoardCards; }
 
-        public (Card, Card) HandCards { get => _playerView.Players[CurPlayer].HandCards; }
+        public (Card, Card) HandCards { get => _playerView.Players[CurPlayer].MyState.HandCards; }
 
         public void AddBank(int bankBeforeBet)
         {

@@ -91,8 +91,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PlayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlayerView.xaml.cs">
+      <DependentUpon>PlayerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -132,6 +139,76 @@
     <Resource Include="Resources\tt.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cardBack_blue1.png" />
+    <Resource Include="Resources\cardBack_blue2.png" />
+    <Resource Include="Resources\cardBack_blue3.png" />
+    <Resource Include="Resources\cardBack_blue4.png" />
+    <Resource Include="Resources\cardBack_blue5.png" />
+    <Resource Include="Resources\cardBack_green1.png" />
+    <Resource Include="Resources\cardBack_green2.png" />
+    <Resource Include="Resources\cardBack_green3.png" />
+    <Resource Include="Resources\cardBack_green4.png" />
+    <Resource Include="Resources\cardBack_green5.png" />
+    <Resource Include="Resources\cardBack_red1.png" />
+    <Resource Include="Resources\cardBack_red2.png" />
+    <Resource Include="Resources\cardBack_red3.png" />
+    <Resource Include="Resources\cardBack_red4.png" />
+    <Resource Include="Resources\cardBack_red5.png" />
+    <Resource Include="Resources\cardClubsA.png" />
+    <Resource Include="Resources\cardClubsc10.png" />
+    <Resource Include="Resources\cardClubsc2.png" />
+    <Resource Include="Resources\cardClubsc3.png" />
+    <Resource Include="Resources\cardClubsc4.png" />
+    <Resource Include="Resources\cardClubsc5.png" />
+    <Resource Include="Resources\cardClubsc6.png" />
+    <Resource Include="Resources\cardClubsc7.png" />
+    <Resource Include="Resources\cardClubsc8.png" />
+    <Resource Include="Resources\cardClubsc9.png" />
+    <Resource Include="Resources\cardClubsJ.png" />
+    <Resource Include="Resources\cardClubsK.png" />
+    <Resource Include="Resources\cardClubsQ.png" />
+    <Resource Include="Resources\cardDiamondsA.png" />
+    <Resource Include="Resources\cardDiamondsc10.png" />
+    <Resource Include="Resources\cardDiamondsc2.png" />
+    <Resource Include="Resources\cardDiamondsc3.png" />
+    <Resource Include="Resources\cardDiamondsc4.png" />
+    <Resource Include="Resources\cardDiamondsc5.png" />
+    <Resource Include="Resources\cardDiamondsc6.png" />
+    <Resource Include="Resources\cardDiamondsc7.png" />
+    <Resource Include="Resources\cardDiamondsc8.png" />
+    <Resource Include="Resources\cardDiamondsc9.png" />
+    <Resource Include="Resources\cardDiamondsJ.png" />
+    <Resource Include="Resources\cardDiamondsK.png" />
+    <Resource Include="Resources\cardDiamondsQ.png" />
+    <Resource Include="Resources\cardHeartsA.png" />
+    <Resource Include="Resources\cardHeartsc10.png" />
+    <Resource Include="Resources\cardHeartsc2.png" />
+    <Resource Include="Resources\cardHeartsc3.png" />
+    <Resource Include="Resources\cardHeartsc4.png" />
+    <Resource Include="Resources\cardHeartsc5.png" />
+    <Resource Include="Resources\cardHeartsc6.png" />
+    <Resource Include="Resources\cardHeartsc7.png" />
+    <Resource Include="Resources\cardHeartsc8.png" />
+    <Resource Include="Resources\cardHeartsc9.png" />
+    <Resource Include="Resources\cardHeartsJ.png" />
+    <Resource Include="Resources\cardHeartsK.png" />
+    <Resource Include="Resources\cardHeartsQ.png" />
+    <Resource Include="Resources\cardJoker.png" />
+    <Resource Include="Resources\cardSpadesA.png" />
+    <Resource Include="Resources\cardSpadesc10.png" />
+    <Resource Include="Resources\cardSpadesc2.png" />
+    <Resource Include="Resources\cardSpadesc3.png" />
+    <Resource Include="Resources\cardSpadesc4.png" />
+    <Resource Include="Resources\cardSpadesc5.png" />
+    <Resource Include="Resources\cardSpadesc6.png" />
+    <Resource Include="Resources\cardSpadesc7.png" />
+    <Resource Include="Resources\cardSpadesc8.png" />
+    <Resource Include="Resources\cardSpadesc9.png" />
+    <Resource Include="Resources\cardSpadesJ.png" />
+    <Resource Include="Resources\cardSpadesK.png" />
+    <Resource Include="Resources\cardSpadesQ.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
