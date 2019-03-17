@@ -51,7 +51,7 @@ namespace PokerGraphics
             tmp.Visibility = Visibility.Visible;
             views.Add(tmp);
             AddVisualChild(tmp);
-            pokerTable = new Poker(real, smallBlind, bigBlind); 
+            pokerTable = new Poker(real, smallBlind, bigBlind);
 
             tmp = new PlayerView(pokerTable.TryConnect("Bot0", 800));
             tmp.OneWayBind(tmp.ViewModel, v => v.MyState.Name, view => view.uName);
@@ -66,16 +66,23 @@ namespace PokerGraphics
         {
             PokerInitialize();
             InitializeComponent();
-            
+            ViewModel.TryConnect("daun1", 1);
+            ViewModel.TryConnect("daun21", 1);
+            ViewModel.TryConnect("daun31", 1);
+            ViewModel.TryConnect("daun41", 1);
+            ViewModel.TryConnect("daun51", 1);
+            ViewModel.TryConnect("daun61", 1);
+            ViewModel.TryConnect("daun71", 1);
+            ViewModel.TryConnect("daun81", 1);
             DataContext = this;
             this.WhenActivated(disposer =>
             {
                 this.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
             });
 
-            //menu.Visibility = Visibility.Visible;
-            //grid_sett.Visibility = Visibility.Collapsed;
-            //table.Visibility = Visibility.Collapsed;
+            menu.Visibility = Visibility.Visible;
+            grid_sett.Visibility = Visibility.Collapsed;
+            table.Visibility = Visibility.Collapsed;
         }
 
         private void button_start_Click(object sender, RoutedEventArgs e)
@@ -105,5 +112,32 @@ namespace PokerGraphics
             grid_sett.Visibility = Visibility.Visible;
 
         }
+        private void button_exit_Click(object sender, RoutedEventArgs e)
+        {
+        }
+        private void button_equalize_Click(object sender, RoutedEventArgs e)
+        {
+            try {
+                ViewModel.Players[0].Check();
+            }
+            catch (Exception ex) { }
+        }
+        private void button_fold(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].Fold();
+            }
+            catch (Exception ex) { }
+        }
+        private void button_call(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].Bet(Convert.ToInt32(textbox_number_of_money));
+            }
+            catch (Exception ex) { }
+        }
     }
 }
+

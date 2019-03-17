@@ -11,7 +11,7 @@ namespace PokerCore.ViewModel
 {
     public class Poker : ReactiveObject
     {
-        Dictionary<int, Player> _players;
+        public Dictionary<int, Player> _players;
         GameRules _gameRules;
         List<Card> _boardCards;
         CardDeck _cardDeck;
@@ -341,7 +341,7 @@ namespace PokerCore.ViewModel
             Dictionary<CardSuit, int> dicCountSuit = new Dictionary<CardSuit, int>
             {
                 { CardSuit.Clubs, 0 },
-                { CardSuit.Dimonds, 0 },
+                { CardSuit.Diamonds, 0 },
                 { CardSuit.Hearts, 0 },
                 { CardSuit.Spades, 0 }
             };
