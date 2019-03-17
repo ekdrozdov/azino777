@@ -140,12 +140,13 @@ namespace PokerCore.ViewModel
             using (ApplicationContext db = new ApplicationContext())
             {
                 DBGame game = db.Games.Last();
-                DBPlayer player = db.Players.Where(p => p.Name == _myState.Name).First();
+                DBPlayer player = db.Players.Where(p => p.Name == _myState.Name).Last();
 
                 db.Rounds.Add(new DBRound
                 {
                     Name = GetRoundName(),
-                    GamePlayer = game.Id.ToString() + " | " + player.Id.ToString(),
+                    Game = game.Id,
+                    Player = player.Id,
                     ActionName = _actionName,
                     BetSize = _myState.PlayerBet
                     //DecisionTime

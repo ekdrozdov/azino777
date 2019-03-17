@@ -8,7 +8,8 @@ namespace PokerCore.Model.DataBase
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string GamePlayer { get; set; }
+        public int Game { get; set; }
+        public int Player { get; set; }
 
         public string ActionName { get; set; }
         public int BetSize { get; set; }

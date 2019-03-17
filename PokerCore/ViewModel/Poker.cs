@@ -716,12 +716,13 @@ namespace PokerCore.ViewModel
                         using (ApplicationContext db = new ApplicationContext())
                         {
                             DBGame game = db.Games.Last();
-                            DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).First();
+                            DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
 
                             db.Rounds.Add(new DBRound
                             {
                                 Name = "Blinds",
-                                GamePlayer = game.Id.ToString() + " | " + player.Id.ToString(),
+                                Game = game.Id,
+                                Player = player.Id,
                                 ActionName = "Small blind",
                                 BetSize = _smallBlind,
                                 //DecisionTime
@@ -737,12 +738,13 @@ namespace PokerCore.ViewModel
                         using (ApplicationContext db = new ApplicationContext())
                         {
                             DBGame game = db.Games.Last();
-                            DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).First();
+                            DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
 
                             db.Rounds.Add(new DBRound
                             {
                                 Name = "Blinds",
-                                GamePlayer = game.Id.ToString() + " | " + player.Id.ToString(),
+                                Game = game.Id,
+                                Player = player.Id,
                                 ActionName = "Big blind",
                                 BetSize = _bigBlind,
                                 //DecisionTime
@@ -905,6 +907,44 @@ namespace PokerCore.ViewModel
                 }
             }
             return result-riverCount;
+        }
+
+        List<DBRequest> DbRequest(string PlayerName)
+        {
+            List<DBRequest> request = new List<DBRequest>();
+
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var player = db.Players.Where(p => p.Name == PlayerName);
+                var tableCards = db.TableCards.ToList();
+
+                foreach (var _player in player)
+                {
+                    int i = 0;
+                    DBRound lastRound = db.Rounds.Where(p => p.Player == _player.Id).Last();
+
+                    request[i] = new DBRequest { LastBet = lastRound.BetSize, StartCash = _player.StartCash };
+                    request[i].DBHandCards.Add(_player.FirstCard);
+                    request[i].DBHandCards.Add(_player.SecondCard);
+
+                    i++;
+                }
+
+                foreach (var _tableCards in tableCards)
+                {
+                    int i = 0;
+
+                    request[i].DBTableCards.Add(_tableCards.FirstCard);
+                    request[i].DBTableCards.Add(_tableCards.SecondCard);
+                    request[i].DBTableCards.Add(_tableCards.ThirdCard);
+                    request[i].DBTableCards.Add(_tableCards.FourthCard);
+                    request[i].DBTableCards.Add(_tableCards.FifthCard);
+
+                    i++;
+                }
+            }
+
+            return request;
         }
     }
 }
