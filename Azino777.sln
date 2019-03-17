@@ -8,7 +8,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokerGraphics", "PokerGraph
 		{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713} = {AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokerCore", "PokerCore\PokerCore.csproj", "{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokerCore", "PokerCore\PokerCore.csproj", "{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{60524614-B335-4721-A4E4-0D435271CF76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60524614-B335-4721-A4E4-0D435271CF76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60524614-B335-4721-A4E4-0D435271CF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60524614-B335-4721-A4E4-0D435271CF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60524614-B335-4721-A4E4-0D435271CF76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -817,7 +817,18 @@ namespace PokerCore.ViewModel
                     result++;
                 }
             }
-            return result;
+            int riverCount = 0;
+            foreach (Card c in allCards)
+            {
+                List<ICard> buf = new List<ICard>();
+                buf.AddRange(cards.GetRange(2, cards.Count - 2));
+                buf.Add(c);
+                if (IsCombination(buf))
+                {
+                    riverCount++;
+                }
+            }
+            return result-riverCount;
         }
 
         public bool testCountOuts()
@@ -836,6 +847,23 @@ namespace PokerCore.ViewModel
                 result = false;
             }
 
+
+            c1 = new List<ICard>();
+            c1.Add(new Card(CardRank.A, CardSuit.Spades));
+            c1.Add(new Card(CardRank.K, CardSuit.Spades));
+            c1.Add(new Card(CardRank.c5, CardSuit.Spades));
+            c1.Add(new Card(CardRank.J, CardSuit.Clubs));
+            c1.Add(new Card(CardRank.Q, CardSuit.Dimonds));
+            c1.Add(new Card(CardRank.c2, CardSuit.Spades));
+
+            if (countOuts(c1) != 18)
+            {
+                result = false;
+            }
+
+
+
+
             return result;
         }
 
@@ -848,6 +876,7 @@ namespace PokerCore.ViewModel
             c1.Add(new Card(CardRank.c5, CardSuit.Spades));
             c1.Add(new Card(CardRank.J, CardSuit.Spades));
             c1.Add(new Card(CardRank.Q, CardSuit.Spades));
+            c1.Add(new Card(CardRank.Q, CardSuit.Clubs));
 
 
             res.Add(IsCombination(c1));
@@ -876,7 +905,29 @@ namespace PokerCore.ViewModel
         }
 
 
+        public  void testAll()
+        {
+            if (testCountOuts())
+            {
+                Console.WriteLine("Test outs passed");
+            }
+            else
+            {
+                Console.WriteLine("Test outs failed");
+            }
 
+
+            if (testIsCombination())
+            {
+                Console.WriteLine("Test combinations passed");
+            }
+            else
+            {
+                Console.WriteLine("Test combinations failed");
+            }
+
+
+        }
 
 
 

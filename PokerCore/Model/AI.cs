@@ -13,30 +13,30 @@ namespace PokerCore.ViewModel
     public class AI : Player
     {
         enum gameTurn { preFlop, Flop, Tern, River, Kciker }
-
+        Poker poker;
         Dictionary<int, double> _aggresivity;
         double _myAggresive = 0.5;
-
         double _firstChoiseKoef, _secondChoiseKoef, _thirdChoiseKoef;
 
         private double _trustRatio = 0.5;
 
         private static Random random = new Random();
         //gauss params
-        public AI(string name, int cash) : base(name, cash)
+        public AI(string name, int cash, int small, int smallBlind, int bigBlind) : base(name, cash)
         {
+            poker = new Poker(name, cash, smallBlind, bigBlind);
         }
 
-        private double GetOuts()
+        private int GetOuts(List<ICard> cards)
         {
             //все карты, что усилят руку
-            return 0;
+            return poker.countOuts(cards);
         }
 
-        private double GetDiscountOuts()
+        private int GetDiscountOuts(List<ICard> cards)
         {
             //все карты, что усилят только нашу руку
-            return 0;
+            return poker.countOuts(cards.GetRange(0,2));
         }
 
         private double GetOdds()
@@ -111,6 +111,28 @@ namespace PokerCore.ViewModel
         {
 
         }
+
+        public GameState GetOptimalMove(List<ICard> cards)
+        {
+            int outs = GetOuts(cards);
+            if (outs >= 7)
+            {
+                return GameState.raise;
+            }
+
+            if (cards.Count == 5 && outs <= 6)
+            {
+                if (cards[0].Rank < CardRank.J && cards[1].Rank < CardRank.J) {
+                    return GameState.fold;
+                }
+            }
+            
+            return GameState.call;
+        }
+
+
+
+
 
     }
 }
