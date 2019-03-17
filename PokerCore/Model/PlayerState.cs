@@ -17,6 +17,9 @@ namespace PokerCore.Model
         int _playerBet;
         public int PlayerBet { get => _playerBet; set => _playerBet = value; }
 
+        int _mySeat;
+        public int MySeat { get; set; }
+
         PlayerGameState _state;
         public PlayerGameState State { get => _state; set => _state = value;  }
     }

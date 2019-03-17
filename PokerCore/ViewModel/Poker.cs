@@ -733,5 +733,73 @@ namespace PokerCore.ViewModel
         {
             _players.Remove(key);
         }
+
+        public List<ICard> GetAllDeckWithoutMineCards(List<ICard> exclude)
+        {
+            List<ICard> result = new List<ICard>();
+
+            foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
+                foreach (CardRank rank in Enum.GetValues(typeof(CardRank)))
+                    if (!exclude.Exists(x => x.Rank == rank && x.Suit == suit))
+                        result.Add(new Card(rank, suit));
+
+            return result;
+        }
+
+        public bool IsCombination(List<ICard> cards)
+        {
+            //Pair
+            for (int i = 0; i < cards.Count; i++)
+                for (int j = i + 1; j < cards.Count; j++)
+                    if (cards[i].Rank == cards[j].Rank)
+                        return true;
+
+            //Flush
+            List<CardSuit> suits = new List<CardSuit>();
+            foreach (Card c in cards)
+                suits.Add(c.Suit);
+
+            foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
+                if (suits.FindAll(s => s.Equals(suit)).Count >= 5)
+                    return true;
+
+            //Straight
+            cards.Sort(new CardRankCompare());
+            List<ICard> comb = new List<ICard>(GetStraightCombination(cards));
+            if (comb.Count != 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public int countOuts(List<ICard> cards)
+        {
+            int result = 0;
+            List<ICard> allCards = GetAllDeckWithoutMineCards(cards);
+            foreach (Card c in allCards)
+            {
+                List<ICard> buf = new List<ICard>();
+                buf.AddRange(cards);
+                buf.Add(c);
+                if (IsCombination(buf))
+                {
+                    result++;
+                }
+            }
+            int riverCount = 0;
+            foreach (Card c in allCards)
+            {
+                List<ICard> buf = new List<ICard>();
+                buf.AddRange(cards.GetRange(2, cards.Count - 2));
+                buf.Add(c);
+                if (IsCombination(buf))
+                {
+                    riverCount++;
+                }
+            }
+            return result-riverCount;
+        }
     }
 }

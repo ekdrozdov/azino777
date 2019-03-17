@@ -15,12 +15,11 @@ namespace PokerCore.ViewModel
         (Card, Card) _handCards;
         public (Card, Card) HandCards { get => _handCards; set => this.RaiseAndSetIfChanged(ref _handCards, value); }
 
-        TableForPlayer _table;
+        protected TableForPlayer _table;
 
         public Player(string name, int cash)
         {
-            _myState.Name = name;
-            _myState.Cash = cash;
+            _myState = new PlayerState(name, cash);
         }
 
         public void AddCash(int cash)

@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokerGraphics", "PokerGraph
 		{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713} = {AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokerCore", "PokerCore\PokerCore.csproj", "{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokerCore", "PokerCore\PokerCore.csproj", "{AFB4DF35-CBEB-4323-A49E-7B6ECC5FD713}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

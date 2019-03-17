@@ -31,5 +31,19 @@ namespace PokerCore.Model
             name += ".png";
             return name;
         }
+
+        public static bool operator ==(Card x, Card y)
+        {
+            return (x.Rank == y.Rank) && (x.Suit == y.Suit);
+        }
+
+        public static bool operator !=(Card x, Card y)
+        {
+            return !(x == y);
+        }
+
+
     }
+
+
 }
