@@ -739,26 +739,9 @@ namespace PokerCore.ViewModel
             List<ICard> result = new List<ICard>();
 
             foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
-            {
                 foreach (CardRank rank in Enum.GetValues(typeof(CardRank)))
-                {
-                    Card buf = new Card(rank, suit);
-                    bool is_unique = true;
-                    foreach (Card c in exclude)
-                    {
-                        if (buf == c)
-                        {
-                            is_unique = false;
-                            break;
-                        }
-                    }
-
-                    if (is_unique)
-                    {
-                        result.Add(buf);
-                    }
-                }
-            }
+                    if (!exclude.Exists(x => x.Rank == rank && x.Suit == suit))
+                        result.Add(new Card(rank, suit));
 
             return result;
         }
@@ -767,30 +750,18 @@ namespace PokerCore.ViewModel
         {
             //Pair
             for (int i = 0; i < cards.Count; i++)
-            {
                 for (int j = i + 1; j < cards.Count; j++)
-                {
                     if (cards[i].Rank == cards[j].Rank)
-                    {
                         return true;
-                    }
-                }
-            }
 
             //Flush
             List<CardSuit> suits = new List<CardSuit>();
             foreach (Card c in cards)
-            {
                 suits.Add(c.Suit);
-            }
 
             foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
-            {
                 if (suits.FindAll(s => s.Equals(suit)).Count >= 5)
-                {
                     return true;
-                }
-            }
 
             //Straight
             cards.Sort(new CardRankCompare());
@@ -830,107 +801,5 @@ namespace PokerCore.ViewModel
             }
             return result-riverCount;
         }
-
-        public bool testCountOuts()
-        {
-            bool result = true;
-
-            List<ICard> c1 = new List<ICard>();
-            c1.Add(new Card(CardRank.A, CardSuit.Spades));
-            c1.Add(new Card(CardRank.K, CardSuit.Spades));
-            c1.Add(new Card(CardRank.c5, CardSuit.Spades));
-            c1.Add(new Card(CardRank.J, CardSuit.Clubs));
-            c1.Add(new Card(CardRank.Q, CardSuit.Dimonds));
-
-            if (countOuts(c1) != 10)
-            {
-                result = false;
-            }
-
-
-            c1 = new List<ICard>();
-            c1.Add(new Card(CardRank.A, CardSuit.Spades));
-            c1.Add(new Card(CardRank.K, CardSuit.Spades));
-            c1.Add(new Card(CardRank.c5, CardSuit.Spades));
-            c1.Add(new Card(CardRank.J, CardSuit.Clubs));
-            c1.Add(new Card(CardRank.Q, CardSuit.Dimonds));
-            c1.Add(new Card(CardRank.c2, CardSuit.Spades));
-
-            if (countOuts(c1) != 18)
-            {
-                result = false;
-            }
-
-
-
-
-            return result;
-        }
-
-        public bool testIsCombination()
-        {
-            List<bool> res = new List<bool>();
-            List<ICard> c1 = new List<ICard>();
-            c1.Add(new Card(CardRank.A, CardSuit.Spades));
-            c1.Add(new Card(CardRank.K, CardSuit.Spades));
-            c1.Add(new Card(CardRank.c5, CardSuit.Spades));
-            c1.Add(new Card(CardRank.J, CardSuit.Spades));
-            c1.Add(new Card(CardRank.Q, CardSuit.Spades));
-            c1.Add(new Card(CardRank.Q, CardSuit.Clubs));
-
-
-            res.Add(IsCombination(c1));
-
-            c1 = new List<ICard>();
-            c1.Add(new Card(CardRank.A, CardSuit.Spades));
-            c1.Add(new Card(CardRank.A, CardSuit.Clubs));
-            c1.Add(new Card(CardRank.A, CardSuit.Dimonds));
-            c1.Add(new Card(CardRank.A, CardSuit.Hearts));
-            c1.Add(new Card(CardRank.Q, CardSuit.Spades));
-
-
-            res.Add(IsCombination(c1));
-
-            c1 = new List<ICard>();
-            c1.Add(new Card(CardRank.A, CardSuit.Spades));
-            c1.Add(new Card(CardRank.K, CardSuit.Clubs));
-            c1.Add(new Card(CardRank.J, CardSuit.Spades));
-            c1.Add(new Card(CardRank.c10, CardSuit.Spades));
-            c1.Add(new Card(CardRank.Q, CardSuit.Spades));
-
-
-            res.Add(IsCombination(c1));
-
-            return res.FindAll(s => s.Equals(true)).Count == res.Count;
-        }
-
-
-        public  void testAll()
-        {
-            if (testCountOuts())
-            {
-                Console.WriteLine("Test outs passed");
-            }
-            else
-            {
-                Console.WriteLine("Test outs failed");
-            }
-
-
-            if (testIsCombination())
-            {
-                Console.WriteLine("Test combinations passed");
-            }
-            else
-            {
-                Console.WriteLine("Test combinations failed");
-            }
-
-
-        }
-
-
-
-
     }
 }
