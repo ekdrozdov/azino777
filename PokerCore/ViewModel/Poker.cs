@@ -733,5 +733,153 @@ namespace PokerCore.ViewModel
         {
             _players.Remove(key);
         }
+
+        public List<ICard> GetAllDeckWithoutMineCards(List<ICard> exclude)
+        {
+            List<ICard> result = new List<ICard>();
+
+            foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
+            {
+                foreach (CardRank rank in Enum.GetValues(typeof(CardRank)))
+                {
+                    Card buf = new Card(rank, suit);
+                    bool is_unique = true;
+                    foreach (Card c in exclude)
+                    {
+                        if (buf == c)
+                        {
+                            is_unique = false;
+                            break;
+                        }
+                    }
+
+                    if (is_unique)
+                    {
+                        result.Add(buf);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public bool IsCombination(List<ICard> cards)
+        {
+            //Pair
+            for (int i = 0; i < cards.Count; i++)
+            {
+                for (int j = i + 1; j < cards.Count; j++)
+                {
+                    if (cards[i].Rank == cards[j].Rank)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            //Flush
+            List<CardSuit> suits = new List<CardSuit>();
+            foreach (Card c in cards)
+            {
+                suits.Add(c.Suit);
+            }
+
+            foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
+            {
+                if (suits.FindAll(s => s.Equals(suit)).Count >= 5)
+                {
+                    return true;
+                }
+            }
+
+            //Straight
+            cards.Sort(new CardRankCompare());
+            List<ICard> comb = new List<ICard>(GetStraightCombination(cards));
+            if (comb.Count != 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public int countOuts(List<ICard> cards)
+        {
+            int result = 0;
+            List<ICard> allCards = GetAllDeckWithoutMineCards(cards);
+            foreach (Card c in allCards)
+            {
+                List<ICard> buf = new List<ICard>();
+                buf.AddRange(cards);
+                buf.Add(c);
+                if (IsCombination(buf))
+                {
+                    result++;
+                }
+            }
+            return result;
+        }
+
+        public bool testCountOuts()
+        {
+            bool result = true;
+
+            List<ICard> c1 = new List<ICard>();
+            c1.Add(new Card(CardRank.A, CardSuit.Spades));
+            c1.Add(new Card(CardRank.K, CardSuit.Spades));
+            c1.Add(new Card(CardRank.c5, CardSuit.Spades));
+            c1.Add(new Card(CardRank.J, CardSuit.Clubs));
+            c1.Add(new Card(CardRank.Q, CardSuit.Dimonds));
+
+            if (countOuts(c1) != 10)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        public bool testIsCombination()
+        {
+            List<bool> res = new List<bool>();
+            List<ICard> c1 = new List<ICard>();
+            c1.Add(new Card(CardRank.A, CardSuit.Spades));
+            c1.Add(new Card(CardRank.K, CardSuit.Spades));
+            c1.Add(new Card(CardRank.c5, CardSuit.Spades));
+            c1.Add(new Card(CardRank.J, CardSuit.Spades));
+            c1.Add(new Card(CardRank.Q, CardSuit.Spades));
+
+
+            res.Add(IsCombination(c1));
+
+            c1 = new List<ICard>();
+            c1.Add(new Card(CardRank.A, CardSuit.Spades));
+            c1.Add(new Card(CardRank.A, CardSuit.Clubs));
+            c1.Add(new Card(CardRank.A, CardSuit.Dimonds));
+            c1.Add(new Card(CardRank.A, CardSuit.Hearts));
+            c1.Add(new Card(CardRank.Q, CardSuit.Spades));
+
+
+            res.Add(IsCombination(c1));
+
+            c1 = new List<ICard>();
+            c1.Add(new Card(CardRank.A, CardSuit.Spades));
+            c1.Add(new Card(CardRank.K, CardSuit.Clubs));
+            c1.Add(new Card(CardRank.J, CardSuit.Spades));
+            c1.Add(new Card(CardRank.c10, CardSuit.Spades));
+            c1.Add(new Card(CardRank.Q, CardSuit.Spades));
+
+
+            res.Add(IsCombination(c1));
+
+            return res.FindAll(s => s.Equals(true)).Count == res.Count;
+        }
+
+
+
+
+
+
+
     }
 }

@@ -19,8 +19,7 @@ namespace PokerCore.ViewModel
 
         public Player(string name, int cash)
         {
-            _myState.Name = name;
-            _myState.Cash = cash;
+            _myState = new PlayerState(name, cash);
         }
 
         public void AddCash(int cash)
