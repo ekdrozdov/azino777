@@ -9,11 +9,5 @@ namespace PokerCore.Model.DataBase
         public int Id { get; set; }
 
         public DBTableCards TableCards { get; set; }
-        public List<DBPlayerGame> PlayersGames { get; set; }
-
-        public DBGame()
-        {
-            PlayersGames = new List<DBPlayerGame>();
-        }
     }
 }
