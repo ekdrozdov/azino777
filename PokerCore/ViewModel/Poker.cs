@@ -6,6 +6,7 @@ using ReactiveUI;
 using System.Linq;
 using PokerCore.Model;
 using PokerCore.Model.DataBase;
+using System.ComponentModel;
 
 namespace PokerCore.ViewModel
 {
@@ -95,13 +96,13 @@ namespace PokerCore.ViewModel
 
         public int BigBlind { get => _bigBlind; }
 
-        public int CurrentRaise { get => _curRaise; set => this.RaiseAndSetIfChanged(ref _curRaise, value); }
+        public int CurrentRaise { get => _curRaise; set { _curRaise = value; OnPropertyChanged("CurrentRaise"); } }
 
-        public int CurrentBet { get => _curBet; set => this.RaiseAndSetIfChanged(ref _curBet, value); }
+        public int CurrentBet { get => _curBet; set { _curBet = value; OnPropertyChanged("CurrentBet"); } }
 
-        public int AllBank { get => _allBank; set => this.RaiseAndSetIfChanged(ref _allBank, value); }
+        public int AllBank { get => _allBank; set { _allBank = value; OnPropertyChanged("AllBank"); } }
 
-        public List<(int, int)> DividedBanks { get => _dividedBanks; set => this.RaiseAndSetIfChanged(ref _dividedBanks, value); }
+        public List<(int, int)> DividedBanks { get => _dividedBanks; set { _dividedBanks = value; OnPropertyChanged("DividedBanks"); } }
 
         public CardDeck Deck { get => _cardDeck; }
 
@@ -887,16 +888,17 @@ namespace PokerCore.ViewModel
             }
         }
 
-        public bool TryConnect(string name, int cash)
+        public (bool, Player) TryConnect(string name, int cash)
         {
             if (CheckUniqueName())
             {
                 if (_players.Count < _gameRules.MaxPlayers)
                 {
-                    _players.Add(_players.Count, new Player(name, cash));
-                    return true;
+                    Player player = new Player(name, cash);
+                    _players.Add(_players.Count, player);
+                    return (true, player);
                 }
-                return false;
+                return (false, null);
             }
             else
                 throw new Exception("Данное имя игрока уже существует!");
@@ -1022,6 +1024,17 @@ namespace PokerCore.ViewModel
             }
 
             return request;
+        }
+
+        public event PropertyChangedEventHandler PropertyChange;
+
+        public virtual void OnPropertyChanged(string propertyName)
+        {
+            var propertyChanged = PropertyChange;
+            if (propertyChanged != null)
+            {
+                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }
