@@ -51,7 +51,7 @@ namespace PokerGraphics
             tmp.Visibility = Visibility.Visible;
             views.Add(tmp);
             AddVisualChild(tmp);
-            pokerTable = new Poker(real, smallBlind, bigBlind); 
+            pokerTable = new Poker(real.MyState.Name, real.MyState.Cash, smallBlind, bigBlind); 
 
             tmp = new PlayerView(pokerTable.TryConnect("Bot0", 800));
             tmp.OneWayBind(tmp.ViewModel, v => v.MyState.Name, view => view.uName);
