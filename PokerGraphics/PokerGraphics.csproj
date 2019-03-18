@@ -8,12 +8,13 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>PokerGraphics</RootNamespace>
     <AssemblyName>PokerGraphics</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,14 +36,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DynamicData, Version=6.8.0.2561, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynamicData.6.8.0.2561\lib\net46\DynamicData.dll</HintPath>
+    <Reference Include="DynamicData, Version=6.7.1.2534, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicData.6.7.1.2534\lib\net46\DynamicData.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveUI, Version=9.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveUI.9.11.3\lib\net461\ReactiveUI.dll</HintPath>
+    <Reference Include="ReactiveUI, Version=9.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReactiveUI.9.10.1\lib\net461\ReactiveUI.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveUI.WPF, Version=9.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveUI.WPF.9.11.3\lib\net461\ReactiveUI.WPF.dll</HintPath>
+    <Reference Include="ReactiveUI.WPF, Version=9.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReactiveUI.WPF.9.10.1\lib\net461\ReactiveUI.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Splat, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Splat.6.1.7\lib\net461\Splat.dll</HintPath>
@@ -79,6 +80,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PlayerView.xaml.cs">
+      <DependentUpon>PlayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInfo.xaml.cs">
+      <DependentUpon>UserInfo.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,19 +94,22 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="example.cs" />
+    <Compile Include="graph.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PlayerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PlayerView.xaml.cs">
-      <DependentUpon>PlayerView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -125,20 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PokerCore\PokerCore.csproj">
-      <Project>{afb4df35-cbeb-4323-a49e-7b6ecc5fd713}</Project>
-      <Name>PokerCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\t.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\tt.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\cardBack_blue1.png" />
@@ -209,6 +205,20 @@
     <Resource Include="Resources\cardSpadesJ.png" />
     <Resource Include="Resources\cardSpadesK.png" />
     <Resource Include="Resources\cardSpadesQ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\t.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\tt.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PokerCore\PokerCore.csproj">
+      <Project>{afb4df35-cbeb-4323-a49e-7b6ecc5fd713}</Project>
+      <Name>PokerCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
