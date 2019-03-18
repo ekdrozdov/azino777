@@ -87,16 +87,20 @@
             <Grid.Background>
                 <ImageBrush ImageSource="{DynamicResource ImageSource1}"/>
             </Grid.Background>
-            <Rectangle x:Name="center_card1" HorizontalAlignment="Left" Height="70" Margin="421,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
+            <Rectangle x:Name="center_card1" HorizontalAlignment="Left" Height="70" Margin="421,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.player7.FirstCardName, Mode=OneWay}"/>
+                </Rectangle.Fill>
+            </Rectangle>
             <Rectangle x:Name="center_card2" HorizontalAlignment="Left" Height="70" Margin="476,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
             <Rectangle x:Name="center_card3" HorizontalAlignment="Left" Height="70" Margin="531,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
             <Rectangle x:Name="center_card4" HorizontalAlignment="Left" Height="70" Margin="586,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
             <Rectangle x:Name="center_card5" HorizontalAlignment="Left" Height="70" Margin="641,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
 
             <Button x:Name="button_extract" 
-                    Content="Сбросить" 
-                    Click="button_fold"
-                    HorizontalAlignment="Left" Height="20" Margin="438,590,0,0" VerticalAlignment="Top" Width="69">
+                    Content="Fold" 
+                    Click="button_fold_Click"
+                    HorizontalAlignment="Left" Height="20" Margin="438,636,0,0" VerticalAlignment="Top" Width="69">
                 <Button.Triggers>
                     <EventTrigger RoutedEvent="Button.Click">
                         <BeginStoryboard>
@@ -135,16 +139,16 @@
                 </Button.Triggers>
             </Button>
             <Button x:Name="button_add" 
-                    Content="Поставить:"
+                    Content="Call"
                     Click="button_call"
-                    HorizontalAlignment="Left" Height="20" Margin="622,565,0,0" VerticalAlignment="Top" Width="69"/>
+                    HorizontalAlignment="Left" Height="20" Margin="622,604,0,0" VerticalAlignment="Top" Width="69"/>
             <TextBox x:Name="textbox_number_of_money" 
                      Text="{Binding ViewModel.player0.PlayerBet, Mode=OneWay}" 
-                     HorizontalAlignment="Left" Height="20" Margin="641,590,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="30"/>
+                     HorizontalAlignment="Left" Height="20" Margin="641,631,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="30"/>
             <Button x:Name="button_equalize" 
-                    Content="Уравнять" 
+                    Content="Equalize" 
                     Click="button_equalize_Click"
-                    HorizontalAlignment="Left" Margin="438,565,0,0" VerticalAlignment="Top" Width="69"/>
+                    HorizontalAlignment="Left" Margin="438,609,0,0" VerticalAlignment="Top" Width="69"/>
             <Button x:Name="button_out_to_menu" 
                     Content="Меню" 
                     Command="{Binding ShowMenuSett}"
@@ -161,7 +165,7 @@
             <TextBox x:Name="money_in_big_bland" 
                      Text="{Binding ViewModel.BigBlind, Mode=OneWay}"
                      HorizontalAlignment="Left" Height="23" Margin="655,371,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="55"/>
-            <Ellipse x:Name="diller10" Visibility=" HorizontalAlignment="Left" Height="25" Margin="843,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller10" HorizontalAlignment="Left" Height="25" Margin="843,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse x:Name="diller9" HorizontalAlignment="Left" Height="25" Margin="926,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse x:Name="diller8" HorizontalAlignment="Left" Height="25" Margin="926,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse x:Name="diller7" HorizontalAlignment="Left" Height="25" Margin="802,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
@@ -475,6 +479,21 @@
                     </Rectangle.Fill>
                 </Rectangle>
             </Canvas>
+            <Button x:Name="button_check" 
+                Content="Check"
+                Click="button_check_Click"
+                HorizontalAlignment="Left" Height="20" Margin="438,584,0,0" VerticalAlignment="Top" Width="69" RenderTransformOrigin="0.533,4.295"/>
+            <Button x:Name="button_allin" 
+                Content="AllIn"
+                Click="button_allin_Click"
+                HorizontalAlignment="Left" Height="20" Margin="438,559,0,0" VerticalAlignment="Top" Width="69" RenderTransformOrigin="0.533,4.295"/>
+            <Button x:Name="button_raise" 
+                Content="Raise"
+                Click="button_raise_Click"
+                HorizontalAlignment="Left" Height="20" Margin="622,554,0,0" VerticalAlignment="Top" Width="69"/>
+            <TextBox x:Name="textbox_raise_cash" 
+                Text="{Binding ViewModel.player0.PlayerBet, Mode=OneWay}" 
+                HorizontalAlignment="Left" Height="20" Margin="641,579,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="30"/>
 
         </Grid>
     </Grid>

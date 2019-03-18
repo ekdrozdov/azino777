@@ -118,11 +118,11 @@ namespace PokerGraphics
         private void button_equalize_Click(object sender, RoutedEventArgs e)
         {
             try {
-                ViewModel.Players[0].Check();
+               // ViewModel.Players[0].Check();
             }
             catch (Exception ex) { }
         }
-        private void button_fold(object sender, RoutedEventArgs e)
+        private void button_fold_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -135,6 +135,31 @@ namespace PokerGraphics
             try
             {
                 ViewModel.Players[0].Bet(Convert.ToInt32(textbox_number_of_money));
+                ViewModel.Players[0].Call();
+            }
+            catch (Exception ex) { }
+        }
+        private void button_raise_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].Raise(Convert.ToInt32(textbox_raise_cash));
+            }
+            catch (Exception ex) { }
+        }
+        private void button_check_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].Check();
+            }
+            catch (Exception ex) { }
+        }
+        private void button_allin_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].AllIn();
             }
             catch (Exception ex) { }
         }
