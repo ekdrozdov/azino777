@@ -27,13 +27,18 @@ namespace PokerCore.ViewModel
         int _allBank;
         List<(int, int)> _dividedBanks;
 
-        public Poker(Player _real, int smallBlind, int bigBlind)
+        public Poker(string name, int cash, int smallBlind, int bigBlind)
         {
-            //_players = new Dictionary<int, Player>();
+            _players = new Dictionary<int, Player>();
             _gameRules = new GameRules(10);
             _boardCards = new (Card, Visibility)[5];
             _dividedBanks = new List<(int, int)>();
             _cardDeck = new CardDeck();
+
+            Player player = new Player(name, cash, this);
+
+            AI Bot = new AI("bot", 1000, this);
+            _players.Add(1, Bot);
 
             _cardDeck.Shuffle();
             for (int i = 0; i < 5; i++)
@@ -41,10 +46,14 @@ namespace PokerCore.ViewModel
                 _boardCards[i].Item1 = _cardDeck.TakeCard();
                 _boardCards[i].Item2 = Visibility.Invisible;
             }
-            _players.Add(0, _real);
+            _players.Add(0, player);
             (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-            HandCards.Add((0, playerCards));
             _players[0].HandCards = (playerCards);
+            HandCards.Add((0, playerCards));
+
+            playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+            _players[1].HandCards = (playerCards);
+            HandCards.Add((1, playerCards));
             _curBet = 0;
             _curRaise = bigBlind;
             _allBank = 0;
@@ -56,37 +65,35 @@ namespace PokerCore.ViewModel
 
         #region Игроки
         public PlayerState player0
-        { get => _players[0].MyState; }
+        { get => _players.ContainsKey(0) ? _players[0].MyState : null; }
 
         public PlayerState player1
-        { get => _players[1].MyState; }
+        { get => _players.ContainsKey(1)?_players[1].MyState:null; }
 
         public PlayerState player2
-        { get => _players[2].MyState; }
+        { get => _players.ContainsKey(2) ? _players[2].MyState : null; }
 
         public PlayerState player3
-        { get => _players[3].MyState; }
+        { get => _players.ContainsKey(3) ? _players[3].MyState : null; }
 
         public PlayerState player4
-        { get => _players[4].MyState; }
+        { get => _players.ContainsKey(4) ? _players[4].MyState : null; }
 
         public PlayerState player5
-        { get => _players[5].MyState; }
+        { get => _players.ContainsKey(5) ? _players[5].MyState : null; }
 
         public PlayerState player6
-        { get => _players[6].MyState; }
+        { get => _players.ContainsKey(6) ? _players[6].MyState : null; }
 
         public PlayerState player7
-        { get => _players[7].MyState; }
+        { get => _players.ContainsKey(7) ? _players[7].MyState : null; }
 
         public PlayerState player8
-        { get => _players[8].MyState; }
+        { get => _players.ContainsKey(8) ? _players[8].MyState : null; }
 
         public PlayerState player9
-        { get => _players[9].MyState; }
+        { get => _players.ContainsKey(9) ? _players[9].MyState : null; }
 
-        public PlayerState player10
-        { get => _players[10].MyState; }
         #endregion
 
         #region Поля стола
@@ -126,7 +133,7 @@ namespace PokerCore.ViewModel
             }
         }
 
-        List<(int, (Card, Card))> HandCards;
+        List<(int, (Card, Card))> HandCards = new List<(int, (Card, Card))>();
         #endregion
 
         #region Определение сильнейшей комбинации
@@ -856,6 +863,7 @@ namespace PokerCore.ViewModel
                             }
 
                         NewStageStart();
+
                         break;
                 }
 
@@ -899,7 +907,7 @@ namespace PokerCore.ViewModel
             {
                 if (_players.Count < _gameRules.MaxPlayers)
                 {
-                    Player player = new Player(name, cash);
+                    Player player = new Player(name, cash, this);
                     _players.Add(_players.Count, player);
                     return (true, player);
                 }

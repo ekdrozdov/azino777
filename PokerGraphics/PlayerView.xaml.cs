@@ -20,13 +20,10 @@ namespace PokerGraphics
     /// <summary>
     /// Логика взаимодействия для PlayerView.xaml
     /// </summary>
-    public partial class PlayerView : UserControl, IViewFor<Player>
+    public partial class PlayerView : UserControl
     {
-        Player player;
-        public PlayerView(Player _player)
+        public PlayerView()
         {
-            player = _player;
-            DataContext = _player;
             InitializeComponent();
         }
 
@@ -52,7 +49,5 @@ namespace PokerGraphics
             set { SetValue(cash_u, value); }
         }
 
-        public Player ViewModel { get => player; set => throw new NotImplementedException(); }
-        object IViewFor.ViewModel { get => player; set => throw new NotImplementedException(); }
     }
 }

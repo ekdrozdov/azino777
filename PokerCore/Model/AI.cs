@@ -21,8 +21,11 @@ namespace PokerCore.ViewModel
 
         private static Random random = new Random();
         //gauss params
-        public AI(string name, int cash) : base(name, cash)
+        public AI(string name, int cash, Poker pok) : base(name, cash, pok)
         {
+            MyState = new PlayerState(name, cash);
+            _table = new TableForPlayer(pok);
+            _handCards = (new Card(CardRank.A, CardSuit.Diamonds), new Card(CardRank.J, CardSuit.Spades));
         }
 
         private int GetOuts(List<ICard> cards)

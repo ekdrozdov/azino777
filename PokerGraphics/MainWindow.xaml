@@ -442,16 +442,9 @@
                 </Rectangle.Fill>
             </Rectangle>
             <!--  User Controls -->
-            <local:UserInfo x:Name="i0" Height="50" Margin="506,10,464,630" uName="{Binding ViewModel.player1.Name, Mode=OneWay}" Cash="{Binding ViewModel.player1.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="i1" Height="50" Margin="224,10,746,630" uName="{Binding ViewModel.player2.Name, Mode=OneWay}" Cash="{Binding ViewModel.player2.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="i2" Height="50" Margin="16,128,954,512" uName="{Binding ViewModel.player3.Name, Mode=OneWay}" Cash="{Binding ViewModel.player3.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="i3" Height="50" Margin="16,490,954,150" uName="{Binding ViewModel.player4.Name, Mode=OneWay}" Cash="{Binding ViewModel.player4.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="i4" Height="50" Margin="224,630,746,10" uName="{Binding ViewModel.player5.Name, Mode=OneWay}" Cash="{Binding ViewModel.player5.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="i6" Height="50" Margin="757,630,213,10" uName="{Binding ViewModel.player6.Name, Mode=OneWay}" Cash="{Binding ViewModel.player6.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="i7" Height="50" Margin="960,490,10,150" uName="{Binding ViewModel.player7.Name, Mode=OneWay}" Cash="{Binding ViewModel.player7.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="i8" Height="50" Margin="960,132,10,508" uName="{Binding ViewModel.player8.Name, Mode=OneWay}" Cash="{Binding ViewModel.player8.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="i9" Height="50" Margin="799,10,171,630" uName="{Binding ViewModel.player9.Name, Mode=OneWay}" Cash="{Binding ViewModel.player9.Cash, Mode=OneWay}"/>
-            <local:UserInfo x:Name="player" Height="50" Margin="506,630,464,10" uName="{Binding ViewModel.player0.Name, Mode=OneWay}" Cash="{Binding ViewModel.player0.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i0" Height="50" DataContext="{Binding VievModel.player1}" Margin="506,10,464,630" uName="{Binding MyState.Name, Mode=OneWay}" Cash="{Binding MyState.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i1" Height="50" Margin="224,10,746,630" uName="{Binding ViewModel.player2.Name, Mode=OneWay}" Cash="{Binding ViewModel.player2.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="player" Height="50" Margin="506,630,464,10" uName="{Binding ViewModel.player0.Name, Mode=OneWay}" Cash="{Binding ViewModel.player0.Cash, Mode=OneWay}"/>
 
             <Canvas>
                 <Path x:Name="p" Data="{StaticResource pa}" 

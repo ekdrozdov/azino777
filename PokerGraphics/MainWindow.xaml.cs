@@ -39,50 +39,19 @@ namespace PokerGraphics
             int smallBlind = 10;
             int bigBlind = 50;
             int realCash = 1000;
-            Player real = new Player(realName, realCash);
             //кароч надо создавать объекты типа PlayerView , это UserControl для каждого пользователя
             //у меня не получилось прибиндиться таким образом, мне каж надо как то сказать MainWindow что у него появились ещё контролы
             //но зато получчилось прибиндиться напрямую через ViewModel MainWindow (см. AllBank, SmallBlind, BigBlind)
-            PlayerView tmp = new PlayerView(real);
-            tmp.OneWayBind(tmp.ViewModel, v => v.MyState.Cash, view => view.Cash);
-            tmp.OneWayBind(tmp.ViewModel, v => v.MyState.Name, view => view.uName);
-            tmp.Height = 50;
-            tmp.Margin = new Thickness(506, 630, 464, 10);
-            tmp.Visibility = Visibility.Visible;
-            views.Add(tmp);
-            AddVisualChild(tmp);
-            pokerTable = new Poker(real, smallBlind, bigBlind);
+            pokerTable = new Poker(realName, realCash, smallBlind, bigBlind);
 
-            if (pokerTable.TryConnect("Bot0", 800).Item1)
-                tmp = new PlayerView(pokerTable.TryConnect("Bot0", 800).Item2);
-            else
-                throw new Exception("Свободных мест нет!");
-
-            tmp.OneWayBind(tmp.ViewModel, v => v.MyState.Name, view => view.uName);
-            tmp.OneWayBind(tmp.ViewModel, v => v.MyState.Cash, view => view.Cash);
-            tmp.Height = 50;
-            tmp.Margin = new Thickness(506, 10, 464, 630);
-            tmp.Visibility = Visibility.Visible;
-            views.Add(tmp);
+            pokerTable.TryConnect("Bot0", 800);
         }
 
         public MainWindow()
         {
             PokerInitialize();
             InitializeComponent();
-            ViewModel.TryConnect("daun1", 1);
-            ViewModel.TryConnect("daun21", 1);
-            ViewModel.TryConnect("daun31", 1);
-            ViewModel.TryConnect("daun41", 1);
-            ViewModel.TryConnect("daun51", 1);
-            ViewModel.TryConnect("daun61", 1);
-            ViewModel.TryConnect("daun71", 1);
-            ViewModel.TryConnect("daun81", 1);
             DataContext = this;
-            this.WhenActivated(disposer =>
-            {
-                this.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
-            });
 
             menu.Visibility = Visibility.Visible;
             grid_sett.Visibility = Visibility.Collapsed;
