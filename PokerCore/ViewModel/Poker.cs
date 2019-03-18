@@ -29,20 +29,22 @@ namespace PokerCore.ViewModel
 
         public Poker(Player _real, int smallBlind, int bigBlind)
         {
-            _players = new Dictionary<int, Player>();
+            //_players = new Dictionary<int, Player>();
             _gameRules = new GameRules(10);
             _boardCards = new (Card, Visibility)[5];
             _dividedBanks = new List<(int, int)>();
             _cardDeck = new CardDeck();
 
-            Player real = new Player(name, startbank);
             _cardDeck.Shuffle();
             for (int i = 0; i < 5; i++)
             {
                 _boardCards[i].Item1 = _cardDeck.TakeCard();
                 _boardCards[i].Item2 = Visibility.Invisible;
             }
-            _players.Add(0, real);
+            _players.Add(0, _real);
+            (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+            HandCards.Add((0, playerCards));
+            _players[0].HandCards = (playerCards);
             _curBet = 0;
             _curRaise = bigBlind;
             _allBank = 0;
@@ -112,11 +114,14 @@ namespace PokerCore.ViewModel
 
         public Card[] BoardCards { get
             {
-                Card[] opened = new Card[5];
-                for (int i = 0; i < 5; i++)
-                    if (_boardCards[i].Item2 == Visibility.Visible)
-                        opened[i] = _boardCards[i].Item1;
+                int visibleCardCount = 0;
+                foreach ((Card, Visibility) card in _boardCards)
+                    if (card.Item2 == Visibility.Visible)
+                        visibleCardCount++;
                     else break;
+                Card[] opened = new Card[visibleCardCount];
+                for (int i = 0; i < visibleCardCount; i++)
+                    opened[i] = _boardCards[i].Item1;
                 return opened;
             }
         }

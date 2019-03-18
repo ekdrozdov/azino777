@@ -7,7 +7,7 @@ namespace PokerCore.Model
 {
     public class PlayerState : ReactiveObject
     {
-        public PlayerState(string name, int cash) { _name = name; _cash = cash; HandCards = (new Card(CardRank.Q, CardSuit.Dimonds), new Card(CardRank.c4, CardSuit.Spades)); }
+        public PlayerState(string name, int cash) { _name = name; _cash = cash; HandCards = (new Card(CardRank.Q, CardSuit.Diamonds), new Card(CardRank.c4, CardSuit.Spades)); }
 
         string _name;
         public string Name { get => _name; set => _name = value; }

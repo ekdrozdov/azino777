@@ -13,7 +13,6 @@ namespace PokerCore.ViewModel
     public class AI : Player
     {
         enum gameTurn { preFlop, Flop, Tern, River, Kciker }
-        Poker poker;
         Dictionary<int, double> _aggresivity;
         double _myAggresive = 0.5;
         double _firstChoiseKoef, _secondChoiseKoef, _thirdChoiseKoef;
@@ -22,21 +21,20 @@ namespace PokerCore.ViewModel
 
         private static Random random = new Random();
         //gauss params
-        public AI(string name, int cash, int small, int smallBlind, int bigBlind) : base(name, cash)
+        public AI(string name, int cash) : base(name, cash)
         {
-            poker = new Poker(name, cash, smallBlind, bigBlind);
         }
 
         private int GetOuts(List<ICard> cards)
         {
             //все карты, что усилят руку
-            return poker.countOuts(cards);
+            return _table.countOuts(cards);
         }
 
         private int GetDiscountOuts(List<ICard> cards)
         {
             //все карты, что усилят только нашу руку
-            return poker.countOuts(cards.GetRange(0,2));
+            return _table.countOuts(cards.GetRange(0, 2));
         }
 
         private double GetOdds()
@@ -70,7 +68,7 @@ namespace PokerCore.ViewModel
             Parallel.For(0, nThreads, ind =>
             {
                 //инициализация
-                List<(int,int)> threadBanks;
+                List<(int, int)> threadBanks;
                 Dictionary<int, (Card, Card)> Cards = new Dictionary<int, (Card, Card)>();
                 Dictionary<int, Player> PlayersInfo = new Dictionary<int, Player>();//плохо
                 gameTurn curState;
@@ -94,7 +92,7 @@ namespace PokerCore.ViewModel
                 {
                     while (StateEnd())
                     {
-                        
+
 
                         curPlayer = curPlayer.Next;
                     }
@@ -122,11 +120,12 @@ namespace PokerCore.ViewModel
 
             if (cards.Count == 5 && outs <= 6)
             {
-                if (cards[0].Rank < CardRank.J && cards[1].Rank < CardRank.J) {
+                if (cards[0].Rank < CardRank.J && cards[1].Rank < CardRank.J)
+                {
                     return GameState.fold;
                 }
             }
-            
+
             return GameState.call;
         }
 

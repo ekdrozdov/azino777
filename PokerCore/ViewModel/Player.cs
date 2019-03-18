@@ -123,13 +123,14 @@ namespace PokerCore.ViewModel
         {
             string RoundName = "";
 
-            if (_table.BoardCards.Count == 0)
+            int visibleCardCount = _table.BoardCards.Length;
+            if (visibleCardCount == 0)
                 RoundName = "Pre-flop";
-            if (_table.BoardCards.Count == 3)
+            if (visibleCardCount == 3)
                 RoundName = "Flop";
-            if (_table.BoardCards.Count == 4)
+            if (visibleCardCount == 4)
                 RoundName = "Turn";
-            if (_table.BoardCards.Count == 3)
+            if (visibleCardCount == 3)
                 RoundName = "River";
 
             return RoundName;
