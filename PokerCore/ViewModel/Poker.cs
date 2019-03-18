@@ -14,7 +14,7 @@ namespace PokerCore.ViewModel
         Dictionary<int, Player> _players;
         GameRules _gameRules;
         //List<Card> _boardCards;
-        Tuple<Card, IVisibility>[] _boardCards;
+        Tuple<Card, Visibility>[] _boardCards;
         CardDeck _cardDeck;
         int _curPlayer;
         int _dealer;
@@ -29,7 +29,7 @@ namespace PokerCore.ViewModel
         {
             _players = new Dictionary<int, Player>();
             _gameRules = new GameRules(10);
-            _boardCards = new Tuple<Card, IVisibility>[5];
+            _boardCards = new Tuple<Card, Visibility>[5];
             _dividedBanks = new List<(int, int)>();
             _cardDeck = new CardDeck();
 
@@ -66,7 +66,16 @@ namespace PokerCore.ViewModel
 
         public Dictionary<int, Player> Players { get => _players; }
 
-        public Tuple<Card, IVisibility>[] BoardCards { get => _boardCards; }
+        public Card[] BoardCards { get
+            {
+                Card[] opened = new Card[5];
+                for (int i = 0; i < 5; i++)
+                    if (_boardCards[i].Item2 == Visibility.Visible)
+                        opened[i] = _boardCards[i].Item1;
+                    else break;
+                return opened;
+            }
+        }
 
         List<(int, (Card, Card))> HandCards;
 
