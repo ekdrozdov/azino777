@@ -14,7 +14,8 @@ namespace PokerCore.ViewModel
         Dictionary<int, Player> _players;
         GameRules _gameRules;
         //List<Card> _boardCards;
-        Tuple<Card, Visibility>[] _boardCards;
+        //List<(Card, Visibility)> _boardCards;
+        (Card, Visibility)[] _boardCards;
         CardDeck _cardDeck;
         int _curPlayer;
         int _dealer;
@@ -29,7 +30,7 @@ namespace PokerCore.ViewModel
         {
             _players = new Dictionary<int, Player>();
             _gameRules = new GameRules(10);
-            _boardCards = new Tuple<Card, Visibility>[5];
+            _boardCards = new (Card, Visibility)[5];
             _dividedBanks = new List<(int, int)>();
             _cardDeck = new CardDeck();
 
@@ -96,7 +97,8 @@ namespace PokerCore.ViewModel
                 String strIDCombination = "";
                 String strIDCombinationFlush = "";
                 List<ICard> lsSetCards = new List<ICard>();
-                lsSetCards.AddRange(_boardCards);
+                foreach ((Card, Visibility) boardCard in _boardCards)
+                    lsSetCards.Add(boardCard.Item1);
                 lsSetCards.Add(pairCard.Item2.Item1);
                 lsSetCards.Add(pairCard.Item2.Item2);
                 //Считаем количество карт с одной мастью
@@ -620,6 +622,7 @@ namespace PokerCore.ViewModel
 
         public bool EndAction()
         {
+            int visibleCardCount = 0;
             //добавляем в бд игроков и игру
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -653,19 +656,25 @@ namespace PokerCore.ViewModel
             }
 
             if (lastStage)
-            { switch (_boardCards.Count)
+            {
+                foreach ((Card, Visibility) card in _boardCards)
+                    if (card.Item2 == Visibility.Visible)
+                        visibleCardCount++;
+                    else break;
+
+                switch (visibleCardCount)
                 {
                     case 0:
                         // Lay out 3 cards on board
                         for (int i = 0; i < 3; i++)
-                            _boardCards.Add(_cardDeck.TakeCard());
+                            _boardCards[i].Item2 = Visibility.Visible;
 
                         //добавляем в бд карты со стола
                         using (ApplicationContext db = new ApplicationContext())
                         { 
-                            db.TableCards.Add(new DBTableCards { FirstCard = new DBCard { Rank = _boardCards[0].Rank, Suit = _boardCards[0].Suit },
-                                                                SecondCard = new DBCard { Rank = _boardCards[1].Rank, Suit = _boardCards[1].Suit },
-                                                                ThirdCard = new DBCard { Rank = _boardCards[2].Rank, Suit = _boardCards[2].Suit },
+                            db.TableCards.Add(new DBTableCards { FirstCard = new DBCard { Rank = _boardCards[0].Item1.Rank, Suit = _boardCards[0].Item1.Suit },
+                                                                SecondCard = new DBCard { Rank = _boardCards[1].Item1.Rank, Suit = _boardCards[1].Item1.Suit },
+                                                                ThirdCard = new DBCard { Rank = _boardCards[2].Item1.Rank, Suit = _boardCards[2].Item1.Suit },
                                                                 DBGameId = db.Games.Last().Id });
                             db.SaveChanges();
                         }
@@ -692,12 +701,16 @@ namespace PokerCore.ViewModel
                             db.SaveChanges();
                         }
 
-                        // clear board from cards
-                        _boardCards.Clear();
-
                         // Get new deck andd shuffle cards to start new game
                         _cardDeck = new CardDeck();
                         _cardDeck.Shuffle();
+
+                        // draw new cards for next game
+                        for (int i = 0; i < 5; i++)
+                        {
+                            _boardCards[i].Item1 = _cardDeck.TakeCard();
+                            _boardCards[i].Item2 = Visibility.Invisible;
+                        }
 
                         // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
                         foreach (KeyValuePair<int, Player> player in _players)
@@ -769,15 +782,15 @@ namespace PokerCore.ViewModel
 
                     default:
                         // Lay out 1 card on board 
-                        _boardCards.Add(_cardDeck.TakeCard());
+                        _boardCards[visibleCardCount].Item2 = Visibility.Visible;
 
                         //добавляем в бд 4 и 5 карту со стола
-                        if (_boardCards.Count == 5)
+                        if (visibleCardCount == 4)
                             using (ApplicationContext db = new ApplicationContext())
                             {
                                 DBTableCards table = db.TableCards.Last();    
-                                table.FourthCard = new DBCard { Rank = _boardCards[3].Rank, Suit = _boardCards[3].Suit };
-                                table.FifthCard = new DBCard { Rank = _boardCards[4].Rank, Suit = _boardCards[4].Suit };    
+                                table.FourthCard = new DBCard { Rank = _boardCards[3].Item1.Rank, Suit = _boardCards[3].Item1.Suit };
+                                table.FifthCard = new DBCard { Rank = _boardCards[4].Item1.Rank, Suit = _boardCards[4].Item1.Suit };    
                                 db.TableCards.Update(table);
                                 db.SaveChanges();
                             }
