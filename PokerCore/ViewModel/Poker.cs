@@ -35,6 +35,12 @@ namespace PokerCore.ViewModel
             _cardDeck = new CardDeck();
 
             Player real = new Player(name, startbank);
+            _cardDeck.Shuffle();
+            for (int i = 0; i < 5; i++)
+            {
+                _boardCards[i].Item1 = _cardDeck.TakeCard();
+                _boardCards[i].Item2 = Visibility.Invisible;
+            }
             _players.Add(0, real);
             _curBet = 0;
             _curRaise = bigBlind;
