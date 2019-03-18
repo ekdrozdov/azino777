@@ -7,16 +7,17 @@ using ReactiveUI;
 using System.Linq;
 using PokerCore.Model;
 using PokerCore.Model.DataBase;
+using System.ComponentModel;
 
 namespace PokerCore.ViewModel
 {
     public class Player : ReactiveObject
     {
         PlayerState _myState;
-        public PlayerState MyState { get => _myState; set => this.RaiseAndSetIfChanged(ref _myState, value); }
+        public PlayerState MyState { get => _myState; set { _myState = value; OnPropertyChanged("MyState"); } }
 
         (Card, Card) _handCards;
-        public (Card, Card) HandCards { get => _handCards; set => this.RaiseAndSetIfChanged(ref _handCards, value); }
+        public (Card, Card) HandCards { get => _handCards; set { _handCards = value; OnPropertyChanged("HandCards"); } }
 
         protected TableForPlayer _table;
 
@@ -152,6 +153,17 @@ namespace PokerCore.ViewModel
                     //DecisionTime
                 });
                 db.SaveChanges();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChange;
+
+        public virtual void OnPropertyChanged(string propertyName)
+        {
+            var propertyChanged = PropertyChange;
+            if (propertyChanged != null)
+            {
+                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }
