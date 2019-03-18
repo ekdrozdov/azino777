@@ -812,16 +812,17 @@ namespace PokerCore.ViewModel
             }
         }
 
-        public bool TryConnect(string name, int cash)
+        public (bool, Player) TryConnect(string name, int cash)
         {
             if(CheckUniqueName())
             {
                 if (_players.Count < _gameRules.MaxPlayers)
                 {
-                    _players.Add(_players.Count, new Player(name, cash));
-                    return true;
+                    Player player = new Player(name, cash);
+                    _players.Add(_players.Count, player);
+                    return (true, player);
                 }
-                return false;
+                return (false, null);
             }
             else
                 throw new Exception("Данное имя игрока уже существует!");

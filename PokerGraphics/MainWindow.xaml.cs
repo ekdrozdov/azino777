@@ -51,9 +51,13 @@ namespace PokerGraphics
             tmp.Visibility = Visibility.Visible;
             views.Add(tmp);
             AddVisualChild(tmp);
-            pokerTable = new Poker(real.MyState.Name, real.MyState.Cash, smallBlind, bigBlind); 
+            pokerTable = new Poker(real.MyState.Name, real.MyState.Cash, smallBlind, bigBlind);
 
-            tmp = new PlayerView(pokerTable.TryConnect("Bot0", 800));
+            if (pokerTable.TryConnect("Bot0", 800).Item1)
+                tmp = new PlayerView(pokerTable.TryConnect("Bot0", 800).Item2);
+            else
+                throw new Exception ("Свободных мест нет!");
+
             tmp.OneWayBind(tmp.ViewModel, v => v.MyState.Name, view => view.uName);
             tmp.OneWayBind(tmp.ViewModel, v => v.MyState.Cash, view => view.Cash);
             tmp.Height = 50;
