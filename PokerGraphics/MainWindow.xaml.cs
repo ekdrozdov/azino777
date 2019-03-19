@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using ReactiveUI;
 using PokerCore.ViewModel;
 using System.ComponentModel;
+using System.Reactive.Disposables;
 
 namespace PokerGraphics
 {
@@ -24,6 +25,7 @@ namespace PokerGraphics
     public partial class MainWindow : Window, IViewFor<Poker>
     {
         Poker pokerTable;
+        public List<PlayerView> views = new List<PlayerView>();
 
         public Poker ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
         object IViewFor.ViewModel { get => pokerTable; set => throw new NotImplementedException(); }
@@ -31,20 +33,25 @@ namespace PokerGraphics
         public event PropertyChangedEventHandler PropertyChanged;
         public event ReactiveUI.PropertyChangingEventHandler PropertyChanging;
 
-        public void PokerInitialize(string name, int startbank)
+        public void PokerInitialize()
         {
-            pokerTable = new Poker("",1000,10,50);
+            string realName = "Ilya";
+            int smallBlind = 10;
+            int bigBlind = 50;
+            int realCash = 1000;
+            //кароч надо создавать объекты типа PlayerView , это UserControl для каждого пользователя
+            //у меня не получилось прибиндиться таким образом, мне каж надо как то сказать MainWindow что у него появились ещё контролы
+            //но зато получчилось прибиндиться напрямую через ViewModel MainWindow (см. AllBank, SmallBlind, BigBlind)
+            pokerTable = new Poker(realName, realCash, smallBlind, bigBlind);
+
+            var a = pokerTable.TryConnect("Bot0", 800);
         }
 
         public MainWindow()
         {
+            PokerInitialize();
             InitializeComponent();
-
             DataContext = this;
-            this.WhenActivated(disposer =>
-            {
-                //this.WhenAnyValue(t => t).Subscribe(v => DataContext = v).DisposeWith(disposer);
-            });
 
             menu.Visibility = Visibility.Visible;
             grid_sett.Visibility = Visibility.Collapsed;
@@ -61,9 +68,9 @@ namespace PokerGraphics
         {
             grid_sett.Visibility = Visibility.Collapsed;
             table.Visibility = Visibility.Visible;
+            
             try
             {
-                PokerInitialize(textbox_name.Text, Int32.Parse(textbox_first_bank.Text));
             }
             catch (Exception ex)
             {
@@ -79,5 +86,65 @@ namespace PokerGraphics
             grid_sett.Visibility = Visibility.Visible;
 
         }
+        private void button_exit_Click(object sender, RoutedEventArgs e)
+        {
+        }
+        private void button_equalize_Click(object sender, RoutedEventArgs e)
+        {
+            try {
+                // ViewModel.Players[0].Check();
+                ViewModel.Players[0].Call();
+                pokerTable.EndAction();
+            }
+            catch (Exception ex) { }
+        }
+        private void button_fold_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].Fold();
+                pokerTable.EndAction();
+            }
+            catch (Exception ex) { }
+        }
+        private void button_call(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].Bet(Convert.ToInt32(textbox_number_of_money));
+                pokerTable.EndAction();
+
+            }
+            catch (Exception ex) { }
+        }
+        private void button_raise_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].Raise(Convert.ToInt32(textbox_raise_cash));
+                pokerTable.EndAction();
+            }
+            catch (Exception ex) { }
+        }
+        private void button_check_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].Check();
+                pokerTable.EndAction();
+            }
+            catch (Exception ex) { }
+        }
+        private void button_allin_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.Players[0].AllIn();
+                pokerTable.EndAction();
+
+            }
+            catch (Exception ex) { }
+        }
     }
 }
+

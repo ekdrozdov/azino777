@@ -8,28 +8,36 @@ namespace PokerCore.Model
     {
         public Card(CardRank rank, CardSuit suit) { _rank = rank; _suit = suit; }
 
-        CardRank _rank;
+        private CardRank _rank;
         public CardRank Rank { get => _rank; }
 
-        CardSuit _suit;
+        private CardSuit _suit;
         public CardSuit Suit { get => _suit; }
 
-        public string GetTextureName(CardRank rank, CardSuit suit)
+        public override string ToString()
+        {
+            return $"{_rank} {_suit}";
+        }
+
+        public string GetTextureName()
         {
             string name;
             name = "card";
 
             foreach (string suits in Enum.GetNames(typeof(CardSuit)))
-                if (suits.Equals(suit.ToString()))
+                if (suits.Equals(_suit.ToString()))
                 {
                     name += suits;
                     foreach (string ranks in Enum.GetNames(typeof(CardRank)))
-                        if (ranks.Equals(suit.ToString()))
+                        if (ranks.Equals(_rank.ToString()))
+                        {
                             name += ranks;
+                            break;
+                        }
                 }
 
             name += ".png";
-            return name;
+            return "Resources/" + name;
         }
 
         public static bool operator ==(Card x, Card y)

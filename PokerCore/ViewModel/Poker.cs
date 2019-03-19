@@ -5,35 +5,55 @@ using System.Text;
 using ReactiveUI;
 using System.Linq;
 using PokerCore.Model;
-using PokerCore.Model.DataBase;
+//using PokerCore.Model.DataBase;
+using System.ComponentModel;
 
 namespace PokerCore.ViewModel
 {
-    public class Poker: ReactiveObject
+    public class Poker : ReactiveObject
     {
-        Dictionary<int, Player> _players;
+        public Dictionary<int, Player> _players;
         GameRules _gameRules;
-        List<Card> _boardCards;
+        //List<Card> _boardCards;
+        //List<(Card, Visibility)> _boardCards;
+        (Card, Visibility)[] _boardCards;
         CardDeck _cardDeck;
         int _curPlayer;
         int _dealer;
-        int _smallBlind;
-        int _bigBlind;
+        readonly int _smallBlind;
+        readonly int _bigBlind;
         int _curBet;
         int _curRaise;
         int _allBank;
         List<(int, int)> _dividedBanks;
 
-        public Poker(string name, int startbank, int smallBlind, int bigBlind)
+        public Poker(string name, int cash, int smallBlind, int bigBlind)
         {
             _players = new Dictionary<int, Player>();
             _gameRules = new GameRules(10);
-            _boardCards = new List<Card>();
+            _boardCards = new (Card, Visibility)[5];
             _dividedBanks = new List<(int, int)>();
             _cardDeck = new CardDeck();
 
-            Player real = new Player(name, startbank);
-            _players.Add(0, real);
+            Player player = new Player(name, cash, this);
+
+            AI Bot = new AI("bot", 1000, this);
+            _players.Add(1, Bot);
+
+            _cardDeck.Shuffle();
+            for (int i = 0; i < 5; i++)
+            {
+                _boardCards[i].Item1 = _cardDeck.TakeCard();
+                _boardCards[i].Item2 = Visibility.Invisible;
+            }
+            _players.Add(0, player);
+            (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+            _players[0].HandCards = (playerCards);
+            HandCards.Add((0, playerCards));
+
+            playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+            _players[1].HandCards = (playerCards);
+            HandCards.Add((1, playerCards));
             _curBet = 0;
             _curRaise = bigBlind;
             _allBank = 0;
@@ -43,6 +63,40 @@ namespace PokerCore.ViewModel
             _smallBlind = smallBlind;
         }
 
+        #region Игроки
+        public PlayerState player0
+        { get => _players.ContainsKey(0) ? _players[0].MyState : null; }
+
+        public PlayerState player1
+        { get => _players.ContainsKey(1)?_players[1].MyState:null; }
+
+        public PlayerState player2
+        { get => _players.ContainsKey(2) ? _players[2].MyState : null; }
+
+        public PlayerState player3
+        { get => _players.ContainsKey(3) ? _players[3].MyState : null; }
+
+        public PlayerState player4
+        { get => _players.ContainsKey(4) ? _players[4].MyState : null; }
+
+        public PlayerState player5
+        { get => _players.ContainsKey(5) ? _players[5].MyState : null; }
+
+        public PlayerState player6
+        { get => _players.ContainsKey(6) ? _players[6].MyState : null; }
+
+        public PlayerState player7
+        { get => _players.ContainsKey(7) ? _players[7].MyState : null; }
+
+        public PlayerState player8
+        { get => _players.ContainsKey(8) ? _players[8].MyState : null; }
+
+        public PlayerState player9
+        { get => _players.ContainsKey(9) ? _players[9].MyState : null; }
+
+        #endregion
+
+        #region Поля стола
         public int Dealer { get => _dealer; }
 
         public int CurPlayer { get => _curPlayer; }
@@ -54,7 +108,7 @@ namespace PokerCore.ViewModel
         public int CurrentRaise { get => _curRaise; set => this.RaiseAndSetIfChanged(ref _curRaise, value); }
 
         public int CurrentBet { get => _curBet; set => this.RaiseAndSetIfChanged(ref _curBet, value); }
-              
+
         public int AllBank { get => _allBank; set => this.RaiseAndSetIfChanged(ref _allBank, value); }
 
         public List<(int, int)> DividedBanks { get => _dividedBanks; set => this.RaiseAndSetIfChanged(ref _dividedBanks, value); }
@@ -65,11 +119,27 @@ namespace PokerCore.ViewModel
 
         public Dictionary<int, Player> Players { get => _players; }
 
-        public List<Card> BoardCards { get => _boardCards; }
+        public List<string> BoardCards { get
+            {
+                List<string> opened = new List<string>();
+                int visibleCardCount = 0;
+                foreach ((Card, Visibility) card in _boardCards)
+                    if (card.Item2 == Visibility.Visible)
+                    {
+                        opened.Add(card.Item1.GetTextureName());
+                    } 
+                    else opened.Add("cardBlack_blue1.png");
+                //Card[] opened = new Card[visibleCardCount];
+                //for (int i = 0; i < visibleCardCount; i++)
+                //    opened[i] = _boardCards[i].Item1;
+                return opened;
+            }
+        }
 
-        List<(int, (Card, Card))> HandCards;
+        List<(int, (Card, Card))> HandCards = new List<(int, (Card, Card))>();
+        #endregion
 
-
+        #region Определение сильнейшей комбинации
         private Dictionary<CardRank, String> m_dicWeightCardRank;
         private Dictionary<String, String> m_dicNumberCombination;
         private List<CardRank> m_ls4CardsEqualRank;
@@ -78,54 +148,55 @@ namespace PokerCore.ViewModel
         private List<CardRank> m_lsOnlyCards;
         public IEnumerable<int> GetStrongestCombination()
         {
-            List<(int, UInt64)> lsCombinationCardsPlayers=new List<(int, UInt64)>();
+            List<(int, UInt64)> lsCombinationCardsPlayers = new List<(int, UInt64)>();
             CreateNumberCombination();
             CreateWeightCardRank();
             foreach (var pairCard in HandCards)
             {
                 String strIDCombination = "";
                 String strIDCombinationFlush = "";
-                List<ICard> lsSetCards = new List<ICard>();
-                lsSetCards.AddRange(_boardCards);
+                List<Card> lsSetCards = new List<Card>();
+                foreach ((Card, Visibility) boardCard in _boardCards)
+                    lsSetCards.Add(boardCard.Item1);
                 lsSetCards.Add(pairCard.Item2.Item1);
                 lsSetCards.Add(pairCard.Item2.Item2);
                 //Считаем количество карт с одной мастью
-                Dictionary< CardSuit, int> dicCountSuit = new Dictionary<CardSuit, int>(CountCardsThisSuit(lsSetCards));
+                Dictionary<CardSuit, int> dicCountSuit = new Dictionary<CardSuit, int>(CountCardsThisSuit(lsSetCards));
                 //Сортирум карты по рангу
                 CardRankCompare comp = new CardRankCompare();
                 lsSetCards.Sort(comp);
-                foreach ( var suit in dicCountSuit)
+                foreach (var suit in dicCountSuit)
                 {
                     //Если масть у карт встречается более 4 раз, то роял флеш, стрит флеш или флеш
-                    if(suit.Value < 5)
+                    if (suit.Value < 5)
                     {
                         continue;
                     }
                     //Если первая карта туз, карты идут подряд и все одной масти, то роял флеш
-                    if(lsSetCards[0].Rank == CardRank.A && IsInOrderAndEqualSuit(lsSetCards.GetRange(0,5)))
+                    if (lsSetCards[0].Rank == CardRank.A && IsInOrderAndEqualSuit(lsSetCards.GetRange(0, 5)))
                     {
                         strIDCombination = m_dicNumberCombination["RoualStraightFlush"] + "0000000000";
                         break;
                     }
                     //Если карты идут подряд и одной масти то стрит флеш
-                    List<ICard> lsStraightFlushCombination =
-                        new List<ICard>(GetStraightFlushCombination(lsSetCards));
-                   if (lsStraightFlushCombination.Count != 0)
+                    List<Card> lsStraightFlushCombination =
+                        new List<Card>(GetStraightFlushCombination(lsSetCards));
+                    if (lsStraightFlushCombination.Count != 0)
                     {
-                        strIDCombination = m_dicNumberCombination["StraightFlush"] 
+                        strIDCombination = m_dicNumberCombination["StraightFlush"]
                             + CreateCardsCombimationInStringForStraightFlush(lsSetCards, lsStraightFlushCombination);
                         break;
                     }
-                   //иначе флэш, просто запоминаем комбинации, т.к. есть более сильные комбинации
-                    strIDCombinationFlush = m_dicNumberCombination["Flush"] 
-                        + CreateCardsCombimationInStringForFlush(lsSetCards,suit.Key);
-                        break;
+                    //иначе флэш, просто запоминаем комбинации, т.к. есть более сильные комбинации
+                    strIDCombinationFlush = m_dicNumberCombination["Flush"]
+                        + CreateCardsCombimationInStringForFlush(lsSetCards, suit.Key);
+                    break;
                 }
                 //Если до сих пор не определили комбинацию, то ищем дальше
-                if(strIDCombination.Length == 0)
+                if (strIDCombination.Length == 0)
                 {
                     strIDCombination = DeterminationTheStrongestCombination(
-                        lsSetCards, 
+                        lsSetCards,
                         strIDCombinationFlush);
 
                 }
@@ -134,7 +205,7 @@ namespace PokerCore.ViewModel
             //Находим самую сильную комбинацию
             return FindStrongestCombination(lsCombinationCardsPlayers);
         }
-       
+
         //Определяем самую сильную комбинацию среди игроков
         private IEnumerable<int> FindStrongestCombination(List<(int, UInt64)> lsCombinationCardsPlayers)
         {
@@ -143,19 +214,19 @@ namespace PokerCore.ViewModel
             CombinationCompare comp = new CombinationCompare();
             lsCombinationCardsPlayers.Sort(comp);
             lsWinPlayer.Add(lsCombinationCardsPlayers[0].Item1);
-            for ( int i=0; i< lsCombinationCardsPlayers.Count-1; i++)
+            for (int i = 0; i < lsCombinationCardsPlayers.Count - 1; i++)
             {
                 //Если комбинации одинаковые, то добавляем еще одного игрока
-                if (lsCombinationCardsPlayers[i].Item2 == lsCombinationCardsPlayers[i+1].Item2)
+                if (lsCombinationCardsPlayers[i].Item2 == lsCombinationCardsPlayers[i + 1].Item2)
                 {
-                    lsWinPlayer.Add(lsCombinationCardsPlayers[i+1].Item1);
+                    lsWinPlayer.Add(lsCombinationCardsPlayers[i + 1].Item1);
                 }
             }
             return lsWinPlayer;
         }
         //Определяем сильную комбинацию
         private String DeterminationTheStrongestCombination(
-            List<ICard> lsSetCards, 
+            List<Card> lsSetCards,
             String strIDCombinationFlush)
         {
             String strIDCombination;
@@ -191,11 +262,11 @@ namespace PokerCore.ViewModel
                 return strIDCombinationFlush;
             }
             //Если есть 5 карт, идущих по порядку, то стрит
-            List<ICard> lsStraightCombination =
-                       new List<ICard>(GetStraightCombination(lsSetCards));
+            List<Card> lsStraightCombination =
+                       new List<Card>(GetStraightCombination(lsSetCards));
             if (lsStraightCombination.Count != 0)
             {
-                strIDCombination = m_dicNumberCombination["Straight"] 
+                strIDCombination = m_dicNumberCombination["Straight"]
                     + CreateCardsCombimationInStringForStraight(lsSetCards, lsStraightCombination);
                 return strIDCombination;
             }
@@ -223,11 +294,11 @@ namespace PokerCore.ViewModel
             }
             //Если ничего не нашли, то запоминаем 5 старших карт
             strIDCombination = m_dicNumberCombination["Oldest"]
-                    + CreateCardsCombimationInStringForOldest(lsSetCards.GetRange(0,5));
+                    + CreateCardsCombimationInStringForOldest(lsSetCards.GetRange(0, 5));
             return strIDCombination;
         }
         //Считаем количество карт с одинаковым рангом
-        private void SortedCardsOnRank(List<ICard> lsCards)
+        private void SortedCardsOnRank(List<Card> lsCards)
         {
             Dictionary<CardRank, int> dicCountRank = new Dictionary<CardRank, int>(CountCardsThisRank(lsCards));
             m_ls4CardsEqualRank = new List<CardRank>();
@@ -236,7 +307,7 @@ namespace PokerCore.ViewModel
             m_lsOnlyCards = new List<CardRank>();
             foreach (var rank in dicCountRank)
             {
-                switch(rank.Value)
+                switch (rank.Value)
                 {
                     case 4:
                         m_ls4CardsEqualRank.Add(rank.Key);
@@ -263,44 +334,50 @@ namespace PokerCore.ViewModel
         //Задаем веса каждому рангу карты
         private void CreateWeightCardRank()
         {
-            m_dicWeightCardRank = new Dictionary<CardRank, String>(13);
-            m_dicWeightCardRank.Add(CardRank.c2, "02");
-            m_dicWeightCardRank.Add(CardRank.c3, "03");
-            m_dicWeightCardRank.Add(CardRank.c4, "04");
-            m_dicWeightCardRank.Add(CardRank.c5, "05");
-            m_dicWeightCardRank.Add(CardRank.c6, "06");
-            m_dicWeightCardRank.Add(CardRank.c7, "07");
-            m_dicWeightCardRank.Add(CardRank.c8, "08");
-            m_dicWeightCardRank.Add(CardRank.c9, "09");
-            m_dicWeightCardRank.Add(CardRank.c10, "10");
-            m_dicWeightCardRank.Add(CardRank.J, "11");
-            m_dicWeightCardRank.Add(CardRank.Q, "12");
-            m_dicWeightCardRank.Add(CardRank.K, "13");
-            m_dicWeightCardRank.Add(CardRank.A, "14");
+            m_dicWeightCardRank = new Dictionary<CardRank, String>(13)
+            {
+                { CardRank.c2, "02" },
+                { CardRank.c3, "03" },
+                { CardRank.c4, "04" },
+                { CardRank.c5, "05" },
+                { CardRank.c6, "06" },
+                { CardRank.c7, "07" },
+                { CardRank.c8, "08" },
+                { CardRank.c9, "09" },
+                { CardRank.c10, "10" },
+                { CardRank.J, "11" },
+                { CardRank.Q, "12" },
+                { CardRank.K, "13" },
+                { CardRank.A, "14" }
+            };
         }
         //Задаем веса комбинациям
         private void CreateNumberCombination()
         {
-            m_dicNumberCombination = new Dictionary<String, String>(10);
-            m_dicNumberCombination.Add("Oldest", "0");
-            m_dicNumberCombination.Add("Pair", "1");
-            m_dicNumberCombination.Add("TwoPairs", "2");
-            m_dicNumberCombination.Add("ThreeCards", "3");
-            m_dicNumberCombination.Add("Straight", "4");
-            m_dicNumberCombination.Add("Flush", "5");
-            m_dicNumberCombination.Add("FullHouse", "6");
-            m_dicNumberCombination.Add("Care", "7");
-            m_dicNumberCombination.Add("StraightFlush", "8");
-            m_dicNumberCombination.Add("RoualStraightFlush", "9");
+            m_dicNumberCombination = new Dictionary<String, String>(10)
+            {
+                { "Oldest", "0" },
+                { "Pair", "1" },
+                { "TwoPairs", "2" },
+                { "ThreeCards", "3" },
+                { "Straight", "4" },
+                { "Flush", "5" },
+                { "FullHouse", "6" },
+                { "Care", "7" },
+                { "StraightFlush", "8" },
+                { "RoualStraightFlush", "9" }
+            };
         }
         //Считаем количество карт с одинаковой мастью
-        private Dictionary<CardSuit, int> CountCardsThisSuit(List<ICard> lsCards)
+        private Dictionary<CardSuit, int> CountCardsThisSuit(List<Card> lsCards)
         {
-            Dictionary<CardSuit, int> dicCountSuit = new Dictionary<CardSuit, int>();
-            dicCountSuit.Add(CardSuit.Clubs, 0);
-            dicCountSuit.Add(CardSuit.Dimonds, 0);
-            dicCountSuit.Add(CardSuit.Hearts, 0);
-            dicCountSuit.Add(CardSuit.Spades, 0);
+            Dictionary<CardSuit, int> dicCountSuit = new Dictionary<CardSuit, int>
+            {
+                { CardSuit.Clubs, 0 },
+                { CardSuit.Diamonds, 0 },
+                { CardSuit.Hearts, 0 },
+                { CardSuit.Spades, 0 }
+            };
             foreach (var card in lsCards)
             {
                 dicCountSuit[card.Suit]++;
@@ -308,22 +385,24 @@ namespace PokerCore.ViewModel
             return dicCountSuit;
         }
         //Считаем количество карт с одинаковым рангом
-        private Dictionary<CardRank, int> CountCardsThisRank(List<ICard> lsCards)
+        private Dictionary<CardRank, int> CountCardsThisRank(List<Card> lsCards)
         {
-            Dictionary<CardRank, int> dicCountRank = new Dictionary<CardRank, int>();
-            dicCountRank.Add(CardRank.c2, 0);
-            dicCountRank.Add(CardRank.c3, 0);
-            dicCountRank.Add(CardRank.c4, 0);
-            dicCountRank.Add(CardRank.c5, 0);
-            dicCountRank.Add(CardRank.c6, 0);
-            dicCountRank.Add(CardRank.c7, 0);
-            dicCountRank.Add(CardRank.c8, 0);
-            dicCountRank.Add(CardRank.c9, 0);
-            dicCountRank.Add(CardRank.c10, 0);
-            dicCountRank.Add(CardRank.J, 0);
-            dicCountRank.Add(CardRank.Q, 0);
-            dicCountRank.Add(CardRank.K, 0);
-            dicCountRank.Add(CardRank.A, 0);
+            Dictionary<CardRank, int> dicCountRank = new Dictionary<CardRank, int>
+            {
+                { CardRank.c2, 0 },
+                { CardRank.c3, 0 },
+                { CardRank.c4, 0 },
+                { CardRank.c5, 0 },
+                { CardRank.c6, 0 },
+                { CardRank.c7, 0 },
+                { CardRank.c8, 0 },
+                { CardRank.c9, 0 },
+                { CardRank.c10, 0 },
+                { CardRank.J, 0 },
+                { CardRank.Q, 0 },
+                { CardRank.K, 0 },
+                { CardRank.A, 0 }
+            };
 
             foreach (var card in lsCards)
             {
@@ -332,12 +411,12 @@ namespace PokerCore.ViewModel
             return dicCountRank;
         }
         //Проверка: карты идут подрят и имеют одинаковую масть
-        private bool IsInOrderAndEqualSuit(List<ICard> lsCards)
+        private bool IsInOrderAndEqualSuit(List<Card> lsCards)
         {
-            for(int i=0; i < lsCards.Count- 1; i++)
+            for (int i = 0; i < lsCards.Count - 1; i++)
             {
-                if(EnumRankToInt(lsCards[i].Rank) != EnumRankToInt(lsCards[i+1].Rank) + 1
-                    || lsCards[i].Suit != lsCards[i+1].Suit)
+                if (EnumRankToInt(lsCards[i].Rank) != EnumRankToInt(lsCards[i + 1].Rank) + 1
+                    || lsCards[i].Suit != lsCards[i + 1].Suit)
                 {
                     return false;
                 }
@@ -345,11 +424,11 @@ namespace PokerCore.ViewModel
             return true;
         }
         //Проверка: карты идут по порядку
-        private bool IsInOrder(List<ICard> lsCards)
+        private bool IsInOrder(List<Card> lsCards)
         {
             for (int i = 0; i < lsCards.Count - 1; i++)
             {
-                if (EnumRankToInt(lsCards[i].Rank)  != EnumRankToInt(lsCards[i + 1].Rank) + 1)
+                if (EnumRankToInt(lsCards[i].Rank) != EnumRankToInt(lsCards[i + 1].Rank) + 1)
                 {
                     return false;
                 }
@@ -363,8 +442,8 @@ namespace PokerCore.ViewModel
         }
         //Создание идентификатора комбинации для стрит флеша
         private String CreateCardsCombimationInStringForStraightFlush(
-            List<ICard> lsCards, 
-            List<ICard> lsStraightFlushCombination)
+            List<Card> lsCards,
+            List<Card> lsStraightFlushCombination)
         {
             String strCombinationString = "";
             foreach (var card in lsStraightFlushCombination)
@@ -375,10 +454,10 @@ namespace PokerCore.ViewModel
         }
         //Создание идентификатора комбинации для стрита
         private String CreateCardsCombimationInStringForStraight(
-            List<ICard> lsCards,
-            List<ICard> lsStraightCombination)
+            List<Card> lsCards,
+            List<Card> lsStraightCombination)
         {
-            String strCombinationString="";
+            String strCombinationString = "";
             foreach (var card in lsStraightCombination)
             {
                 strCombinationString += m_dicWeightCardRank[card.Rank];
@@ -386,18 +465,18 @@ namespace PokerCore.ViewModel
             return strCombinationString;
         }
         //Создание идентификатора комбинации для каре
-        private String CreateCardsCombimationInStringForCare(List<ICard> lsCards, CardRank Rank)
+        private String CreateCardsCombimationInStringForCare(List<Card> lsCards, CardRank Rank)
         {
-            String strCombinationString = 
+            String strCombinationString =
                 m_dicWeightCardRank[Rank]
                 + m_dicWeightCardRank[Rank]
                 + m_dicWeightCardRank[Rank]
                 + m_dicWeightCardRank[Rank];
-           
+
             foreach (var card in lsCards)
             {
                 //ищем кикер - одна карта не из комбинации
-                if(card.Rank!= Rank)
+                if (card.Rank != Rank)
                 {
                     strCombinationString += m_dicWeightCardRank[card.Rank];
                     break;
@@ -406,7 +485,7 @@ namespace PokerCore.ViewModel
             return strCombinationString;
         }
         //Определяем есть ли кобминация карт для стрит флеша
-        private List<ICard> GetStraightFlushCombination(List<ICard> lsCards)
+        private List<Card> GetStraightFlushCombination(List<Card> lsCards)
         {
             int j = 5;
             for (int i = 0; i < lsCards.Count + 1 - j; i++)
@@ -420,7 +499,7 @@ namespace PokerCore.ViewModel
             return lsCards.GetRange(0, 0);
         }
         //Определяем есть ли кобминация карт для стрита
-        private List<ICard> GetStraightCombination(List<ICard> lsCards)
+        private List<Card> GetStraightCombination(List<Card> lsCards)
         {
             int j = 5;
             for (int i = 0; i < lsCards.Count + 1 - j; i++)
@@ -434,20 +513,20 @@ namespace PokerCore.ViewModel
             return lsCards.GetRange(0, 0);
         }
         //Создание идентификатора комбинации для флеша
-        private String CreateCardsCombimationInStringForFlush(List<ICard> lsCards, CardSuit enSuit)
+        private String CreateCardsCombimationInStringForFlush(List<Card> lsCards, CardSuit enSuit)
         {
             String strCombinationString = "";
             foreach (var card in lsCards)
             {
-                if(card.Suit== enSuit)
+                if (card.Suit == enSuit)
                 {
-                    strCombinationString+= m_dicWeightCardRank[card.Rank];
+                    strCombinationString += m_dicWeightCardRank[card.Rank];
                 }
             }
             return strCombinationString;
         }
         //Создание идентификатора комбинации для фулхауза если имеем пару трех карт
-        private String CreateCardsCombimationInStringForFullHause33(List<ICard> lsCards)
+        private String CreateCardsCombimationInStringForFullHause33(List<Card> lsCards)
         {
             String strCombinationString = "";
             String RankInString = m_dicWeightCardRank[m_ls3CardsEqualRank[0]];
@@ -457,7 +536,7 @@ namespace PokerCore.ViewModel
             return strCombinationString;
         }
         //Создание идентификатора комбинации для фулхауза если имеем три карты и пару
-        private String CreateCardsCombimationInStringForFullHause32(List<ICard> lsCards)
+        private String CreateCardsCombimationInStringForFullHause32(List<Card> lsCards)
         {
             String strCombinationString = "";
             String RankInString = m_dicWeightCardRank[m_ls3CardsEqualRank[0]];
@@ -468,7 +547,7 @@ namespace PokerCore.ViewModel
         }
         //Создание идентификатора комбинации для фулхауза если имеем три карты
 
-        private String CreateCardsCombimationInStringForThreeCards(List<ICard> lsCards)
+        private String CreateCardsCombimationInStringForThreeCards(List<Card> lsCards)
         {
             String strCombinationString = "";
             String strHelpCombinationString = "";
@@ -480,7 +559,7 @@ namespace PokerCore.ViewModel
                     strCombinationString += m_dicWeightCardRank[card.Rank];
                 }
                 //Ищем два кикера
-                if(fl < 2)
+                if (fl < 2)
                 {
                     strHelpCombinationString += m_dicWeightCardRank[card.Rank];
                     fl++;
@@ -489,7 +568,7 @@ namespace PokerCore.ViewModel
             return strCombinationString + strHelpCombinationString;
         }
         //Создание идентификатора комбинации для фулхауза если имеем две пары
-        private String CreateCardsCombimationInStringForTwoPairs(List<ICard> lsCards)
+        private String CreateCardsCombimationInStringForTwoPairs(List<Card> lsCards)
         {
             String strCombinationString = "";
             String strHelpCombinationString1 = "";
@@ -514,12 +593,12 @@ namespace PokerCore.ViewModel
                     fl = false;
                 }
             }
-            return strCombinationString 
+            return strCombinationString
                 + strHelpCombinationString1
                 + strHelpCombinationString2;
         }
         //Создание идентификатора комбинации для фулхауза если имеем пару
-        private String CreateCardsCombimationInStringForPair(List<ICard> lsCards)
+        private String CreateCardsCombimationInStringForPair(List<Card> lsCards)
         {
             String strCombinationString = "";
             String strHelpCombinationString = "";
@@ -532,7 +611,7 @@ namespace PokerCore.ViewModel
                     continue;
                 }
                 //Ищем три кикера
-                if(fl < 3)
+                if (fl < 3)
                 {
                     strHelpCombinationString += m_dicWeightCardRank[card.Rank];
                     fl++;
@@ -541,7 +620,7 @@ namespace PokerCore.ViewModel
             return strCombinationString + strHelpCombinationString;
         }
         //Запоманием 5 страрших карт
-        private String CreateCardsCombimationInStringForOldest(List<ICard> lsCards)
+        private String CreateCardsCombimationInStringForOldest(List<Card> lsCards)
         {
             String strCombinationString = "";
 
@@ -552,6 +631,8 @@ namespace PokerCore.ViewModel
             }
             return strCombinationString;
         }
+
+        #endregion
         public void AddBank()
         {
 
@@ -610,22 +691,23 @@ namespace PokerCore.ViewModel
 
         public bool EndAction()
         {
+            int visibleCardCount = 0;
             //добавляем в бд игроков и игру
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                foreach (var player in _players)
-                {
-                    db.Players.Add(new DBPlayer
-                    {
-                        Name = player.Value.MyState.Name,
-                        StartCash = player.Value.MyState.Cash,
-                        FirstCard = new DBCard { Rank = player.Value.HandCards.Item1.Rank, Suit = player.Value.HandCards.Item1.Suit },
-                        SecondCard = new DBCard { Rank = player.Value.HandCards.Item2.Rank, Suit = player.Value.HandCards.Item2.Suit }
-                    });
-                }
-                db.Games.Add(new DBGame { });
-                db.SaveChanges();
-            }
+            //using (ApplicationContext db = new ApplicationContext())
+            //{
+            //    foreach (var player in _players)
+            //    {
+            //        db.Players.Add(new DBPlayer
+            //        {
+            //            Name = player.Value.MyState.Name,
+            //            StartCash = player.Value.MyState.Cash,
+            //            FirstCard = new DBCard { Rank = player.Value.HandCards.Item1.Rank, Suit = player.Value.HandCards.Item1.Suit },
+            //            SecondCard = new DBCard { Rank = player.Value.HandCards.Item2.Rank, Suit = player.Value.HandCards.Item2.Suit }
+            //        });
+            //    }
+            //    db.Games.Add(new DBGame { });
+            //    db.SaveChanges();
+            //}
 
             (Card, Card) playerCards;
             List<int> keys = _players.Keys.ToList();
@@ -643,22 +725,28 @@ namespace PokerCore.ViewModel
             }
 
             if (lastStage)
-            { switch (_boardCards.Count)
+            {
+                foreach ((Card, Visibility) card in _boardCards)
+                    if (card.Item2 == Visibility.Visible)
+                        visibleCardCount++;
+                    else break;
+
+                switch (visibleCardCount)
                 {
                     case 0:
                         // Lay out 3 cards on board
                         for (int i = 0; i < 3; i++)
-                            _boardCards.Add(_cardDeck.TakeCard());
+                            _boardCards[i].Item2 = Visibility.Visible;
 
                         //добавляем в бд карты со стола
-                        using (ApplicationContext db = new ApplicationContext())
-                        { 
-                            db.TableCards.Add(new DBTableCards { FirstCard = new DBCard { Rank = _boardCards[0].Rank, Suit = _boardCards[0].Suit },
-                                                                SecondCard = new DBCard { Rank = _boardCards[1].Rank, Suit = _boardCards[1].Suit },
-                                                                ThirdCard = new DBCard { Rank = _boardCards[2].Rank, Suit = _boardCards[2].Suit },
-                                                                DBGameId = db.Games.Last().Id });
-                            db.SaveChanges();
-                        }
+                        //using (ApplicationContext db = new ApplicationContext())
+                        //{ 
+                        //    db.TableCards.Add(new DBTableCards { FirstCard = new DBCard { Rank = _boardCards[0].Item1.Rank, Suit = _boardCards[0].Item1.Suit },
+                        //                                        SecondCard = new DBCard { Rank = _boardCards[1].Item1.Rank, Suit = _boardCards[1].Item1.Suit },
+                        //                                        ThirdCard = new DBCard { Rank = _boardCards[2].Item1.Rank, Suit = _boardCards[2].Item1.Suit },
+                        //                                        DBGameId = db.Games.Last().Id });
+                        //    db.SaveChanges();
+                        //}
 
                         NewStageStart();
                         break;
@@ -668,32 +756,37 @@ namespace PokerCore.ViewModel
                         BankDivision();
 
                         //добавляем в бд кэш игроков после окончания игры
-                        using (ApplicationContext db = new ApplicationContext())
-                        {
-                            var players = db.Players.ToList();
+                        //using (ApplicationContext db = new ApplicationContext())
+                        //{
+                        //    var players = db.Players.ToList();
 
-                            foreach (var player in _players)
-                            {
-                                int i = 0;
-                                players[i].EndCash = player.Value.MyState.Cash;
-                                db.Players.Update(players[i]);
-                                i++;
-                            }
-                            db.SaveChanges();
-                        }
-
-                        // clear board from cards
-                        _boardCards.Clear();
+                        //    foreach (var player in _players)
+                        //    {
+                        //        int i = 0;
+                        //        players[i].EndCash = player.Value.MyState.Cash;
+                        //        db.Players.Update(players[i]);
+                        //        i++;
+                        //    }
+                        //    db.SaveChanges();
+                        //}
 
                         // Get new deck andd shuffle cards to start new game
                         _cardDeck = new CardDeck();
                         _cardDeck.Shuffle();
 
+                        // draw new cards for next game
+                        for (int i = 0; i < 5; i++)
+                        {
+                            _boardCards[i].Item1 = _cardDeck.TakeCard();
+                            _boardCards[i].Item2 = Visibility.Invisible;
+                        }
+
                         // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
                         foreach (KeyValuePair<int, Player> player in _players)
                             if (player.Value.MyState.Cash < _bigBlind)
                                 Disconnect(player.Key);
-                            else {
+                            else
+                            {
                                 playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
                                 HandCards.Add((player.Key, playerCards));
                                 //player.Value.HandCards = (playerCards);
@@ -713,72 +806,97 @@ namespace PokerCore.ViewModel
                         _players[addKey].MyState.PlayerBet = _smallBlind;
 
                         //добавление в бд малого блайнда
-                        using (ApplicationContext db = new ApplicationContext())
-                        {
-                            DBGame game = db.Games.Last();
-                            DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
+                        //using (ApplicationContext db = new ApplicationContext())
+                        //{
+                        //    DBGame game = db.Games.Last();
+                        //    DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
 
-                            db.Rounds.Add(new DBRound
-                            {
-                                Name = "Blinds",
-                                Game = game.Id,
-                                Player = player.Id,
-                                ActionName = "Small blind",
-                                BetSize = _smallBlind,
-                                //DecisionTime
-                            });
-                            db.SaveChanges();
-                        }
+                        //    db.Rounds.Add(new DBRound
+                        //    {
+                        //        Name = "Blinds",
+                        //        Game = game.Id,
+                        //        Player = player.Id,
+                        //        ActionName = "Small blind",
+                        //        BetSize = _smallBlind,
+                        //        //DecisionTime
+                        //    });
+                        //    db.SaveChanges();
+                        //}
 
                         addKey = TakeNextKey(addKey);
                         _players[addKey].MyState.Cash -= _bigBlind;
                         _players[addKey].MyState.PlayerBet = _bigBlind;
 
                         //добавление в бд большого блайнда
-                        using (ApplicationContext db = new ApplicationContext())
-                        {
-                            DBGame game = db.Games.Last();
-                            DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
+                        //using (ApplicationContext db = new ApplicationContext())
+                        //{
+                        //    DBGame game = db.Games.Last();
+                        //    DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
 
-                            db.Rounds.Add(new DBRound
-                            {
-                                Name = "Blinds",
-                                Game = game.Id,
-                                Player = player.Id,
-                                ActionName = "Big blind",
-                                BetSize = _bigBlind,
-                                //DecisionTime
-                            });
-                            db.SaveChanges();
-                        }
+                        //    db.Rounds.Add(new DBRound
+                        //    {
+                        //        Name = "Blinds",
+                        //        Game = game.Id,
+                        //        Player = player.Id,
+                        //        ActionName = "Big blind",
+                        //        BetSize = _bigBlind,
+                        //        //DecisionTime
+                        //    });
+                        //    db.SaveChanges();
+                        //}
 
                         // choose first player
-                        _curPlayer = TakeNextKey(addKey); 
+                        _curPlayer = TakeNextKey(addKey);
 
                         break;
 
                     default:
                         // Lay out 1 card on board 
-                        _boardCards.Add(_cardDeck.TakeCard());
+                        _boardCards[visibleCardCount].Item2 = Visibility.Visible;
 
                         //добавляем в бд 4 и 5 карту со стола
-                        if (_boardCards.Count == 5)
-                            using (ApplicationContext db = new ApplicationContext())
-                            {
-                                DBTableCards table = db.TableCards.Last();    
-                                table.FourthCard = new DBCard { Rank = _boardCards[3].Rank, Suit = _boardCards[3].Suit };
-                                table.FifthCard = new DBCard { Rank = _boardCards[4].Rank, Suit = _boardCards[4].Suit };    
-                                db.TableCards.Update(table);
-                                db.SaveChanges();
-                            }
+                        //if (visibleCardCount == 4)
+                        //    using (ApplicationContext db = new ApplicationContext())
+                        //    {
+                        //        DBTableCards table = db.TableCards.Last();    
+                        //        table.FourthCard = new DBCard { Rank = _boardCards[3].Item1.Rank, Suit = _boardCards[3].Item1.Suit };
+                        //        table.FifthCard = new DBCard { Rank = _boardCards[4].Item1.Rank, Suit = _boardCards[4].Item1.Suit };    
+                        //        db.TableCards.Update(table);
+                        //        db.SaveChanges();
+                        //    }
 
                         NewStageStart();
+
                         break;
                 }
 
             }
             else
             {
+                List<Card> tmp = new List<Card>();
+                tmp.Add(_players[1].MyState.HandCards.Item1);
+                tmp.Add(_players[1].MyState.HandCards.Item2);
+                tmp.AddRange(_boardCards.Select(x => x.Item1).ToArray());
+                GameState aiState;
+                aiState = ((AI)_players[1]).GetOptimalMove(tmp);
+                switch (aiState)
+                {
+                    case GameState.call:
+                        _players[1].Call();
+                        break;
+
+                    case GameState.check:
+                        _players[1].Check();
+                        break;
+
+                    case GameState.fold:
+                        _players[1].Fold();
+                        break;
+
+                    case GameState.raise:
+                        _players[1].Raise(_curRaise);
+                        break;
+                }
                 // search for player in game
                 do
                 {
@@ -786,7 +904,7 @@ namespace PokerCore.ViewModel
                 } while (_players[addKey].MyState.State != PlayerGameState.In);
                 _curPlayer = addKey;
             }
-
+            this.RaisePropertyChanged("BoardCards");
             return true;
             int TakeNextKey(int key) // return the key of next player
             {
@@ -810,16 +928,17 @@ namespace PokerCore.ViewModel
             }
         }
 
-        public bool TryConnect(string name, int cash)
+        public (bool, Player) TryConnect(string name, int cash)
         {
-            if(CheckUniqueName())
+            if (CheckUniqueName())
             {
                 if (_players.Count < _gameRules.MaxPlayers)
                 {
-                    _players.Add(_players.Count, new Player(name, cash));
-                    return true;
+                    Player player = new Player(name, cash, this);
+                    _players.Add(_players.Count, player);
+                    return (true, player);
                 }
-                return false;
+                return (false, null);
             }
             else
                 throw new Exception("Данное имя игрока уже существует!");
@@ -841,9 +960,9 @@ namespace PokerCore.ViewModel
             _players.Remove(key);
         }
 
-        public List<ICard> GetAllDeckWithoutMineCards(List<ICard> exclude)
+        public List<Card> GetAllDeckWithoutMineCards(List<Card> exclude)
         {
-            List<ICard> result = new List<ICard>();
+            List<Card> result = new List<Card>();
 
             foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
                 foreach (CardRank rank in Enum.GetValues(typeof(CardRank)))
@@ -853,7 +972,7 @@ namespace PokerCore.ViewModel
             return result;
         }
 
-        public bool IsCombination(List<ICard> cards)
+        public bool IsCombination(List<Card> cards)
         {
             //Pair
             for (int i = 0; i < cards.Count; i++)
@@ -872,7 +991,7 @@ namespace PokerCore.ViewModel
 
             //Straight
             cards.Sort(new CardRankCompare());
-            List<ICard> comb = new List<ICard>(GetStraightCombination(cards));
+            List<Card> comb = new List<Card>(GetStraightCombination(cards));
             if (comb.Count != 0)
             {
                 return true;
@@ -881,13 +1000,13 @@ namespace PokerCore.ViewModel
             return false;
         }
 
-        public int countOuts(List<ICard> cards)
+        public int countOuts(List<Card> cards)
         {
             int result = 0;
-            List<ICard> allCards = GetAllDeckWithoutMineCards(cards);
+            List<Card> allCards = GetAllDeckWithoutMineCards(cards);
             foreach (Card c in allCards)
             {
-                List<ICard> buf = new List<ICard>();
+                List<Card> buf = new List<Card>();
                 buf.AddRange(cards);
                 buf.Add(c);
                 if (IsCombination(buf))
@@ -898,7 +1017,7 @@ namespace PokerCore.ViewModel
             int riverCount = 0;
             foreach (Card c in allCards)
             {
-                List<ICard> buf = new List<ICard>();
+                List<Card> buf = new List<Card>();
                 buf.AddRange(cards.GetRange(2, cards.Count - 2));
                 buf.Add(c);
                 if (IsCombination(buf))
@@ -906,45 +1025,56 @@ namespace PokerCore.ViewModel
                     riverCount++;
                 }
             }
-            return result-riverCount;
+            return result - riverCount;
         }
 
-        List<DBRequest> DbRequest(string PlayerName)
+        //List<DBRequest> DbRequest(string PlayerName)
+        //{
+        //    List<DBRequest> request = new List<DBRequest>();
+
+        //    using (ApplicationContext db = new ApplicationContext())
+        //    {
+        //        var player = db.Players.Where(p => p.Name == PlayerName);
+        //        var tableCards = db.TableCards.ToList();
+
+        //        foreach (var _player in player)
+        //        {
+        //            int i = 0;
+        //            DBRound lastRound = db.Rounds.Where(p => p.Player == _player.Id).Last();
+
+        //            request[i] = new DBRequest { LastBet = lastRound.BetSize, StartCash = _player.StartCash };
+        //            request[i].DBHandCards.Add(_player.FirstCard);
+        //            request[i].DBHandCards.Add(_player.SecondCard);
+
+        //            i++;
+        //        }
+
+        //        foreach (var _tableCards in tableCards)
+        //        {
+        //            int i = 0;
+
+        //            request[i].DBTableCards.Add(_tableCards.FirstCard);
+        //            request[i].DBTableCards.Add(_tableCards.SecondCard);
+        //            request[i].DBTableCards.Add(_tableCards.ThirdCard);
+        //            request[i].DBTableCards.Add(_tableCards.FourthCard);
+        //            request[i].DBTableCards.Add(_tableCards.FifthCard);
+
+        //            i++;
+        //        }
+        //    }
+
+        //    return request;
+        //}
+
+        public event PropertyChangedEventHandler PropertyChange;
+
+        public virtual void OnPropertyChanged(string propertyName)
         {
-            List<DBRequest> request = new List<DBRequest>();
-
-            using (ApplicationContext db = new ApplicationContext())
+            var propertyChanged = PropertyChange;
+            if (propertyChanged != null)
             {
-                var player = db.Players.Where(p => p.Name == PlayerName);
-                var tableCards = db.TableCards.ToList();
-
-                foreach (var _player in player)
-                {
-                    int i = 0;
-                    DBRound lastRound = db.Rounds.Where(p => p.Player == _player.Id).Last();
-
-                    request[i] = new DBRequest { LastBet = lastRound.BetSize, StartCash = _player.StartCash };
-                    request[i].DBHandCards.Add(_player.FirstCard);
-                    request[i].DBHandCards.Add(_player.SecondCard);
-
-                    i++;
-                }
-
-                foreach (var _tableCards in tableCards)
-                {
-                    int i = 0;
-
-                    request[i].DBTableCards.Add(_tableCards.FirstCard);
-                    request[i].DBTableCards.Add(_tableCards.SecondCard);
-                    request[i].DBTableCards.Add(_tableCards.ThirdCard);
-                    request[i].DBTableCards.Add(_tableCards.FourthCard);
-                    request[i].DBTableCards.Add(_tableCards.FifthCard);
-
-                    i++;
-                }
+                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-
-            return request;
         }
     }
 }

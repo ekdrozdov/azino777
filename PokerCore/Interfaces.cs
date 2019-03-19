@@ -7,7 +7,7 @@ using System.Reactive;
 //DEPRECATED
 namespace PokerCore
 {
-    public enum CardSuit { Spades, Dimonds, Hearts, Clubs };
+    public enum CardSuit { Spades, Diamonds, Hearts, Clubs };
     public enum CardRank
     {
         c2  = 2,
