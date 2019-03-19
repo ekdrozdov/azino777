@@ -48,11 +48,11 @@ namespace PokerCore.ViewModel
             }
             _players.Add(0, player);
             (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-            _players[0].HandCards = (playerCards);
+            _players[0].MyState.HandCards = playerCards;
             HandCards.Add((0, playerCards));
 
             playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-            _players[1].HandCards = (playerCards);
+            _players[1].MyState.HandCards = (playerCards);
             HandCards.Add((1, playerCards));
             _curBet = 0;
             _curRaise = bigBlind;
@@ -67,32 +67,53 @@ namespace PokerCore.ViewModel
         public PlayerState player0
         { get => _players.ContainsKey(0) ? _players[0].MyState : null; }
 
+        public string player0vis
+        { get => _players.ContainsKey(0)?"Visible":"Hidden"; }
+
         public PlayerState player1
         { get => _players.ContainsKey(1)?_players[1].MyState:null; }
+        public string player1vis
+        { get => _players.ContainsKey(1)?"Visible":"Hidden"; }
 
         public PlayerState player2
         { get => _players.ContainsKey(2) ? _players[2].MyState : null; }
+        public string player2vis
+        { get => _players.ContainsKey(2)?"Visible":"Hidden"; }
 
         public PlayerState player3
         { get => _players.ContainsKey(3) ? _players[3].MyState : null; }
+        public string player3vis
+        { get => _players.ContainsKey(3)?"Visible":"Hidden"; }
 
         public PlayerState player4
         { get => _players.ContainsKey(4) ? _players[4].MyState : null; }
+        public string player4vis
+        { get => _players.ContainsKey(4)?"Visible":"Hidden"; }
 
         public PlayerState player5
         { get => _players.ContainsKey(5) ? _players[5].MyState : null; }
+        public string player5vis
+        { get => _players.ContainsKey(5)?"Visible":"Hidden"; }
 
         public PlayerState player6
         { get => _players.ContainsKey(6) ? _players[6].MyState : null; }
+        public string player6vis
+        { get => _players.ContainsKey(6)?"Visible":"Hidden"; }
 
         public PlayerState player7
         { get => _players.ContainsKey(7) ? _players[7].MyState : null; }
+        public string player7vis
+        { get => _players.ContainsKey(7)?"Visible":"Hidden"; }
 
         public PlayerState player8
         { get => _players.ContainsKey(8) ? _players[8].MyState : null; }
+        public string player8vis
+        { get => _players.ContainsKey(8)?"Visible":"Hidden"; }
 
         public PlayerState player9
         { get => _players.ContainsKey(9) ? _players[9].MyState : null; }
+        public string player9vis
+        { get => _players.ContainsKey(9)?"Visible":"Hidden"; }
 
         #endregion
 
@@ -936,6 +957,7 @@ namespace PokerCore.ViewModel
                 {
                     Player player = new Player(name, cash, this);
                     _players.Add(_players.Count, player);
+                    this.RaisePropertyChanged($"player{_players.Count}vis");
                     return (true, player);
                 }
                 return (false, null);

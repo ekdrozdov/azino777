@@ -25,7 +25,7 @@ namespace PokerCore.ViewModel
         {
             MyState = new PlayerState(name, cash);
             _table = new TableForPlayer(pok);
-            _handCards = (new Card(CardRank.A, CardSuit.Diamonds), new Card(CardRank.J, CardSuit.Spades));
+
         }
 
         private int GetOuts(List<Card> cards)
@@ -83,7 +83,7 @@ namespace PokerCore.ViewModel
                 foreach (var item in PlayersInfo)//плохо
                 {
                     if (item.Key == MyState.MySeat)
-                        Cards[item.Key] = HandCards;
+                        Cards[item.Key] = MyState.HandCards;
                     else
                         Cards[item.Key] = (NextCard, NextCard);
                 }

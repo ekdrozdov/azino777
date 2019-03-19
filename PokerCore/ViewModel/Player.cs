@@ -16,18 +16,12 @@ namespace PokerCore.ViewModel
         PlayerState _myState;
         public PlayerState MyState { get => _myState; set=> this.RaiseAndSetIfChanged(ref _myState, value); }
 
-        protected (Card, Card) _handCards;
-        public (Card, Card) HandCards { get => _handCards; 
-            
-          set  => this.RaiseAndSetIfChanged(ref _handCards, value); }
-
         protected TableForPlayer _table;
 
         public Player(string name, int cash, Poker hz)
         {
             _myState = new PlayerState(name, cash);
             _table = new TableForPlayer(hz);
-            _handCards =( new Card(CardRank.A, CardSuit.Diamonds), new Card(CardRank.J, CardSuit.Clubs));
         }
 
         public void AddCash(int cash)

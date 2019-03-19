@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PokerGraphics"
         xmlns:Properties="clr-namespace:PokerGraphics.Properties" x:Class="PokerGraphics.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="721.206" Width="1094.201">
+        Title="MainWindow" Height="720" Width="1090">
     <Window.Resources>
         <ControlTemplate TargetType="{x:Type Button}" x:Key="ell">
             <Border CornerRadius="25" BorderBrush="LightGreen" BorderThickness="5"
@@ -83,7 +83,7 @@
                     Click="button_done_Click"
                     Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="198" Height="37"/>
         </Grid>
-        <Grid x:Name="table" Visibility="{Binding ShowTable}">
+        <Grid x:Name="table" Visibility="{Binding ShowTable}" Height="689" VerticalAlignment="Top">
             <Grid.Background>
                 <ImageBrush ImageSource="{DynamicResource ImageSource1}"/>
             </Grid.Background>
@@ -256,71 +256,40 @@ Visibility="Hidden"                    Command="{Binding ''}"
                     HorizontalAlignment="Left" Margin="833,88,0,0" VerticalAlignment="Top" Width="44" Height="45"/>
             <!-- Конец зеленых кнопок -->
             
-            <!--   Карты opp1   -->
+            <!--   Карты opp5   -->
             <Rectangle x:Name="card1_opp" 
-                       Visibility="{Binding ''}"
+                       Visibility="{Binding ViewModel.player5vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="512,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player1.FirstCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player5.FirstCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
             <Rectangle x:Name="card2_opp" 
-                       Visibility="{Binding ''}"
+                       Visibility="{Binding ViewModel.player5vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="567,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player1.SecondCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player5.SecondCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <!--   Карты opp1   -->
-            <Rectangle x:Name="c1o1" 
-                       Visibility="{Binding ''}"
+            <!--   Карты opp4   -->
+            <Rectangle x:Name="c1o4_" 
+                      Visibility="{Binding ViewModel.player4vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="227,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player1.FirstCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player4.FirstCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle x:Name="c2o1" 
-                       Visibility="{Binding ''}"
+            <Rectangle x:Name="c2o4_" 
+                       Visibility="{Binding ViewModel.player4vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="282,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player1.SecondCardName, Mode=OneWay}"/>
-                </Rectangle.Fill>
-            </Rectangle>
-            <!--   Карты opp2   -->
-            <Rectangle x:Name="c1o2" 
-                       Visibility="{Binding ''}"
-                       HorizontalAlignment="Left" Height="70" Margin="43,174,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
-                <Rectangle.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="-90"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Rectangle.RenderTransform>
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player2.FirstCardName, Mode=OneWay}"/>
-                </Rectangle.Fill>
-            </Rectangle>
-            <Rectangle x:Name="c2o2" 
-                       Visibility="{Binding ''}"
-                       HorizontalAlignment="Left" Height="70" Margin="43,229,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
-                <Rectangle.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="-90"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Rectangle.RenderTransform>
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player2.SecondCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player4.SecondCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
             <!--   Карты opp3   -->
-            <Rectangle x:Name="c1o3" 
-                       Visibility="{Binding ''}"
-                       HorizontalAlignment="Left" Height="70" Margin="42,368,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+            <Rectangle x:Name="c1o3_" 
+                       Visibility="{Binding ViewModel.player3vis, Mode=OneWay}"
+                       HorizontalAlignment="Left" Height="70" Margin="43,174,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -333,9 +302,9 @@ Visibility="Hidden"                    Command="{Binding ''}"
                     <ImageBrush ImageSource="{Binding ViewModel.player3.FirstCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle x:Name="c2o3" 
-                       Visibility="{Binding ''}"
-                       HorizontalAlignment="Left" Height="70" Margin="42,423,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+            <Rectangle x:Name="c2o3_" 
+                      Visibility="{Binding ViewModel.player3vis, Mode=OneWay}"
+                       HorizontalAlignment="Left" Height="70" Margin="43,229,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -348,39 +317,70 @@ Visibility="Hidden"                    Command="{Binding ''}"
                     <ImageBrush ImageSource="{Binding ViewModel.player3.SecondCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <!--   Карты opp4   -->
-            <Rectangle x:Name="c1o4" 
-                       Visibility="{Binding ''}"
-                       HorizontalAlignment="Left" Height="70" Margin="227,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+            <!--   Карты opp2   -->
+            <Rectangle x:Name="c1o2_" 
+                       Visibility="{Binding ViewModel.player2vis, Mode=OneWay}"
+                       HorizontalAlignment="Left" Height="70" Margin="42,368,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player4.FirstCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player2.FirstCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle x:Name="c2o4" 
-                       Visibility="{Binding ''}"
+            <Rectangle x:Name="c2o2_" 
+                       Visibility="{Binding ViewModel.player2vis, Mode=OneWay}"
+                       HorizontalAlignment="Left" Height="70" Margin="42,423,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.player2.SecondCardName, Mode=OneWay}"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!--   Карты opp1   -->
+            <Rectangle x:Name="c1o1_" 
+                      Visibility="{Binding ViewModel.player1vis, Mode=OneWay}"
+                       HorizontalAlignment="Left" Height="70" Margin="227,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.player1.FirstCardName, Mode=OneWay}"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="c2o1_" 
+                      Visibility="{Binding ViewModel.player1vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="282,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player4.SecondCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player1.SecondCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
             <!--   Карты opp5   -->
-            <Rectangle x:Name="c1o5" 
-                       Visibility="{Binding ''}"
+            <Rectangle x:Name="c1o9_" 
+                       Visibility="{Binding ViewModel.player9vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="763,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player5.FirstCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player9.FirstCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle x:Name="c2o5" 
-                       Visibility="{Binding ''}"
+            <Rectangle x:Name="c2o9_" 
+                       Visibility="{Binding ViewModel.player9vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="818,554,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player5.SecondCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player9.SecondCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <!--   Карты opp6   -->
-            <Rectangle x:Name="c1o6" 
-                       Visibility="{Binding ''}"
+            <!--   Карты opp8   -->
+            <Rectangle x:Name="c1o8_" 
+                       Visibility="{Binding ViewModel.player8vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="996,368,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
@@ -391,11 +391,11 @@ Visibility="Hidden"                    Command="{Binding ''}"
                     </TransformGroup>
                 </Rectangle.RenderTransform>
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player6.FirstCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player8.FirstCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle x:Name="c2o6" 
-                       Visibility="{Binding ''}"
+            <Rectangle x:Name="c2o8_" 
+                      Visibility="{Binding ViewModel.player8vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="997,423,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
@@ -406,12 +406,12 @@ Visibility="Hidden"                    Command="{Binding ''}"
                     </TransformGroup>
                 </Rectangle.RenderTransform>
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player6.SecondCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player8.SecondCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
             <!--   Карты opp7   -->
-            <Rectangle x:Name="c1o7" 
-                       Visibility="{Binding ''}"
+            <Rectangle x:Name="c1o7_" 
+                      Visibility="{Binding ViewModel.player7vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="997,176,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
@@ -425,8 +425,8 @@ Visibility="Hidden"                    Command="{Binding ''}"
                     <ImageBrush ImageSource="{Binding ViewModel.player7.FirstCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle x:Name="c2o7" 
-                       Visibility="{Binding ''}"
+            <Rectangle x:Name="c2o7_" 
+                      Visibility="{Binding ViewModel.player7vis, Mode=OneWay}"
                        HorizontalAlignment="Left" Height="70" Margin="997,229,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
@@ -440,25 +440,33 @@ Visibility="Hidden"                    Command="{Binding ''}"
                     <ImageBrush ImageSource="{Binding ViewModel.player7.SecondCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <!--   Карты opp8   -->
-            <Rectangle x:Name="c1o8" 
-                Visibility="{Binding ''}"
+            <!--   Карты opp6   -->
+            <Rectangle x:Name="c1o6_" 
+               Visibility="{Binding ViewModel.player6vis, Mode=OneWay}"
                 HorizontalAlignment="Left" Height="70" Margin="802,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player8.FirstCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player6.FirstCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle x:Name="c2o8" 
-                Visibility="{Binding ''}"
+            <Rectangle x:Name="c2o6_" 
+               Visibility="{Binding ViewModel.player6vis, Mode=OneWay}"
                 HorizontalAlignment="Left" Height="70" Margin="857,70,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player8.SecondCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.player6.SecondCardName, Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
             <!--  User Controls -->
-            <local:PlayerView x:Name="i0" Height="50" DataContext="{Binding VievModel.player1}" Margin="506,10,464,630" uName="{Binding MyState.Name, Mode=OneWay}" Cash="{Binding MyState.Cash, Mode=OneWay}"/>
-            <local:PlayerView x:Name="i1" Height="50" Margin="224,10,746,630" uName="{Binding ViewModel.player2.Name, Mode=OneWay}" Cash="{Binding ViewModel.player2.Cash, Mode=OneWay}"/>
-            <local:PlayerView x:Name="player" Height="50" Margin="506,630,464,10" uName="{Binding ViewModel.player0.Name, Mode=OneWay}" Cash="{Binding ViewModel.player0.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i0" Height="50" Margin="506,630,464,10" Visibility="{Binding ViewModel.player0vis, Mode=OneWay}" uName="{Binding ViewModel.player0.Name, Mode=OneWay}" Cash="{Binding ViewModel.player0.Cash, Mode=OneWay}"/>
+
+            <local:PlayerView x:Name="i1" Height="50" Margin="224,630,746,10" Visibility="{Binding ViewModel.player1vis, Mode=OneWay}" uName="{Binding ViewModel.player1.Name, Mode=OneWay}" Cash="{Binding ViewModel.player1.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i2" Height="50" Margin="16,490,954,150" Visibility="{Binding ViewModel.player2vis, Mode=OneWay}" uName="{Binding ViewModel.player2.Name, Mode=OneWay}" Cash="{Binding ViewModel.player2.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i3" Height="50" Margin="16,128,954,512" Visibility="{Binding ViewModel.player3vis, Mode=OneWay}" uName="{Binding ViewModel.player3.Name, Mode=OneWay}" Cash="{Binding ViewModel.player3.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i4" Height="50" Margin="224,10,746,630" Visibility="{Binding ViewModel.player4vis, Mode=OneWay}" uName="{Binding ViewModel.player4.Name, Mode=OneWay}" Cash="{Binding ViewModel.player4.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i5" Height="50" Margin="506,10,464,630" Visibility="{Binding ViewModel.player5vis, Mode=OneWay}" uName="{Binding ViewModel.player5.Name, Mode=OneWay}" Cash="{Binding ViewModel.player5.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i6" Height="50" Margin="799,10,171,630" Visibility="{Binding ViewModel.player6vis, Mode=OneWay}" uName="{Binding ViewModel.player6.Name, Mode=OneWay}" Cash="{Binding ViewModel.player6.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i7" Height="50" Margin="960,132,10,508" Visibility="{Binding ViewModel.player7vis, Mode=OneWay}" uName="{Binding ViewModel.player7.Name, Mode=OneWay}" Cash="{Binding ViewModel.player7.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i8" Height="50" Margin="960,490,10,150" Visibility="{Binding ViewModel.player8vis, Mode=OneWay}" uName="{Binding ViewModel.player8.Name, Mode=OneWay}" Cash="{Binding ViewModel.player8.Cash, Mode=OneWay}"/>
+            <local:PlayerView x:Name="i9" Height="50" Margin="757,630,213,10" Visibility="{Binding ViewModel.player9vis, Mode=OneWay}" uName="{Binding ViewModel.player9.Name, Mode=OneWay}" Cash="{Binding ViewModel.player9.Cash, Mode=OneWay}"/>
 
             <Canvas>
                 <Path x:Name="p" Data="{StaticResource pa}" 
