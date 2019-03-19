@@ -43,8 +43,6 @@ namespace PokerGraphics
             //у меня не получилось прибиндиться таким образом, мне каж надо как то сказать MainWindow что у него появились ещё контролы
             //но зато получчилось прибиндиться напрямую через ViewModel MainWindow (см. AllBank, SmallBlind, BigBlind)
             pokerTable = new Poker(realName, realCash, smallBlind, bigBlind);
-
-            var a = pokerTable.TryConnect("Bot0", 800);
         }
 
         public MainWindow()
