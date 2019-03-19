@@ -14,6 +14,11 @@ namespace PokerCore.Model
         private CardSuit _suit;
         public CardSuit Suit { get => _suit; }
 
+        public override string ToString()
+        {
+            return $"{_rank} {_suit}";
+        }
+
         public string GetTextureName()
         {
             string name;

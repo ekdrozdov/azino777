@@ -28,13 +28,13 @@ namespace PokerCore.ViewModel
             _handCards = (new Card(CardRank.A, CardSuit.Diamonds), new Card(CardRank.J, CardSuit.Spades));
         }
 
-        private int GetOuts(List<ICard> cards)
+        private int GetOuts(List<Card> cards)
         {
             //все карты, что усилят руку
             return _table.countOuts(cards);
         }
 
-        private int GetDiscountOuts(List<ICard> cards)
+        private int GetDiscountOuts(List<Card> cards)
         {
             //все карты, что усилят только нашу руку
             return _table.countOuts(cards.GetRange(0, 2));
@@ -113,7 +113,7 @@ namespace PokerCore.ViewModel
 
         }
 
-        public GameState GetOptimalMove(List<ICard> cards)
+        public GameState GetOptimalMove(List<Card> cards)
         {
             int outs = GetOuts(cards);
             if (outs >= 7)

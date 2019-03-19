@@ -44,7 +44,7 @@ namespace PokerGraphics
             //но зато получчилось прибиндиться напрямую через ViewModel MainWindow (см. AllBank, SmallBlind, BigBlind)
             pokerTable = new Poker(realName, realCash, smallBlind, bigBlind);
 
-            pokerTable.TryConnect("Bot0", 800);
+            var a = pokerTable.TryConnect("Bot0", 800);
         }
 
         public MainWindow()
@@ -68,6 +68,7 @@ namespace PokerGraphics
         {
             grid_sett.Visibility = Visibility.Collapsed;
             table.Visibility = Visibility.Visible;
+            
             try
             {
             }
@@ -91,7 +92,9 @@ namespace PokerGraphics
         private void button_equalize_Click(object sender, RoutedEventArgs e)
         {
             try {
-               // ViewModel.Players[0].Check();
+                // ViewModel.Players[0].Check();
+                ViewModel.Players[0].Call();
+                pokerTable.EndAction();
             }
             catch (Exception ex) { }
         }
@@ -100,6 +103,7 @@ namespace PokerGraphics
             try
             {
                 ViewModel.Players[0].Fold();
+                pokerTable.EndAction();
             }
             catch (Exception ex) { }
         }
@@ -108,7 +112,8 @@ namespace PokerGraphics
             try
             {
                 ViewModel.Players[0].Bet(Convert.ToInt32(textbox_number_of_money));
-                ViewModel.Players[0].Call();
+                pokerTable.EndAction();
+
             }
             catch (Exception ex) { }
         }
@@ -117,6 +122,7 @@ namespace PokerGraphics
             try
             {
                 ViewModel.Players[0].Raise(Convert.ToInt32(textbox_raise_cash));
+                pokerTable.EndAction();
             }
             catch (Exception ex) { }
         }
@@ -125,6 +131,7 @@ namespace PokerGraphics
             try
             {
                 ViewModel.Players[0].Check();
+                pokerTable.EndAction();
             }
             catch (Exception ex) { }
         }
@@ -133,6 +140,8 @@ namespace PokerGraphics
             try
             {
                 ViewModel.Players[0].AllIn();
+                pokerTable.EndAction();
+
             }
             catch (Exception ex) { }
         }

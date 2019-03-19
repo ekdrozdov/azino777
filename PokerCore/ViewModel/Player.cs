@@ -6,7 +6,7 @@ using System.Reactive;
 using ReactiveUI;
 using System.Linq;
 using PokerCore.Model;
-using PokerCore.Model.DataBase;
+//using PokerCore.Model.DataBase;
 using System.ComponentModel;
 
 namespace PokerCore.ViewModel
@@ -14,10 +14,12 @@ namespace PokerCore.ViewModel
     public class Player : ReactiveObject
     {
         PlayerState _myState;
-        public PlayerState MyState { get => _myState; set { _myState = value; OnPropertyChanged("MyState"); } }
+        public PlayerState MyState { get => _myState; set=> this.RaiseAndSetIfChanged(ref _myState, value); }
 
         protected (Card, Card) _handCards;
-        public (Card, Card) HandCards { get => _handCards; set { _handCards = value; OnPropertyChanged("HandCards"); } }
+        public (Card, Card) HandCards { get => _handCards; 
+            
+          set  => this.RaiseAndSetIfChanged(ref _handCards, value); }
 
         protected TableForPlayer _table;
 
@@ -38,7 +40,7 @@ namespace PokerCore.ViewModel
             _myState.PlayerBet = 0;
             _myState.State = PlayerGameState.Out;
 
-            AddInDb("Fold");
+            //AddInDb("Fold");
         }
 
         public void Call()
@@ -53,7 +55,7 @@ namespace PokerCore.ViewModel
             else
                 throw new Exception("У вас недостаточно средств, чтобы сделать ставку.");
 
-            AddInDb("Call");
+            //AddInDb("Call");
         }
 
         public void Check()
@@ -63,7 +65,7 @@ namespace PokerCore.ViewModel
             else
                 throw new Exception("Вы не можете сделать чек, ставки уже сделаны.");
 
-            AddInDb("Check");
+            //AddInDb("Check");
         }
 
         public void Raise(int raise)
@@ -85,7 +87,7 @@ namespace PokerCore.ViewModel
             else
                 throw new Exception("Вы не увеличили размер текущей ставки.");
 
-            AddInDb("Raise");
+            //AddInDb("Raise");
         }
 
         public void AllIn()
@@ -102,7 +104,7 @@ namespace PokerCore.ViewModel
             else
                 _table.AddBank(_table.AllBank - _table.CurrentBet + _myState.PlayerBet);
 
-            AddInDb("AllIn");
+            //AddInDb("AllIn");
         }
 
         public void Bet(int bet)
@@ -117,7 +119,7 @@ namespace PokerCore.ViewModel
             else
                 throw new Exception("Cтавка уже была сделана.");
 
-            AddInDb("Bet");
+            //AddInDb("Bet");
         }
 
         //получение названия текущего раунда для добавления в бд
@@ -125,7 +127,7 @@ namespace PokerCore.ViewModel
         {
             string RoundName = "";
 
-            int visibleCardCount = _table.BoardCards.Length;
+            int visibleCardCount = _table.BoardCards.Count;
             if (visibleCardCount == 0)
                 RoundName = "Pre-flop";
             if (visibleCardCount == 3)
@@ -139,25 +141,27 @@ namespace PokerCore.ViewModel
         }
 
         //добавить запись об одном ходе раунда в бд
-        public void AddInDb(string _actionName)
-        {
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                DBGame game = db.Games.Last();
-                DBPlayer player = db.Players.Where(p => p.Name == _myState.Name).Last();
+        //public void AddInDb(string _actionName)
+        //{
+        //    string a = "adsas";
 
-                db.Rounds.Add(new DBRound
-                {
-                    Name = GetRoundName(),
-                    Game = game.Id,
-                    Player = player.Id,
-                    ActionName = _actionName,
-                    BetSize = _myState.PlayerBet
-                    //DecisionTime
-                });
-                db.SaveChanges();
-            }
-        }
+        //    using (ApplicationContext db = new ApplicationContext())
+        //    {
+        //        DBGame game = db.Games.Last();
+        //        DBPlayer player = db.Players.Where(p => p.Name == _myState.Name).Last();
+
+        //        db.Rounds.Add(new DBRound
+        //        {
+        //            Name = GetRoundName(),
+        //            Game = game.Id,
+        //            Player = player.Id,
+        //            ActionName = _actionName,
+        //            BetSize = _myState.PlayerBet
+        //            //DecisionTime
+        //        });
+        //        db.SaveChanges();
+        //    }
+        //}
 
         public event PropertyChangedEventHandler PropertyChange;
 

@@ -89,19 +89,34 @@
             </Grid.Background>
             <Rectangle x:Name="center_card1" HorizontalAlignment="Left" Height="70" Margin="421,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding ViewModel.player7.FirstCardName, Mode=OneWay}"/>
+                    <ImageBrush ImageSource="{Binding ViewModel.BoardCards[0], Mode=OneWay}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle x:Name="center_card2" HorizontalAlignment="Left" Height="70" Margin="476,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle x:Name="center_card3" HorizontalAlignment="Left" Height="70" Margin="531,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle x:Name="center_card4" HorizontalAlignment="Left" Height="70" Margin="586,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-            <Rectangle x:Name="center_card5" HorizontalAlignment="Left" Height="70" Margin="641,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3"/>
-
+            <Rectangle x:Name="center_card2" HorizontalAlignment="Left" Height="70" Margin="476,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="{Binding ViewModel.BoardCards[1], Mode=OneWay}"/>
+            </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="center_card3" HorizontalAlignment="Left" Height="70" Margin="531,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="{Binding ViewModel.BoardCards[2], Mode=OneWay}"/>
+            </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="center_card4" HorizontalAlignment="Left" Height="70" Margin="586,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="{Binding ViewModel.BoardCards[3], Mode=OneWay}"/>
+            </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle x:Name="center_card5" HorizontalAlignment="Left" Height="70" Margin="641,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="{Binding ViewModel.BoardCards[4], Mode=OneWay}"/>
+            </Rectangle.Fill>
+            </Rectangle>
             <Button x:Name="button_extract" 
                     Content="Fold" 
                     Click="button_fold_Click"
                     HorizontalAlignment="Left" Height="20" Margin="438,636,0,0" VerticalAlignment="Top" Width="69">
-                <Button.Triggers>
+                <!--<Button.Triggers>
                     <EventTrigger RoutedEvent="Button.Click">
                         <BeginStoryboard>
                             <Storyboard>
@@ -136,7 +151,7 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
-                </Button.Triggers>
+                </Button.Triggers>-->
             </Button>
             <Button x:Name="button_add" 
                     Content="Call"
@@ -179,40 +194,39 @@
             <!-- Зеленые кнопки -->
             <Button x:Name="opp0"
                     Content=""
-                    Visibility="{Binding ''}"
+                    Visibility="Hidden"
                     Command="{Binding ''}"
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="543,88,0,0" VerticalAlignment="Top" Width="44" Height="45" Panel.ZIndex="3"/>
             <Button x:Name="opp1"
-                    Visibility="{Binding ''}"
+                    Visibility="Hidden"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="257,88,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button x:Name="opp2"
-                    Visibility="{Binding ''}"
-                    Command="{Binding ''}"
+Visibility="Hidden"                    Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="46,214,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button x:Name="opp3"
-                    Visibility="{Binding ''}"
+                    Visibility="Hidden"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="46,408,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button x:Name="opp4"
-                    Visibility="{Binding ''}"
+                    Visibility="Hidden"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="257,565,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button x:Name="opp5"
-                    Visibility="{Binding ''}"
+                    Visibility="Hidden"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
@@ -220,21 +234,21 @@
                     CommandParameter="{Binding ''}"
                     HorizontalAlignment="Left" Margin="794,565,0,0" VerticalAlignment="Top" Width="44" Height="45"/>
             <Button x:Name="opp6"
-                    Visibility="{Binding ''}"
+                    Visibility="Hidden"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="998,408,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button x:Name="opp7"
-                    Visibility="{Binding ''}"
+                    Visibility="Hidden"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="998,214,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button x:Name="opp8"
-                    Visibility="{Binding ''}"
+                    Visibility="Hidden"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""

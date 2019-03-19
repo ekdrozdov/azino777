@@ -13,7 +13,7 @@ namespace PokerCore.Model
         {
             _playerView = playerView;
         }
-        public int countOuts(List<ICard> cards) => _playerView.countOuts(cards);
+        public int countOuts(List<Card> cards) => _playerView.countOuts(cards);
 
         public int Dealer { get => _playerView.Dealer; }
 
@@ -33,7 +33,7 @@ namespace PokerCore.Model
 
         public Dictionary<int, Player> Players { get => _playerView.Players; }
 
-        public Card[] BoardCards { get => _playerView.BoardCards; }
+        public List<string> BoardCards { get => _playerView.BoardCards; }
 
         public (Card, Card) HandCards { get => _playerView.Players[CurPlayer].MyState.HandCards; }
 
