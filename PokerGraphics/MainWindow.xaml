@@ -19,7 +19,7 @@
         </Style>
         <PathGeometry x:Key="pa">
             <PathFigure StartPoint="0,0">
-                <LineSegment Point="74,-277" /> 
+                <LineSegment Point="74,-277" />
             </PathFigure>
         </PathGeometry>
         <PathGeometry x:Key="pa2">
@@ -93,29 +93,29 @@
                 </Rectangle.Fill>
             </Rectangle>
             <Rectangle x:Name="center_card2" HorizontalAlignment="Left" Height="70" Margin="476,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="{Binding ViewModel.BoardCards[1], Mode=OneWay}"/>
-            </Rectangle.Fill>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.BoardCards[1], Mode=OneWay}"/>
+                </Rectangle.Fill>
             </Rectangle>
             <Rectangle x:Name="center_card3" HorizontalAlignment="Left" Height="70" Margin="531,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="{Binding ViewModel.BoardCards[2], Mode=OneWay}"/>
-            </Rectangle.Fill>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.BoardCards[2], Mode=OneWay}"/>
+                </Rectangle.Fill>
             </Rectangle>
             <Rectangle x:Name="center_card4" HorizontalAlignment="Left" Height="70" Margin="586,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="{Binding ViewModel.BoardCards[3], Mode=OneWay}"/>
-            </Rectangle.Fill>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.BoardCards[3], Mode=OneWay}"/>
+                </Rectangle.Fill>
             </Rectangle>
             <Rectangle x:Name="center_card5" HorizontalAlignment="Left" Height="70" Margin="641,277,0,0" Stroke="White" VerticalAlignment="Top" Width="50" StrokeThickness="3">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="{Binding ViewModel.BoardCards[4], Mode=OneWay}"/>
-            </Rectangle.Fill>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding ViewModel.BoardCards[4], Mode=OneWay}"/>
+                </Rectangle.Fill>
             </Rectangle>
             <Button x:Name="button_extract" 
                     Content="Fold" 
                     Click="button_fold_Click"
-                    HorizontalAlignment="Left" Height="20" Margin="438,636,0,0" VerticalAlignment="Top" Width="69">
+                    HorizontalAlignment="Left" Height="20" Margin="438,609,0,0" VerticalAlignment="Top" Width="69">
                 <!--<Button.Triggers>
                     <EventTrigger RoutedEvent="Button.Click">
                         <BeginStoryboard>
@@ -160,24 +160,23 @@
             <TextBox x:Name="textbox_number_of_money" 
                      Text="{Binding ViewModel.player0.PlayerBet, Mode=OneWay}" 
                      HorizontalAlignment="Left" Height="20" Margin="641,631,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="30"/>
-            <Button x:Name="button_equalize" 
-                    Content="Equalize" 
-                    Click="button_equalize_Click"
-                    HorizontalAlignment="Left" Margin="438,609,0,0" VerticalAlignment="Top" Width="69"/>
             <Button x:Name="button_out_to_menu" 
                     Content="Меню" 
                     Command="{Binding ShowMenuSett}"
                     HorizontalAlignment="Left" VerticalAlignment="Top" Width="75"/>
             <TextBlock x:Name="main_bank" HorizontalAlignment="Left" Margin="475,233,0,0" TextWrapping="Wrap" Text="Общий банк: " VerticalAlignment="Top"/>
             <TextBox x:Name="money_in_main_bank" 
+                     IsReadOnly="True"
                      Text="{Binding ViewModel.AllBank, Mode=OneWay}"
                      HorizontalAlignment="Left" Height="23" Margin="550,232,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="78"/>
             <TextBlock x:Name="little_bland" HorizontalAlignment="Left" Margin="390,372,0,0" TextWrapping="Wrap" Text="Малый блайнд: " VerticalAlignment="Top"/>
             <TextBox x:Name="money_in_little_bland" 
+                     IsReadOnly="True"
                      Text="{Binding ViewModel.SmallBlind, Mode=OneWay}"
                      HorizontalAlignment="Left" Height="23" Margin="478,371,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="62"/>
             <TextBlock x:Name="big_bland" HorizontalAlignment="Left" Margin="551,372,0,0" TextWrapping="Wrap" Text="Большой блайнд: " VerticalAlignment="Top"/>
             <TextBox x:Name="money_in_big_bland" 
+                     IsReadOnly="True"
                      Text="{Binding ViewModel.BigBlind, Mode=OneWay}"
                      HorizontalAlignment="Left" Height="23" Margin="655,371,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="55"/>
             <Ellipse x:Name="diller10" HorizontalAlignment="Left" Height="25" Margin="843,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
@@ -190,72 +189,91 @@
             <Ellipse x:Name="diller2" HorizontalAlignment="Left" Height="25" Margin="267,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse x:Name="diller3" HorizontalAlignment="Left" Height="25" Margin="122,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse x:Name="diller4" HorizontalAlignment="Left" Height="25" Margin="122,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
- 
+
             <!-- Зеленые кнопки -->
-            <Button x:Name="opp0"
+            <Button x:Name="opp5"
                     Content=""
-                    Visibility="Hidden"
+                    Visibility="{Binding ViewModel.player5connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player5connected, Mode=OneWay}"
+                    Click="button_add_5Bot"
                     Command="{Binding ''}"
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="543,88,0,0" VerticalAlignment="Top" Width="44" Height="45" Panel.ZIndex="3"/>
-            <Button x:Name="opp1"
-                    Visibility="Hidden"
+            <Button x:Name="opp4"
+                    Visibility="{Binding ViewModel.player4connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player4connected, Mode=OneWay}"
+                    Click="button_add_4Bot"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="257,88,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
-            <Button x:Name="opp2"
-Visibility="Hidden"                    Command="{Binding ''}"
+            <Button x:Name="opp3"
+                    Visibility="{Binding ViewModel.player3connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player3connected, Mode=OneWay}" 
+                    Click="button_add_3Bot"
+                    Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="46,214,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
-            <Button x:Name="opp3"
-                    Visibility="Hidden"
+            <Button x:Name="opp2"
+                    Visibility="{Binding ViewModel.player2connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player2connected, Mode=OneWay}"
+                    Click="button_add_2Bot"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="46,408,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
-            <Button x:Name="opp4"
-                    Visibility="Hidden"
+            <Button x:Name="opp1"
+                    Visibility="{Binding ViewModel.player1connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player1connected, Mode=OneWay}"
+                    Click="button_add_1Bot"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="257,565,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
-            <Button x:Name="opp5"
-                    Visibility="Hidden"
+            <Button x:Name="opp9"
+                    Visibility="{Binding ViewModel.player9connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player9connected, Mode=OneWay}"
+                    Click="button_add_9Bot"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     CommandParameter="{Binding ''}"
                     HorizontalAlignment="Left" Margin="794,565,0,0" VerticalAlignment="Top" Width="44" Height="45"/>
-            <Button x:Name="opp6"
-                    Visibility="Hidden"
+            <Button x:Name="opp8"
+                    Visibility="{Binding ViewModel.player8connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player8connected, Mode=OneWay}"
+                    Click="button_add_8Bot"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="998,408,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
             <Button x:Name="opp7"
-                    Visibility="Hidden"
+                    Visibility="{Binding ViewModel.player7connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player7connected, Mode=OneWay}"
+                    Click="button_add_7Bot"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="998,214,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
-            <Button x:Name="opp8"
-                    Visibility="Hidden"
+            <Button x:Name="opp6"
+                    Visibility="{Binding ViewModel.player6connectedvis, Mode=OneWay}"
+                    IsEnabled="{Binding ViewModel.player6connected, Mode=OneWay}"
+                    Click="button_add_6Bot"
                     Command="{Binding ''}"
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
                     HorizontalAlignment="Left" Margin="833,88,0,0" VerticalAlignment="Top" Width="44" Height="45"/>
             <!-- Конец зеленых кнопок -->
-            
+
             <!--   Карты opp5   -->
             <Rectangle x:Name="card1_opp" 
                        Visibility="{Binding ViewModel.player5vis, Mode=OneWay}"
@@ -457,7 +475,6 @@ Visibility="Hidden"                    Command="{Binding ''}"
             </Rectangle>
             <!--  User Controls -->
             <local:PlayerView x:Name="i0" Height="50" Margin="506,630,464,10" Visibility="{Binding ViewModel.player0vis, Mode=OneWay}" uName="{Binding ViewModel.player0.Name, Mode=OneWay}" Cash="{Binding ViewModel.player0.Cash, Mode=OneWay}"/>
-
             <local:PlayerView x:Name="i1" Height="50" Margin="224,630,746,10" Visibility="{Binding ViewModel.player1vis, Mode=OneWay}" uName="{Binding ViewModel.player1.Name, Mode=OneWay}" Cash="{Binding ViewModel.player1.Cash, Mode=OneWay}"/>
             <local:PlayerView x:Name="i2" Height="50" Margin="16,490,954,150" Visibility="{Binding ViewModel.player2vis, Mode=OneWay}" uName="{Binding ViewModel.player2.Name, Mode=OneWay}" Cash="{Binding ViewModel.player2.Cash, Mode=OneWay}"/>
             <local:PlayerView x:Name="i3" Height="50" Margin="16,128,954,512" Visibility="{Binding ViewModel.player3vis, Mode=OneWay}" uName="{Binding ViewModel.player3.Name, Mode=OneWay}" Cash="{Binding ViewModel.player3.Cash, Mode=OneWay}"/>
@@ -509,6 +526,13 @@ Visibility="Hidden"                    Command="{Binding ''}"
             <TextBox x:Name="textbox_raise_cash" 
                 Text="{Binding ViewModel.player0.PlayerBet, Mode=OneWay}" 
                 HorizontalAlignment="Left" Height="20" Margin="641,579,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="30"/>
+            <TextBlock 
+                Text="Игрок с блайндами: "
+                HorizontalAlignment="Left" Margin="449,408,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <TextBlock 
+                x:Name="bland_user"
+                Text="BlandUser" 
+                HorizontalAlignment="Left" Margin="567,408,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
 
         </Grid>
     </Grid>

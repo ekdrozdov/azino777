@@ -54,17 +54,17 @@ namespace PokerCore.ViewModel
 
         public void Check()
         {
-            if (_table.CurrentBet == 0)
+         //   if (_table.CurrentBet == 0)
                 _myState.PlayerBet = 0;
-            else
-                throw new Exception("Вы не можете сделать чек, ставки уже сделаны.");
+        //    else
+         //       throw new Exception("Вы не можете сделать чек, ставки уже сделаны.");
 
             //AddInDb("Check");
         }
 
         public void Raise(int raise)
         {
-            if (raise > _table.CurrentRaise)
+            if (raise >= _table.CurrentRaise)
             {
                 int BetDifferenсe = _table.CurrentBet - _myState.PlayerBet;
                 if (_myState.Cash > BetDifferenсe + raise)
