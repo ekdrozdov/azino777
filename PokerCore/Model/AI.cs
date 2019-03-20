@@ -133,8 +133,29 @@ namespace PokerCore.ViewModel
         }
 
 
+        public int GetOptimalRaise(int cash, List<Card> cards)
+        {
+            int outs = GetOuts(cards);
 
+            int res = 0;
 
+            switch (outs)
+            {
+                case 7:
+                    res = (int)(cash * 0.3);
+                    break;
+                case 8:
+                    res = (int)(cash * 0.35);
+                    break;
+                case 9:
+                    res = (int)(cash * 0.4);
+                    break;
+                case 10:
+                    res = (int)(cash * 0.5);
+                    break;
+            }
 
+            return res;
+        }
     }
 }
