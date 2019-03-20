@@ -179,16 +179,16 @@
                      IsReadOnly="True"
                      Text="{Binding ViewModel.BigBlind, Mode=OneWay}"
                      HorizontalAlignment="Left" Height="23" Margin="655,371,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="55"/>
-            <Ellipse x:Name="diller10" HorizontalAlignment="Left" Height="25" Margin="843,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller9" HorizontalAlignment="Left" Height="25" Margin="926,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller6" HorizontalAlignment="Left" Height="25" Margin="843,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller7" HorizontalAlignment="Left" Height="25" Margin="926,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse x:Name="diller8" HorizontalAlignment="Left" Height="25" Margin="926,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller7" HorizontalAlignment="Left" Height="25" Margin="802,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller6" HorizontalAlignment="Left" Height="26" Margin="556,523,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller1" HorizontalAlignment="Left" Height="25" Margin="551,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller5" HorizontalAlignment="Left" Height="25" Margin="267,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller2" HorizontalAlignment="Left" Height="25" Margin="267,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller9" HorizontalAlignment="Left" Height="25" Margin="802,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller0" HorizontalAlignment="Left" Height="26" Margin="556,523,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller5" HorizontalAlignment="Left" Height="25" Margin="551,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller1" HorizontalAlignment="Left" Height="25" Margin="267,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller4" HorizontalAlignment="Left" Height="25" Margin="267,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
             <Ellipse x:Name="diller3" HorizontalAlignment="Left" Height="25" Margin="122,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller4" HorizontalAlignment="Left" Height="25" Margin="122,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller2" HorizontalAlignment="Left" Height="25" Margin="122,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
 
             <!-- Зеленые кнопки -->
             <Button x:Name="opp5"
