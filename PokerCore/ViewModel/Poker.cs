@@ -37,9 +37,10 @@ namespace PokerCore.ViewModel
 
             Player player = new Player(name, cash, this);
 
-            AI Bot = new AI("bot", 1000, this);
-            _players.Add(1, Bot);
-
+            //AI Bot = new AI("bot", 1000, this);
+            //_players.Add(1, Bot);
+            //AI Bot1 = new AI("bot", 1000, this);
+            //_players.Add(2, Bot1);
             _cardDeck.Shuffle();
             for (int i = 0; i < 5; i++)
             {
@@ -48,12 +49,12 @@ namespace PokerCore.ViewModel
             }
             _players.Add(0, player);
             (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-            _players[0].HandCards = (playerCards);
+            _players[0].MyState.HandCards = playerCards;
             HandCards.Add((0, playerCards));
 
             playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-            _players[1].HandCards = (playerCards);
-            HandCards.Add((1, playerCards));
+            //_players[1].MyState.HandCards = (playerCards);
+            //HandCards.Add((1, playerCards));
             _curBet = 0;
             _curRaise = bigBlind;
             _allBank = 0;
@@ -67,33 +68,93 @@ namespace PokerCore.ViewModel
         public PlayerState player0
         { get => _players.ContainsKey(0) ? _players[0].MyState : null; }
 
+        public string player0vis
+        { get => _players.ContainsKey(0)?"Visible":"Hidden"; }
+        public string player0connected
+        { get => _players.ContainsKey(0) ? "False" : "True"; }
+        public string player0connectedvis
+        { get => _players.ContainsKey(0) ? "Hidden" : "Visible"; }
+
         public PlayerState player1
         { get => _players.ContainsKey(1)?_players[1].MyState:null; }
+        public string player1vis
+        { get => _players.ContainsKey(1)?"Visible":"Hidden"; }
+        public string player1connected
+        { get => _players.ContainsKey(1) ? "False" : "True"; }
+        public string player1connectedvis
+        { get => _players.ContainsKey(1) ? "Hidden" : "Visible"; }
 
         public PlayerState player2
         { get => _players.ContainsKey(2) ? _players[2].MyState : null; }
+        public string player2vis
+        { get => _players.ContainsKey(2)?"Visible":"Hidden"; }
+        public string player2connected
+        { get => _players.ContainsKey(2) ? "False" : "True"; }
+        public string player2connectedvis
+        { get => _players.ContainsKey(2) ? "Hidden" : "Visible"; }
 
         public PlayerState player3
         { get => _players.ContainsKey(3) ? _players[3].MyState : null; }
+        public string player3vis
+        { get => _players.ContainsKey(3)?"Visible":"Hidden"; }
+        public string player3connected
+        { get => _players.ContainsKey(3) ? "False" : "True"; }
+        public string player3connectedvis
+        { get => _players.ContainsKey(3) ? "Hidden" : "Visible"; }
 
         public PlayerState player4
         { get => _players.ContainsKey(4) ? _players[4].MyState : null; }
+        public string player4vis
+        { get => _players.ContainsKey(4)?"Visible":"Hidden"; }
+        public string player4connected
+        { get => _players.ContainsKey(4) ? "False" : "True"; }
+        public string player4connectedvis
+        { get => _players.ContainsKey(4) ? "Hidden" : "Visible"; }
 
         public PlayerState player5
         { get => _players.ContainsKey(5) ? _players[5].MyState : null; }
+        public string player5vis
+        { get => _players.ContainsKey(5)?"Visible":"Hidden"; }
+        public string player5connected
+        { get => _players.ContainsKey(5) ? "False" : "True"; }
+        public string player5connectedvis
+        { get => _players.ContainsKey(5) ? "Hidden" : "Visible"; }
 
         public PlayerState player6
         { get => _players.ContainsKey(6) ? _players[6].MyState : null; }
+        public string player6vis
+        { get => _players.ContainsKey(6)?"Visible":"Hidden"; }
+        public string player6connected
+        { get => _players.ContainsKey(6) ? "False" : "True"; }
+        public string player6connectedvis
+        { get => _players.ContainsKey(6) ? "Hidden" : "Visible"; }
 
         public PlayerState player7
         { get => _players.ContainsKey(7) ? _players[7].MyState : null; }
+        public string player7vis
+        { get => _players.ContainsKey(7)?"Visible":"Hidden"; }
+        public string player7connected
+        { get => _players.ContainsKey(7) ? "False" : "True"; }
+        public string player7connectedvis
+        { get => _players.ContainsKey(7) ? "Hidden" : "Visible"; }
 
         public PlayerState player8
         { get => _players.ContainsKey(8) ? _players[8].MyState : null; }
+        public string player8vis
+        { get => _players.ContainsKey(8)?"Visible":"Hidden"; }
+        public string player8connected
+        { get => _players.ContainsKey(8) ? "False" : "True"; }
+        public string player8connectedvis
+        { get => _players.ContainsKey(8) ? "Hidden" : "Visible"; }
 
         public PlayerState player9
         { get => _players.ContainsKey(9) ? _players[9].MyState : null; }
-
+        public string player9vis
+        { get => _players.ContainsKey(9)?"Visible":"Hidden"; }
+        public string player9connected
+        { get => _players.ContainsKey(9) ? "False" : "True"; }
+        public string player9connectedvis
+        { get => _players.ContainsKey(9) ? "Hidden" : "Visible"; }
         #endregion
 
         #region Поля стола
@@ -128,7 +189,7 @@ namespace PokerCore.ViewModel
                     {
                         opened.Add(card.Item1.GetTextureName());
                     } 
-                    else opened.Add("cardBlack_blue1.png");
+                    else opened.Add("Resources/"+"cardBack_blue1.png");
                 //Card[] opened = new Card[visibleCardCount];
                 //for (int i = 0; i < visibleCardCount; i++)
                 //    opened[i] = _boardCards[i].Item1;
@@ -873,36 +934,44 @@ namespace PokerCore.ViewModel
             }
             else
             {
-                List<Card> tmp = new List<Card>();
-                tmp.Add(_players[1].MyState.HandCards.Item1);
-                tmp.Add(_players[1].MyState.HandCards.Item2);
-                tmp.AddRange(_boardCards.Select(x => x.Item1).ToArray());
-                GameState aiState;
-                aiState = ((AI)_players[1]).GetOptimalMove(tmp);
-                switch (aiState)
+                foreach (var bot in _players)//не знаю на сколько это верно
                 {
-                    case GameState.call:
-                        _players[1].Call();
-                        break;
+                    
+                    if (bot.Value.GetType() == typeof(AI))
+                    {
+                        List<Card> tmp = new List<Card>();
+                        tmp.Add(bot.Value.MyState.HandCards.Item1);
+                        tmp.Add(bot.Value.MyState.HandCards.Item2);
+                        tmp.AddRange(_boardCards.Select(x => x.Item1).ToArray());
+                        GameState aiState;
+                        aiState = ((AI)bot.Value).GetOptimalMove(tmp);
+                        switch (aiState)
+                        {
+                            case GameState.call:
+                                bot.Value.Call();
+                                break;
 
-                    case GameState.check:
-                        _players[1].Check();
-                        break;
+                            case GameState.check:
+                                bot.Value.Check();
+                                break;
 
-                    case GameState.fold:
-                        _players[1].Fold();
-                        break;
+                            case GameState.fold:
+                                bot.Value.Fold();
+                                break;
 
-                    case GameState.raise:
-                        _players[1].Raise(_curRaise);
-                        break;
+                            case GameState.raise:
+                                bot.Value.Raise(_curRaise);
+                                break;
+                        }
+                        // search for player in game
+                        do
+                        {
+                            addKey = TakeNextKey(_dealer);
+                        } while (_players[addKey].MyState.State != PlayerGameState.In);
+                        _curPlayer = addKey;
+                    }
                 }
-                // search for player in game
-                do
-                {
-                    addKey = TakeNextKey(_dealer);
-                } while (_players[addKey].MyState.State != PlayerGameState.In);
-                _curPlayer = addKey;
+             
             }
             this.RaisePropertyChanged("BoardCards");
             return true;
@@ -936,6 +1005,7 @@ namespace PokerCore.ViewModel
                 {
                     Player player = new Player(name, cash, this);
                     _players.Add(_players.Count, player);
+                    this.RaisePropertyChanged($"player{_players.Count}vis");
                     return (true, player);
                 }
                 return (false, null);
@@ -953,6 +1023,23 @@ namespace PokerCore.ViewModel
                 }
                 return true;
             }
+        }
+        public (bool, Player) TryConnectBot(int number, int cash)//не очень безопасно ну и ладно
+        {
+            if (_players.Count < _gameRules.MaxPlayers)
+            {
+                Player player = new AI($"Bot{number.ToString()}", cash, this);
+                _players.Add(number, player);//////WARNING ПО ИДЕЕ ЕМУ СЕЙЧАС КАРТЫ НЕ НУЖНО ВЫДАВАТЬ
+                (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+                _players[number].MyState.HandCards = playerCards;
+                HandCards.Add((number, playerCards));
+                this.RaisePropertyChanged($"player{number}vis");
+                this.RaisePropertyChanged($"player{number}connected");
+                this.RaisePropertyChanged($"player{number}connectedvis");
+                this.RaisePropertyChanged($"player{number}");
+                return (true, player);
+            }
+            return (false, null);
         }
 
         public void Disconnect(int key)

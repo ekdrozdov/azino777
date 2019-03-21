@@ -7,7 +7,13 @@ namespace PokerCore.Model
 {
     public class PlayerState : ReactiveObject
     {
-        public PlayerState(string name, int cash) { _name = name; _cash = cash; HandCards = (new Card(CardRank.Q, CardSuit.Diamonds), new Card(CardRank.c4, CardSuit.Spades)); }
+        public PlayerState(string name, int cash) {
+            _name = name; this.RaisePropertyChanged("Name");
+            _cash = cash; this.RaisePropertyChanged("Cash");
+            _handCards = (new Card(CardRank.Q, CardSuit.Diamonds), new Card(CardRank.c4, CardSuit.Spades));
+            this.RaisePropertyChanged("FirstCardName");
+            this.RaisePropertyChanged("SecondCardName");
+        }
 
         string _name;
         public string Name { get => _name; set => this.RaiseAndSetIfChanged(ref _name, value); }
@@ -23,6 +29,10 @@ namespace PokerCore.Model
 
         PlayerGameState _state;
         public PlayerGameState State { get => _state; set => this.RaiseAndSetIfChanged(ref _state, value); }
+        string _dealer;
+        public string Dealer { get => _dealer; set => this.RaiseAndSetIfChanged(ref _dealer, value); }//реализовать постановку этого флага
+        string _current_player;
+        public string CurrentPlayer { get => _current_player; set => this.RaiseAndSetIfChanged(ref _current_player, value); }//реализовать постановку этого флага
 
         (Card, Card) _handCards;
         public (Card, Card) HandCards
@@ -31,14 +41,12 @@ namespace PokerCore.Model
             set
             {
                 this.RaiseAndSetIfChanged(ref _handCards, value);
-                FirstCardName = _handCards.Item1.GetTextureName();
-                SecondCardName = _handCards.Item2.GetTextureName();
+                this.RaisePropertyChanged("FirstCardName");
+                this.RaisePropertyChanged("SecondCardName");
             }
         }
-        string card1;
-        string card2;
 
-        public string FirstCardName { get => _handCards.Item1.GetTextureName(); set => this.RaiseAndSetIfChanged(ref card1, value);        }
-        public string SecondCardName { get => _handCards.Item2.GetTextureName(); set => this.RaiseAndSetIfChanged(ref card2, value); }
+        public string FirstCardName { get => _handCards.Item1.GetTextureName(); }
+        public string SecondCardName { get => _handCards.Item2.GetTextureName(); }
     }
 }

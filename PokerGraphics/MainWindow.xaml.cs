@@ -43,8 +43,6 @@ namespace PokerGraphics
             //у меня не получилось прибиндиться таким образом, мне каж надо как то сказать MainWindow что у него появились ещё контролы
             //но зато получчилось прибиндиться напрямую через ViewModel MainWindow (см. AllBank, SmallBlind, BigBlind)
             pokerTable = new Poker(realName, realCash, smallBlind, bigBlind);
-
-            var a = pokerTable.TryConnect("Bot0", 800);
         }
 
         public MainWindow()
@@ -56,6 +54,7 @@ namespace PokerGraphics
             menu.Visibility = Visibility.Visible;
             grid_sett.Visibility = Visibility.Collapsed;
             table.Visibility = Visibility.Collapsed;
+          
         }
 
         private void button_start_Click(object sender, RoutedEventArgs e)
@@ -89,15 +88,6 @@ namespace PokerGraphics
         private void button_exit_Click(object sender, RoutedEventArgs e)
         {
         }
-        private void button_equalize_Click(object sender, RoutedEventArgs e)
-        {
-            try {
-                // ViewModel.Players[0].Check();
-                ViewModel.Players[0].Call();
-                pokerTable.EndAction();
-            }
-            catch (Exception ex) { }
-        }
         private void button_fold_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -105,26 +95,26 @@ namespace PokerGraphics
                 ViewModel.Players[0].Fold();
                 pokerTable.EndAction();
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
         private void button_call(object sender, RoutedEventArgs e)
         {
             try
             {
-                ViewModel.Players[0].Bet(Convert.ToInt32(textbox_number_of_money));
+                ViewModel.Players[0].Bet(Convert.ToInt32(textbox_number_of_money.Text));
                 pokerTable.EndAction();
 
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
         private void button_raise_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                ViewModel.Players[0].Raise(Convert.ToInt32(textbox_raise_cash));
+                ViewModel.Players[0].Raise(Convert.ToInt32(textbox_raise_cash.Text));
                 pokerTable.EndAction();
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
         private void button_check_Click(object sender, RoutedEventArgs e)
         {
@@ -133,7 +123,7 @@ namespace PokerGraphics
                 ViewModel.Players[0].Check();
                 pokerTable.EndAction();
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
         private void button_allin_Click(object sender, RoutedEventArgs e)
         {
@@ -143,7 +133,78 @@ namespace PokerGraphics
                 pokerTable.EndAction();
 
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_1Bot(object sender, RoutedEventArgs e)
+        {
+            try {
+                ViewModel.TryConnectBot(1,1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_2Bot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.TryConnectBot(2, 1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_3Bot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.TryConnectBot(3, 1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_4Bot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.TryConnectBot(4, 1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_5Bot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.TryConnectBot(5, 1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_6Bot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.TryConnectBot(6, 1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_7Bot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.TryConnectBot(7, 1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_8Bot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.TryConnectBot(8, 1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private void button_add_9Bot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.TryConnectBot(9, 1000);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
     }
 }

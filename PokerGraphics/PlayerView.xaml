@@ -19,6 +19,6 @@
 
         <TextBlock Grid.Column="0" Grid.Row="0" Name="nameUser" Text="{Binding uName, ElementName=uInfo}" TextAlignment="Center"/>
         <TextBlock Grid.Column="0" Grid.Row="1" Text="Деньги: " TextAlignment="Center"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Name="cash"       Text="{Binding Cash, ElementName=uInfo}" BorderBrush="#FF4A5CD8"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Name="cash"       IsReadOnly="True" Text="{Binding Cash, ElementName=uInfo}" BorderBrush="#FF4A5CD8"/>
     </Grid>
 </UserControl>
