@@ -37,31 +37,59 @@ namespace PokerCore.ViewModel
 
             Player player = new Player(name, cash, this);
 
+            _cardDeck.Shuffle();
+            for (int i = 0; i < 5; i++)
+            {
+                _boardCards[i].Item1 = null;
+                _boardCards[i].Item2 = Visibility.Invisible;
+            }
+
             //AI Bot = new AI("bot", 1000, this);
             //_players.Add(1, Bot);
             //AI Bot1 = new AI("bot", 1000, this);
             //_players.Add(2, Bot1);
+            _players.Add(0, player);
+            _dealer = 0;
+            _bigBlind = bigBlind;
+            _smallBlind = smallBlind;
+        }
+
+        public void GameStart()
+        {
             _cardDeck.Shuffle();
             for (int i = 0; i < 5; i++)
             {
                 _boardCards[i].Item1 = _cardDeck.TakeCard();
                 _boardCards[i].Item2 = Visibility.Invisible;
             }
-            _players.Add(0, player);
-            (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-            _players[0].MyState.HandCards = playerCards;
-            HandCards.Add((0, playerCards));
 
-            playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-            //_players[1].MyState.HandCards = (playerCards);
-            //HandCards.Add((1, playerCards));
-            _curBet = 0;
-            _curRaise = bigBlind;
+            for ( int i = 0; i < _players.Count; i++)
+            {
+                (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+                _players[i].MyState.HandCards = playerCards;
+                HandCards.Add((i, playerCards));
+
+                // set visibility of player cards
+                for (int j = 0; j < i; j++)
+                    _players[i].MyState.PlayersCardVisibility[j] = "Hidden";
+                _players[i].MyState.PlayersCardVisibility[i] = "Visible";
+                for (int j = i + 1; j < _players.Count; j++)
+                    _players[i].MyState.PlayersCardVisibility[j] = "Hidden";
+                for (int j = _players.Count; j < 10; j++)
+                    _players[i].MyState.PlayersCardVisibility[j] = "Collapsed";
+            }
+
             _allBank = 0;
-            _dealer = 0;
-            _curPlayer = 0;
-            _bigBlind = bigBlind;
-            _smallBlind = smallBlind;
+            _curBet = 0;
+            _curRaise = 0;
+
+            _curPlayer = TakeNextKey(_dealer);
+            _players[_curPlayer].Bet(_smallBlind);
+            _curPlayer = TakeNextKey(_curPlayer);
+            _players[_curPlayer].Raise(_bigBlind - _smallBlind);
+            _curPlayer = TakeNextKey(_curPlayer);
+            _curRaise = _bigBlind;
+
         }
 
         #region Игроки
@@ -179,6 +207,28 @@ namespace PokerCore.ViewModel
         public GameRules Rules { get => _gameRules; }
 
         public Dictionary<int, Player> Players { get => _players; }
+
+        public string[] DealerChip
+        {
+            get
+            {
+                string[] ans = new string[10];
+                for (int i = 0; i < 10; i++)
+                    ans[i] = "Hidden";
+                ans[_dealer] = "Visible";
+                return ans;
+            }
+        }
+
+        public string ButtonActivity
+        {
+            get
+            {
+                if (_curPlayer == 0 && _boardCards[0].Item1 != null)
+                    return "True";
+                else return "False";
+            }
+        }
 
         public List<string> BoardCards { get
             {
@@ -771,7 +821,7 @@ namespace PokerCore.ViewModel
             //}
 
             (Card, Card) playerCards;
-            List<int> keys = _players.Keys.ToList();
+            
             int addKey;
             int bet = _players[0].MyState.PlayerBet;
             bool lastStage = true;
@@ -934,62 +984,43 @@ namespace PokerCore.ViewModel
             }
             else
             {
-                foreach (var bot in _players)//не знаю на сколько это верно
+                for (int i = _curPlayer; i < _players.Count - 1; i++)
                 {
-                    
-                    if (bot.Value.GetType() == typeof(AI))
+                    _curPlayer = TakeNextKey(_curPlayer);
+                    if (_players[_curPlayer].MyState.State == PlayerGameState.In)
                     {
                         List<Card> tmp = new List<Card>();
-                        tmp.Add(bot.Value.MyState.HandCards.Item1);
-                        tmp.Add(bot.Value.MyState.HandCards.Item2);
+                        tmp.Add(_players[_curPlayer].MyState.HandCards.Item1);
+                        tmp.Add(_players[_curPlayer].MyState.HandCards.Item2);
                         tmp.AddRange(_boardCards.Select(x => x.Item1).ToArray());
+
                         GameState aiState;
-                        aiState = ((AI)bot.Value).GetOptimalMove(tmp);
+                        aiState = ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
                         switch (aiState)
                         {
                             case GameState.call:
-                                bot.Value.Call();
+                                _players[_curPlayer].Call();
                                 break;
 
                             case GameState.check:
-                                bot.Value.Check();
+                                _players[_curPlayer].Check();
                                 break;
 
                             case GameState.fold:
-                                bot.Value.Fold();
+                                _players[_curPlayer].Fold();
                                 break;
 
                             case GameState.raise:
-                                /*Check cash. If empty then fold*/
-                                if (_players[1].MyState.Cash == 0)
-                                {
-                                    _players[1].Fold();
-                                    break;
-                                }
-                                _players[1].Raise(((AI)_players[1]).GetOptimalRaise(_players[1].MyState.Cash, tmp));
+                                _players[_curPlayer].Raise(_curRaise);
                                 break;
                         }
-                        // search for player in game
-                        do
-                        {
-                            addKey = TakeNextKey(_dealer);
-                        } while (_players[addKey].MyState.State != PlayerGameState.In);
-                        _curPlayer = addKey;
                     }
                 }
              
             }
             this.RaisePropertyChanged("BoardCards");
             return true;
-            int TakeNextKey(int key) // return the key of next player
-            {
-                int nextKey;
-                int playerInd = keys.IndexOf(key);
-                if (playerInd < _players.Count - 1)
-                    nextKey = keys[playerInd + 1];
-                else nextKey = keys[0];
-                return nextKey;
-            }
+            
 
             void NewStageStart()
             {
@@ -1001,6 +1032,17 @@ namespace PokerCore.ViewModel
                 // Give a turn to a player left to dealer
                 _curPlayer = TakeNextKey(_dealer);
             }
+        }
+
+        int TakeNextKey(int key) // return the key of next player
+        {
+            List<int> keys = _players.Keys.ToList();
+            int nextKey;
+            int playerInd = keys.IndexOf(key);
+            if (playerInd < _players.Count - 1)
+                nextKey = keys[playerInd + 1];
+            else nextKey = keys[0];
+            return nextKey;
         }
 
         public (bool, Player) TryConnect(string name, int cash)

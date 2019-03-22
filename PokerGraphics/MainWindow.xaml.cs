@@ -61,6 +61,7 @@ namespace PokerGraphics
         {
             menu.Visibility = Visibility.Collapsed;
             grid_sett.Visibility = Visibility.Visible;
+
         }
 
         private void button_done_Click(object sender, RoutedEventArgs e)
