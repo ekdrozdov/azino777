@@ -56,6 +56,7 @@ namespace PokerCore.ViewModel
 
         public void GameStart()
         {
+            _cardDeck = new CardDeck();
             _cardDeck.Shuffle();
             for (int i = 0; i < 5; i++)
             {
@@ -799,231 +800,374 @@ namespace PokerCore.ViewModel
                 }
             } while (_dividedBanks.Count != 0);
         }
+        #region Чисто по человечески оставил старый EndAction, чтобы потом БД по новой не писать
+        //public bool EndAction()
+        //{
+        //    int visibleCardCount = 0;
+        //    //добавляем в бд игроков и игру
+        //    //using (ApplicationContext db = new ApplicationContext())
+        //    //{
+        //    //    foreach (var player in _players)
+        //    //    {
+        //    //        db.Players.Add(new DBPlayer
+        //    //        {
+        //    //            Name = player.Value.MyState.Name,
+        //    //            StartCash = player.Value.MyState.Cash,
+        //    //            FirstCard = new DBCard { Rank = player.Value.HandCards.Item1.Rank, Suit = player.Value.HandCards.Item1.Suit },
+        //    //            SecondCard = new DBCard { Rank = player.Value.HandCards.Item2.Rank, Suit = player.Value.HandCards.Item2.Suit }
+        //    //        });
+        //    //    }
+        //    //    db.Games.Add(new DBGame { });
+        //    //    db.SaveChanges();
+        //    //}
 
-        public bool EndAction()
+        //    (Card, Card) playerCards;
+
+        //    int addKey;
+        //    int bet = _players[0].MyState.PlayerBet;
+        //    bool lastStage = true;
+        //    // Check, if this Action was last in round
+        //    foreach (KeyValuePair<int, Player> player in _players)
+        //    {
+        //        if (player.Value.MyState.State == PlayerGameState.In && player.Value.MyState.PlayerBet != bet)
+        //        {
+        //            lastStage = false;
+        //            break;
+        //        }
+        //    }
+
+        //    if (lastStage)
+        //    {
+        //        foreach ((Card, Visibility) card in _boardCards)
+        //            if (card.Item2 == Visibility.Visible)
+        //                visibleCardCount++;
+        //            else break;
+
+        //        switch (visibleCardCount)
+        //        {
+        //            case 0:
+        //                // Lay out 3 cards on board
+        //                for (int i = 0; i < 3; i++)
+        //                    _boardCards[i].Item2 = Visibility.Visible;
+
+        //                //добавляем в бд карты со стола
+        //                //using (ApplicationContext db = new ApplicationContext())
+        //                //{ 
+        //                //    db.TableCards.Add(new DBTableCards { FirstCard = new DBCard { Rank = _boardCards[0].Item1.Rank, Suit = _boardCards[0].Item1.Suit },
+        //                //                                        SecondCard = new DBCard { Rank = _boardCards[1].Item1.Rank, Suit = _boardCards[1].Item1.Suit },
+        //                //                                        ThirdCard = new DBCard { Rank = _boardCards[2].Item1.Rank, Suit = _boardCards[2].Item1.Suit },
+        //                //                                        DBGameId = db.Games.Last().Id });
+        //                //    db.SaveChanges();
+        //                //}
+
+        //                NewStageStart();
+        //                break;
+
+        //            case 5:
+        //                // determinate the winners and give them cash
+        //                BankDivision();
+
+        //                //добавляем в бд кэш игроков после окончания игры
+        //                //using (ApplicationContext db = new ApplicationContext())
+        //                //{
+        //                //    var players = db.Players.ToList();
+
+        //                //    foreach (var player in _players)
+        //                //    {
+        //                //        int i = 0;
+        //                //        players[i].EndCash = player.Value.MyState.Cash;
+        //                //        db.Players.Update(players[i]);
+        //                //        i++;
+        //                //    }
+        //                //    db.SaveChanges();
+        //                //}
+
+        //                // Get new deck andd shuffle cards to start new game
+        //                _cardDeck = new CardDeck();
+        //                _cardDeck.Shuffle();
+
+        //                // draw new cards for next game
+        //                for (int i = 0; i < 5; i++)
+        //                {
+        //                    _boardCards[i].Item1 = _cardDeck.TakeCard();
+        //                    _boardCards[i].Item2 = Visibility.Invisible;
+        //                }
+
+        //                // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
+        //                foreach (KeyValuePair<int, Player> player in _players)
+        //                    if (player.Value.MyState.Cash < _bigBlind)
+        //                        Disconnect(player.Key);
+        //                    else
+        //                    {
+        //                        playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+        //                        HandCards.Add((player.Key, playerCards));
+        //                        //player.Value.HandCards = (playerCards);
+        //                        player.Value.MyState.State = PlayerGameState.In;
+        //                    }
+
+        //                // set new dealer left to old dealer
+        //                _dealer = TakeNextKey(_dealer);
+
+        //                // each player's bet and board max bet set to 0, also Raise set to bigBlind
+        //                NewStageStart();
+        //                _curRaise = _bigBlind;
+
+        //                // make mandatory bets
+        //                addKey = TakeNextKey(_dealer);
+        //                _players[addKey].MyState.Cash -= _smallBlind;
+        //                _players[addKey].MyState.PlayerBet = _smallBlind;
+
+        //                //добавление в бд малого блайнда
+        //                //using (ApplicationContext db = new ApplicationContext())
+        //                //{
+        //                //    DBGame game = db.Games.Last();
+        //                //    DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
+
+        //                //    db.Rounds.Add(new DBRound
+        //                //    {
+        //                //        Name = "Blinds",
+        //                //        Game = game.Id,
+        //                //        Player = player.Id,
+        //                //        ActionName = "Small blind",
+        //                //        BetSize = _smallBlind,
+        //                //        //DecisionTime
+        //                //    });
+        //                //    db.SaveChanges();
+        //                //}
+
+        //                addKey = TakeNextKey(addKey);
+        //                _players[addKey].MyState.Cash -= _bigBlind;
+        //                _players[addKey].MyState.PlayerBet = _bigBlind;
+
+        //                //добавление в бд большого блайнда
+        //                //using (ApplicationContext db = new ApplicationContext())
+        //                //{
+        //                //    DBGame game = db.Games.Last();
+        //                //    DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
+
+        //                //    db.Rounds.Add(new DBRound
+        //                //    {
+        //                //        Name = "Blinds",
+        //                //        Game = game.Id,
+        //                //        Player = player.Id,
+        //                //        ActionName = "Big blind",
+        //                //        BetSize = _bigBlind,
+        //                //        //DecisionTime
+        //                //    });
+        //                //    db.SaveChanges();
+        //                //}
+
+        //                // choose first player
+        //                _curPlayer = TakeNextKey(addKey);
+
+        //                break;
+
+        //            default:
+        //                // Lay out 1 card on board 
+        //                _boardCards[visibleCardCount].Item2 = Visibility.Visible;
+
+        //                //добавляем в бд 4 и 5 карту со стола
+        //                //if (visibleCardCount == 4)
+        //                //    using (ApplicationContext db = new ApplicationContext())
+        //                //    {
+        //                //        DBTableCards table = db.TableCards.Last();    
+        //                //        table.FourthCard = new DBCard { Rank = _boardCards[3].Item1.Rank, Suit = _boardCards[3].Item1.Suit };
+        //                //        table.FifthCard = new DBCard { Rank = _boardCards[4].Item1.Rank, Suit = _boardCards[4].Item1.Suit };    
+        //                //        db.TableCards.Update(table);
+        //                //        db.SaveChanges();
+        //                //    }
+
+        //                NewStageStart();
+
+        //                break;
+        //        }
+
+        //    }
+        //    else
+        //    {
+        //        for (int i = _curPlayer; i < _players.Count - 1; i++)
+        //        {
+        //            _curPlayer = TakeNextKey(_curPlayer);
+        //            if (_players[_curPlayer].MyState.State == PlayerGameState.In)
+        //            {
+        //                List<Card> tmp = new List<Card>();
+        //                tmp.Add(_players[_curPlayer].MyState.HandCards.Item1);
+        //                tmp.Add(_players[_curPlayer].MyState.HandCards.Item2);
+        //                tmp.AddRange(_boardCards.Select(x => x.Item1).ToArray());
+
+        //                GameState aiState;
+        //                aiState = ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
+        //                switch (aiState)
+        //                {
+        //                    case GameState.call:
+        //                        _players[_curPlayer].Call();
+        //                        break;
+
+        //                    case GameState.check:
+        //                        _players[_curPlayer].Check();
+        //                        break;
+
+        //                    case GameState.fold:
+        //                        _players[_curPlayer].Fold();
+        //                        break;
+
+        //                    case GameState.raise:
+        //                        _players[_curPlayer].Raise(_curRaise);
+        //                        break;
+        //                }
+        //            }
+        //        }
+
+        //    }
+        //    this.RaisePropertyChanged("BoardCards");
+        //    return true;
+
+
+        //    void NewStageStart()
+        //    {
+        //        // each player's bet and board max bet set to 0
+        //        foreach (KeyValuePair<int, Player> player in _players)
+        //            player.Value.MyState.PlayerBet = 0;
+        //        _curBet = 0;
+
+        //        // Give a turn to a player left to dealer
+        //        _curPlayer = TakeNextKey(_dealer);
+        //    }
+        //}
+        #endregion
+
+        void EndAction()
         {
-            int visibleCardCount = 0;
-            //добавляем в бд игроков и игру
-            //using (ApplicationContext db = new ApplicationContext())
-            //{
-            //    foreach (var player in _players)
-            //    {
-            //        db.Players.Add(new DBPlayer
-            //        {
-            //            Name = player.Value.MyState.Name,
-            //            StartCash = player.Value.MyState.Cash,
-            //            FirstCard = new DBCard { Rank = player.Value.HandCards.Item1.Rank, Suit = player.Value.HandCards.Item1.Suit },
-            //            SecondCard = new DBCard { Rank = player.Value.HandCards.Item2.Rank, Suit = player.Value.HandCards.Item2.Suit }
-            //        });
-            //    }
-            //    db.Games.Add(new DBGame { });
-            //    db.SaveChanges();
-            //}
-
             (Card, Card) playerCards;
-            
-            int addKey;
-            int bet = _players[0].MyState.PlayerBet;
+            int visibleCardCount = 0;
+            System.Type type = typeof(Player);
+            bool botTurn = true;
             bool lastStage = true;
-            // Check, if this Action was last in round
-            foreach (KeyValuePair<int, Player> player in _players)
+            int bet = _players[0].MyState.PlayerBet;
+            do
             {
-                if (player.Value.MyState.State == PlayerGameState.In && player.Value.MyState.PlayerBet != bet)
+                // Check, if this Action was last in round
+                foreach (KeyValuePair<int, Player> player in _players)
                 {
-                    lastStage = false;
-                    break;
-                }
-            }
-
-            if (lastStage)
-            {
-                foreach ((Card, Visibility) card in _boardCards)
-                    if (card.Item2 == Visibility.Visible)
-                        visibleCardCount++;
-                    else break;
-
-                switch (visibleCardCount)
-                {
-                    case 0:
-                        // Lay out 3 cards on board
-                        for (int i = 0; i < 3; i++)
-                            _boardCards[i].Item2 = Visibility.Visible;
-
-                        //добавляем в бд карты со стола
-                        //using (ApplicationContext db = new ApplicationContext())
-                        //{ 
-                        //    db.TableCards.Add(new DBTableCards { FirstCard = new DBCard { Rank = _boardCards[0].Item1.Rank, Suit = _boardCards[0].Item1.Suit },
-                        //                                        SecondCard = new DBCard { Rank = _boardCards[1].Item1.Rank, Suit = _boardCards[1].Item1.Suit },
-                        //                                        ThirdCard = new DBCard { Rank = _boardCards[2].Item1.Rank, Suit = _boardCards[2].Item1.Suit },
-                        //                                        DBGameId = db.Games.Last().Id });
-                        //    db.SaveChanges();
-                        //}
-
-                        NewStageStart();
-                        break;
-
-                    case 5:
-                        // determinate the winners and give them cash
-                        BankDivision();
-
-                        //добавляем в бд кэш игроков после окончания игры
-                        //using (ApplicationContext db = new ApplicationContext())
-                        //{
-                        //    var players = db.Players.ToList();
-
-                        //    foreach (var player in _players)
-                        //    {
-                        //        int i = 0;
-                        //        players[i].EndCash = player.Value.MyState.Cash;
-                        //        db.Players.Update(players[i]);
-                        //        i++;
-                        //    }
-                        //    db.SaveChanges();
-                        //}
-
-                        // Get new deck andd shuffle cards to start new game
-                        _cardDeck = new CardDeck();
-                        _cardDeck.Shuffle();
-
-                        // draw new cards for next game
-                        for (int i = 0; i < 5; i++)
-                        {
-                            _boardCards[i].Item1 = _cardDeck.TakeCard();
-                            _boardCards[i].Item2 = Visibility.Invisible;
-                        }
-
-                        // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
-                        foreach (KeyValuePair<int, Player> player in _players)
-                            if (player.Value.MyState.Cash < _bigBlind)
-                                Disconnect(player.Key);
-                            else
-                            {
-                                playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-                                HandCards.Add((player.Key, playerCards));
-                                //player.Value.HandCards = (playerCards);
-                                player.Value.MyState.State = PlayerGameState.In;
-                            }
-
-                        // set new dealer left to old dealer
-                        _dealer = TakeNextKey(_dealer);
-
-                        // each player's bet and board max bet set to 0, also Raise set to bigBlind
-                        NewStageStart();
-                        _curRaise = _bigBlind;
-
-                        // make mandatory bets
-                        addKey = TakeNextKey(_dealer);
-                        _players[addKey].MyState.Cash -= _smallBlind;
-                        _players[addKey].MyState.PlayerBet = _smallBlind;
-
-                        //добавление в бд малого блайнда
-                        //using (ApplicationContext db = new ApplicationContext())
-                        //{
-                        //    DBGame game = db.Games.Last();
-                        //    DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
-
-                        //    db.Rounds.Add(new DBRound
-                        //    {
-                        //        Name = "Blinds",
-                        //        Game = game.Id,
-                        //        Player = player.Id,
-                        //        ActionName = "Small blind",
-                        //        BetSize = _smallBlind,
-                        //        //DecisionTime
-                        //    });
-                        //    db.SaveChanges();
-                        //}
-
-                        addKey = TakeNextKey(addKey);
-                        _players[addKey].MyState.Cash -= _bigBlind;
-                        _players[addKey].MyState.PlayerBet = _bigBlind;
-
-                        //добавление в бд большого блайнда
-                        //using (ApplicationContext db = new ApplicationContext())
-                        //{
-                        //    DBGame game = db.Games.Last();
-                        //    DBPlayer player = db.Players.Where(p => p.Name == _players[addKey].MyState.Name).Last();
-
-                        //    db.Rounds.Add(new DBRound
-                        //    {
-                        //        Name = "Blinds",
-                        //        Game = game.Id,
-                        //        Player = player.Id,
-                        //        ActionName = "Big blind",
-                        //        BetSize = _bigBlind,
-                        //        //DecisionTime
-                        //    });
-                        //    db.SaveChanges();
-                        //}
-
-                        // choose first player
-                        _curPlayer = TakeNextKey(addKey);
-
-                        break;
-
-                    default:
-                        // Lay out 1 card on board 
-                        _boardCards[visibleCardCount].Item2 = Visibility.Visible;
-
-                        //добавляем в бд 4 и 5 карту со стола
-                        //if (visibleCardCount == 4)
-                        //    using (ApplicationContext db = new ApplicationContext())
-                        //    {
-                        //        DBTableCards table = db.TableCards.Last();    
-                        //        table.FourthCard = new DBCard { Rank = _boardCards[3].Item1.Rank, Suit = _boardCards[3].Item1.Suit };
-                        //        table.FifthCard = new DBCard { Rank = _boardCards[4].Item1.Rank, Suit = _boardCards[4].Item1.Suit };    
-                        //        db.TableCards.Update(table);
-                        //        db.SaveChanges();
-                        //    }
-
-                        NewStageStart();
-
-                        break;
-                }
-
-            }
-            else
-            {
-                for (int i = _curPlayer; i < _players.Count - 1; i++)
-                {
-                    _curPlayer = TakeNextKey(_curPlayer);
-                    if (_players[_curPlayer].MyState.State == PlayerGameState.In)
+                    if (player.Value.MyState.State == PlayerGameState.In && player.Value.MyState.PlayerBet != bet)
                     {
-                        List<Card> tmp = new List<Card>();
-                        tmp.Add(_players[_curPlayer].MyState.HandCards.Item1);
-                        tmp.Add(_players[_curPlayer].MyState.HandCards.Item2);
-                        tmp.AddRange(_boardCards.Select(x => x.Item1).ToArray());
-
-                        GameState aiState;
-                        aiState = ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
-                        switch (aiState)
-                        {
-                            case GameState.call:
-                                _players[_curPlayer].Call();
-                                break;
-
-                            case GameState.check:
-                                _players[_curPlayer].Check();
-                                break;
-
-                            case GameState.fold:
-                                _players[_curPlayer].Fold();
-                                break;
-
-                            case GameState.raise:
-                                _players[_curPlayer].Raise(_curRaise);
-                                break;
-                        }
+                        lastStage = false;
+                        break;
                     }
                 }
-             
-            }
-            this.RaisePropertyChanged("BoardCards");
-            return true;
-            
 
-            void NewStageStart()
+                if (lastStage)
+                {
+                    foreach ((Card, Visibility) card in _boardCards)
+                        if (card.Item2 == Visibility.Visible)
+                            visibleCardCount++;
+                    switch (visibleCardCount)
+                    {
+                        case 0:
+                            // Lay out 3 cards on board
+                            for (int i = 0; i < 3; i++)
+                                _boardCards[i].Item2 = Visibility.Visible;
+
+                            NewStageStart();
+                            if (type == _players[_curPlayer].GetType())
+                                botTurn = false;
+                            else
+                            {
+                                BotAction();
+                                _curPlayer = TakeNextKey(_curPlayer);
+                            }
+                            break;
+
+                        case 5:
+                            // determinate the winners and give them cash
+                            BankDivision();
+
+                            _dealer = TakeNextKey(_dealer);
+                            GameStart();
+
+                            // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
+                            foreach (KeyValuePair<int, Player> player in _players)
+                                if (player.Value.MyState.Cash < _bigBlind)
+                                    Disconnect(player.Key);
+                                else
+                                {
+                                    playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+                                    HandCards.Add((player.Key, playerCards));
+                                    //player.Value.HandCards = (playerCards);
+                                    player.Value.MyState.State = PlayerGameState.In;
+                                }
+
+                            if (type == _players[_curPlayer].GetType())
+                                botTurn = false;
+                            else
+                            {
+                                BotAction();
+                                _curPlayer = TakeNextKey(_curPlayer);
+                            }
+                            break;
+
+                        default:
+                            // Lay out 1 card on board 
+                            _boardCards[visibleCardCount].Item2 = Visibility.Visible;
+                            NewStageStart();
+
+                            if (type == _players[_curPlayer].GetType())
+                                botTurn = false;
+                            else
+                            {
+                                BotAction();
+                                _curPlayer = TakeNextKey(_curPlayer);
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    if (type == _players[_curPlayer].GetType())
+                        botTurn = false;
+                    else
+                    {
+                        BotAction();
+                        _curPlayer = TakeNextKey(_curPlayer);
+                    }
+                }
+            } while (botTurn);
+        }
+
+        void BotAction()
+        {
+            if (_players[_curPlayer].MyState.State == PlayerGameState.In)
             {
+                List<Card> tmp = new List<Card>();
+                tmp.Add(_players[_curPlayer].MyState.HandCards.Item1);
+                tmp.Add(_players[_curPlayer].MyState.HandCards.Item2);
+                tmp.AddRange(_boardCards.Select(x => x.Item1).ToArray());
+
+                GameState aiState;
+                aiState = ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
+                switch (aiState)
+                {
+                    case GameState.call:
+                        _players[_curPlayer].Call();
+                        break;
+
+                    case GameState.check:
+                        _players[_curPlayer].Check();
+                        break;
+
+                    case GameState.fold:
+                        _players[_curPlayer].Fold();
+                        break;
+
+                    case GameState.raise:
+                        _players[_curPlayer].Raise(_curRaise);
+                        break;
+                }
+            }
+        }
+
+        void NewStageStart()
+                {
                 // each player's bet and board max bet set to 0
                 foreach (KeyValuePair<int, Player> player in _players)
                     player.Value.MyState.PlayerBet = 0;
@@ -1032,7 +1176,6 @@ namespace PokerCore.ViewModel
                 // Give a turn to a player left to dealer
                 _curPlayer = TakeNextKey(_dealer);
             }
-        }
 
         int TakeNextKey(int key) // return the key of next player
         {
