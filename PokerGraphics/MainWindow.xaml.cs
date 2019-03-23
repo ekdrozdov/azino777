@@ -207,6 +207,14 @@ namespace PokerGraphics
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
+        private void button_startgame_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.GameStart();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
     }
 }
 

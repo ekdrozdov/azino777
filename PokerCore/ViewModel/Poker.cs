@@ -90,7 +90,7 @@ namespace PokerCore.ViewModel
             _players[_curPlayer].Raise(_bigBlind - _smallBlind);
             _curPlayer = TakeNextKey(_curPlayer);
             _curRaise = _bigBlind;
-
+            this.RaisePropertyChanged("PlayersCardVisibility");
         }
 
         #region Игроки
@@ -225,7 +225,7 @@ namespace PokerCore.ViewModel
         {
             get
             {
-                if (_curPlayer == 0 && _boardCards[0].Item1 != null)
+                if (_curPlayer == 0)
                     return "True";
                 else return "False";
             }
@@ -1132,6 +1132,9 @@ namespace PokerCore.ViewModel
                     }
                 }
             } while (botTurn);
+            this.RaisePropertyChanged("DealerChip"); 
+            this.RaisePropertyChanged("BoardCards");
+            this.RaisePropertyChanged("ButtonActivity");
         }
 
         void BotAction()
