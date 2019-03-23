@@ -1160,7 +1160,13 @@ namespace PokerCore.ViewModel
                         break;
 
                     case GameState.raise:
-                        _players[_curPlayer].Raise(_curRaise);
+                        /*Check cash. If empty then fold*/
+                        if (_players[1].MyState.Cash == 0)
+                        {
+                            _players[1].Fold();
+                            break;
+                        }
+                        _players[1].Raise(((AI)_players[1]).GetOptimalRaise(_players[1].MyState.Cash, tmp));
                         break;
                 }
             }
