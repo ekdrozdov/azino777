@@ -11,6 +11,7 @@ namespace PokerCore.Model
             _name = name; this.RaisePropertyChanged("Name");
             _cash = cash; this.RaisePropertyChanged("Cash");
             _handCards = (new Card(CardRank.Q, CardSuit.Diamonds), new Card(CardRank.c4, CardSuit.Spades));
+            _playersCardVisibility = new string[10];
             this.RaisePropertyChanged("FirstCardName");
             this.RaisePropertyChanged("SecondCardName");
         }
@@ -48,5 +49,9 @@ namespace PokerCore.Model
 
         public string FirstCardName { get => _handCards.Item1.GetTextureName(); }
         public string SecondCardName { get => _handCards.Item2.GetTextureName(); }
+
+        private string[] _playersCardVisibility;
+        public string[] PlayersCardVisibility{ get => _playersCardVisibility; set { this.RaiseAndSetIfChanged(ref _playersCardVisibility, value); } }
+
     }
 }

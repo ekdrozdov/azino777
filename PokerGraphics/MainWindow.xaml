@@ -516,9 +516,9 @@
                 Click="button_check_Click"
                 HorizontalAlignment="Left" Height="20" Margin="438,584,0,0" VerticalAlignment="Top" Width="69" RenderTransformOrigin="0.533,4.295"/>
             <Button x:Name="button_allin" 
-                Content="AllIn"
-                Click="button_allin_Click"
-                HorizontalAlignment="Left" Height="20" Margin="438,559,0,0" VerticalAlignment="Top" Width="69" RenderTransformOrigin="0.533,4.295"/>
+                    Content="AllIn"
+                    Click="button_allin_Click"
+                    HorizontalAlignment="Left" Height="20" Margin="438,559,0,0" VerticalAlignment="Top" Width="69" RenderTransformOrigin="0.533,4.295"/>
             <Button x:Name="button_raise" 
                 Content="Raise"
                 Click="button_raise_Click"
