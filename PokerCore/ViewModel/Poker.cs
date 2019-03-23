@@ -1036,7 +1036,7 @@ namespace PokerCore.ViewModel
         //}
         #endregion
 
-        void EndAction()
+        public void EndAction()
         {
             (Card, Card) playerCards;
             int visibleCardCount = 0;
