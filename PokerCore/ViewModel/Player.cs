@@ -45,6 +45,7 @@ namespace PokerCore.ViewModel
                 _myState.Cash -= BetDifferenсe;
                 _myState.PlayerBet = _table.CurrentBet;
                 _table.AllBank += BetDifferenсe;
+                _myState.State = PlayerGameState.In;
             }
             else
                 throw new Exception("У вас недостаточно средств, чтобы сделать ставку.");
@@ -56,6 +57,7 @@ namespace PokerCore.ViewModel
         {
          //   if (_table.CurrentBet == 0)
                 _myState.PlayerBet = 0;
+            _myState.State = PlayerGameState.Check;
         //    else
          //       throw new Exception("Вы не можете сделать чек, ставки уже сделаны.");
 
@@ -74,6 +76,7 @@ namespace PokerCore.ViewModel
                     _table.CurrentRaise = raise;
                     _table.CurrentBet += raise;
                     _myState.PlayerBet += BetDifferenсe + raise;
+                    _myState.State = PlayerGameState.In;
                 }
                 else
                     throw new Exception("У вас недостаточно средств, чтобы увеличить размер текущей ставки.");
@@ -109,6 +112,7 @@ namespace PokerCore.ViewModel
                 _table.CurrentBet = bet;
                 _myState.PlayerBet = bet;
                 _table.AllBank += bet;
+                _myState.State = PlayerGameState.In;
             }
             else
                 throw new Exception("Cтавка уже была сделана.");

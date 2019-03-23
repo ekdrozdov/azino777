@@ -25,6 +25,7 @@ namespace PokerCore.ViewModel
         int _curBet;
         int _curRaise;
         int _allBank;
+        //bool _gameStart = true;
         List<(int, int)> _dividedBanks;
 
         public Poker(string name, int cash, int smallBlind, int bigBlind)
@@ -68,6 +69,7 @@ namespace PokerCore.ViewModel
             {
                 (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
                 _players[i].MyState.HandCards = playerCards;
+                _players[i].MyState.State = PlayerGameState.In;
                 HandCards.Add((i, playerCards));
 
                 // set visibility of player cards
@@ -90,6 +92,13 @@ namespace PokerCore.ViewModel
             _players[_curPlayer].Raise(_bigBlind - _smallBlind);
             _curPlayer = TakeNextKey(_curPlayer);
             _curRaise = _bigBlind;
+            //if (_gameStart)
+                while (_curPlayer != 0)
+                {
+                    BotAction();
+                    _curPlayer = TakeNextKey(_curPlayer);
+                }
+            //_gameStart = false;
             this.RaisePropertyChanged("PlayersCardVisibility");
         }
 
@@ -1043,18 +1052,29 @@ namespace PokerCore.ViewModel
             System.Type type = typeof(Player);
             bool botTurn = true;
             bool lastStage = true;
-            int bet = _players[0].MyState.PlayerBet;
+            int bet = 0;
             do
             {
-                // Check, if this Action was last in round
                 foreach (KeyValuePair<int, Player> player in _players)
-                {
-                    if (player.Value.MyState.State == PlayerGameState.In && player.Value.MyState.PlayerBet != bet)
+                    if (player.Value.MyState.State == PlayerGameState.In)
                     {
-                        lastStage = false;
+                        bet = player.Value.MyState.PlayerBet;
                         break;
                     }
+                // Check, if this Action was last in round
+                if (_players[_curPlayer].MyState.State == PlayerGameState.Check && _players[TakePreviousKey(_curPlayer)].MyState.State == PlayerGameState.Check)
+                {
+                    lastStage = true;
                 }
+                else
+                    foreach (KeyValuePair<int, Player> player in _players)
+                    {
+                        if (player.Value.MyState.State == PlayerGameState.In && (player.Value.MyState.PlayerBet != bet || player.Value.MyState.PlayerBet == 0))
+                        {
+                            lastStage = false;
+                            break;
+                        }
+                    }
 
                 if (lastStage)
                 {
@@ -1074,7 +1094,6 @@ namespace PokerCore.ViewModel
                             else
                             {
                                 BotAction();
-                                _curPlayer = TakeNextKey(_curPlayer);
                             }
                             break;
 
@@ -1083,27 +1102,22 @@ namespace PokerCore.ViewModel
                             BankDivision();
 
                             _dealer = TakeNextKey(_dealer);
-                            GameStart();
+                            
 
                             // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
                             foreach (KeyValuePair<int, Player> player in _players)
                                 if (player.Value.MyState.Cash < _bigBlind)
                                     Disconnect(player.Key);
-                                else
-                                {
-                                    playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-                                    HandCards.Add((player.Key, playerCards));
-                                    //player.Value.HandCards = (playerCards);
-                                    player.Value.MyState.State = PlayerGameState.In;
-                                }
 
-                            if (type == _players[_curPlayer].GetType())
+                            GameStart();
+
+                            //if (type == _players[_curPlayer].GetType())
                                 botTurn = false;
-                            else
-                            {
-                                BotAction();
-                                _curPlayer = TakeNextKey(_curPlayer);
-                            }
+                            //else
+                            //{
+                            //    BotAction();
+                                
+                            //}
                             break;
 
                         default:
@@ -1116,21 +1130,24 @@ namespace PokerCore.ViewModel
                             else
                             {
                                 BotAction();
-                                _curPlayer = TakeNextKey(_curPlayer);
+                                
                             }
                             break;
                     }
                 }
                 else
                 {
-                    if (type == _players[_curPlayer].GetType())
+                    _curPlayer = TakeNextKey(_curPlayer);
+                    while (_players[_curPlayer].MyState.State != PlayerGameState.In)
+                        _curPlayer = TakeNextKey(_curPlayer);
+                    if (type == _players[_curPlayer].GetType() && _players[_curPlayer].MyState.State == PlayerGameState.In)
                         botTurn = false;
                     else
                     {
                         BotAction();
-                        _curPlayer = TakeNextKey(_curPlayer);
                     }
                 }
+                lastStage = true;
             } while (botTurn);
             this.RaisePropertyChanged("DealerChip"); 
             this.RaisePropertyChanged("BoardCards");
@@ -1184,7 +1201,9 @@ namespace PokerCore.ViewModel
 
                 // Give a turn to a player left to dealer
                 _curPlayer = TakeNextKey(_dealer);
-            }
+                while (_players[_curPlayer].MyState.State != PlayerGameState.In)
+                    _curPlayer = TakeNextKey(_curPlayer);
+        }
 
         int TakeNextKey(int key) // return the key of next player
         {
@@ -1195,6 +1214,17 @@ namespace PokerCore.ViewModel
                 nextKey = keys[playerInd + 1];
             else nextKey = keys[0];
             return nextKey;
+        }
+
+        int TakePreviousKey(int key) // return the key of next player
+        {
+            List<int> keys = _players.Keys.ToList();
+            int prevKey;
+            int playerInd = keys.IndexOf(key);
+            if (playerInd > 0)
+                prevKey = keys[playerInd - 1];
+            else prevKey = keys[keys.Count - 1];
+            return prevKey;
         }
 
         public (bool, Player) TryConnect(string name, int cash)
