@@ -5,7 +5,7 @@ using System.Text;
 using ReactiveUI;
 using System.Linq;
 using PokerCore.Model;
-//using PokerCore.Model.DataBase;
+using PokerCore.Model.DataBase;
 using System.ComponentModel;
 
 namespace PokerCore.ViewModel
@@ -54,6 +54,23 @@ namespace PokerCore.ViewModel
             _smallBlind = smallBlind;
         }
 
+        public void InitDB()
+        {
+            //добавляем в бд игроков и игру
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Players.Add(new DBPlayer
+                {
+                    Name = _players[0].MyState.Name,
+                    StartCash = _players[0].MyState.Cash,
+                    FirstCard = new DBCard { Rank = _players[0].MyState.HandCards.Item1.Rank, Suit = _players[0].MyState.HandCards.Item1.Suit },
+                    SecondCard = new DBCard { Rank = _players[0].MyState.HandCards.Item2.Rank, Suit = _players[0].MyState.HandCards.Item2.Suit }
+                });
+                db.Games.Add(new DBGame { });
+                db.SaveChanges();
+            }
+        }
+
         public void GameStart()
         {
             _cardDeck = new CardDeck();
@@ -86,11 +103,44 @@ namespace PokerCore.ViewModel
 
             _curPlayer = TakeNextKey(_dealer);
             _players[_curPlayer].Bet(_smallBlind);
+            //добавление в бд малого блайнда
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                DBGame game = db.Games.Last();
+                DBPlayer player = db.Players.Where(p => p.Name == _players[_curPlayer].MyState.Name).Last();
+
+                db.Rounds.Add(new DBRound
+                {
+                    Name = "Blinds",
+                    Game = game.Id,
+                    Player = player.Id,
+                    ActionName = "Small blind",
+                    BetSize = _smallBlind,
+                    //DecisionTime
+                });
+                db.SaveChanges();
+            }
             _curPlayer = TakeNextKey(_curPlayer);
             _players[_curPlayer].Raise(_bigBlind - _smallBlind);
+            //добавление в бд большого блайнда
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                DBGame game = db.Games.Last();
+                DBPlayer player = db.Players.Where(p => p.Name == _players[_curPlayer].MyState.Name).Last();
+
+                db.Rounds.Add(new DBRound
+                {
+                    Name = "Blinds",
+                    Game = game.Id,
+                    Player = player.Id,
+                    ActionName = "Big blind",
+                    BetSize = _bigBlind,
+                    //DecisionTime
+                });
+                db.SaveChanges();
+            }
             _curPlayer = TakeNextKey(_curPlayer);
             _curRaise = _bigBlind;
-
         }
 
         #region Игроки
@@ -1044,6 +1094,7 @@ namespace PokerCore.ViewModel
             bool botTurn = true;
             bool lastStage = true;
             int bet = _players[0].MyState.PlayerBet;
+
             do
             {
                 // Check, if this Action was last in round
@@ -1068,6 +1119,16 @@ namespace PokerCore.ViewModel
                             for (int i = 0; i < 3; i++)
                                 _boardCards[i].Item2 = Visibility.Visible;
 
+                            //добавляем в бд карты со стола
+                            using (ApplicationContext db = new ApplicationContext())
+                            { 
+                                db.TableCards.Add(new DBTableCards { FirstCard = new DBCard { Rank = _boardCards[0].Item1.Rank, Suit = _boardCards[0].Item1.Suit },
+                                                                     SecondCard = new DBCard { Rank = _boardCards[1].Item1.Rank, Suit = _boardCards[1].Item1.Suit },
+                                                                     ThirdCard = new DBCard { Rank = _boardCards[2].Item1.Rank, Suit = _boardCards[2].Item1.Suit },
+                                                                     DBGameId = db.Games.Last().Id });
+                                db.SaveChanges();
+                            }
+
                             NewStageStart();
                             if (type == _players[_curPlayer].GetType())
                                 botTurn = false;
@@ -1081,6 +1142,21 @@ namespace PokerCore.ViewModel
                         case 5:
                             // determinate the winners and give them cash
                             BankDivision();
+
+                            //добавляем в бд кэш игроков после окончания игры
+                            using (ApplicationContext db = new ApplicationContext())
+                            {
+                                var players = db.Players.ToList();
+
+                                foreach (var player in _players)
+                                {
+                                    int i = 0;
+                                    players[i].EndCash = player.Value.MyState.Cash;
+                                    db.Players.Update(players[i]);
+                                    i++;
+                                }
+                                db.SaveChanges();
+                            }
 
                             _dealer = TakeNextKey(_dealer);
                             GameStart();
@@ -1110,6 +1186,17 @@ namespace PokerCore.ViewModel
                             // Lay out 1 card on board 
                             _boardCards[visibleCardCount].Item2 = Visibility.Visible;
                             NewStageStart();
+
+                            //добавляем в бд 4 и 5 карту со стола
+                            if (visibleCardCount == 4)
+                                using (ApplicationContext db = new ApplicationContext())
+                                {
+                                    DBTableCards table = db.TableCards.Last();    
+                                    table.FourthCard = new DBCard { Rank = _boardCards[3].Item1.Rank, Suit = _boardCards[3].Item1.Suit };
+                                    table.FifthCard = new DBCard { Rank = _boardCards[4].Item1.Rank, Suit = _boardCards[4].Item1.Suit };    
+                                    db.TableCards.Update(table);
+                                    db.SaveChanges();
+                                }
 
                             if (type == _players[_curPlayer].GetType())
                                 botTurn = false;
@@ -1312,53 +1399,43 @@ namespace PokerCore.ViewModel
             return result - riverCount;
         }
 
-        //List<DBRequest> DbRequest(string PlayerName)
-        //{
-        //    List<DBRequest> request = new List<DBRequest>();
-
-        //    using (ApplicationContext db = new ApplicationContext())
-        //    {
-        //        var player = db.Players.Where(p => p.Name == PlayerName);
-        //        var tableCards = db.TableCards.ToList();
-
-        //        foreach (var _player in player)
-        //        {
-        //            int i = 0;
-        //            DBRound lastRound = db.Rounds.Where(p => p.Player == _player.Id).Last();
-
-        //            request[i] = new DBRequest { LastBet = lastRound.BetSize, StartCash = _player.StartCash };
-        //            request[i].DBHandCards.Add(_player.FirstCard);
-        //            request[i].DBHandCards.Add(_player.SecondCard);
-
-        //            i++;
-        //        }
-
-        //        foreach (var _tableCards in tableCards)
-        //        {
-        //            int i = 0;
-
-        //            request[i].DBTableCards.Add(_tableCards.FirstCard);
-        //            request[i].DBTableCards.Add(_tableCards.SecondCard);
-        //            request[i].DBTableCards.Add(_tableCards.ThirdCard);
-        //            request[i].DBTableCards.Add(_tableCards.FourthCard);
-        //            request[i].DBTableCards.Add(_tableCards.FifthCard);
-
-        //            i++;
-        //        }
-        //    }
-
-        //    return request;
-        //}
-
-        public event PropertyChangedEventHandler PropertyChange;
-
-        public virtual void OnPropertyChanged(string propertyName)
+        //запрос для бд
+        List<DBRequest> DbRequest(string PlayerName)
         {
-            var propertyChanged = PropertyChange;
-            if (propertyChanged != null)
+            List<DBRequest> request = new List<DBRequest>();
+
+            using (ApplicationContext db = new ApplicationContext())
             {
-                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                var player = db.Players.Where(p => p.Name == PlayerName);
+                var tableCards = db.TableCards.ToList();
+
+                foreach (var _player in player)
+                {
+                    int i = 0;
+                    DBRound lastRound = db.Rounds.Where(p => p.Player == _player.Id).Last();
+
+                    request[i] = new DBRequest { LastBet = lastRound.BetSize, StartCash = _player.StartCash };
+                    request[i].DBHandCards.Add(_player.FirstCard);
+                    request[i].DBHandCards.Add(_player.SecondCard);
+
+                    i++;
+                }
+
+                foreach (var _tableCards in tableCards)
+                {
+                    int i = 0;
+
+                    request[i].DBTableCards.Add(_tableCards.FirstCard);
+                    request[i].DBTableCards.Add(_tableCards.SecondCard);
+                    request[i].DBTableCards.Add(_tableCards.ThirdCard);
+                    request[i].DBTableCards.Add(_tableCards.FourthCard);
+                    request[i].DBTableCards.Add(_tableCards.FifthCard);
+
+                    i++;
+                }
             }
+
+            return request;
         }
     }
 }

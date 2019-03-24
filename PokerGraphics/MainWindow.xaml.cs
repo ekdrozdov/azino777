@@ -16,6 +16,8 @@ using ReactiveUI;
 using PokerCore.ViewModel;
 using System.ComponentModel;
 using System.Reactive.Disposables;
+using PokerCore.Model.DataBase;
+using Microsoft.EntityFrameworkCore;
 
 namespace PokerGraphics
 {
@@ -49,6 +51,7 @@ namespace PokerGraphics
         {
             PokerInitialize();
             InitializeComponent();
+            pokerTable.GameStart();
             DataContext = this;
 
             menu.Visibility = Visibility.Visible;
@@ -66,6 +69,7 @@ namespace PokerGraphics
 
         private void button_done_Click(object sender, RoutedEventArgs e)
         {
+            pokerTable.InitDB();
             grid_sett.Visibility = Visibility.Collapsed;
             table.Visibility = Visibility.Visible;
             

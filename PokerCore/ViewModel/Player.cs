@@ -6,7 +6,7 @@ using System.Reactive;
 using ReactiveUI;
 using System.Linq;
 using PokerCore.Model;
-//using PokerCore.Model.DataBase;
+using PokerCore.Model.DataBase;
 using System.ComponentModel;
 
 namespace PokerCore.ViewModel
@@ -98,7 +98,7 @@ namespace PokerCore.ViewModel
             else
                 _table.AddBank(_table.AllBank - _table.CurrentBet + _myState.PlayerBet);
 
-            //AddInDb("AllIn");
+            AddInDb("AllIn");
         }
 
         public void Bet(int bet)
@@ -121,7 +121,12 @@ namespace PokerCore.ViewModel
         {
             string RoundName = "";
 
-            int visibleCardCount = _table.BoardCards.Count;
+            int visibleCardCount = 0;
+            foreach (var card in _table.BoardCards)
+            {
+                if (card == "Resources / cardBack_blue1.png")
+                    visibleCardCount++;
+            }
             if (visibleCardCount == 0)
                 RoundName = "Pre-flop";
             if (visibleCardCount == 3)
@@ -135,27 +140,25 @@ namespace PokerCore.ViewModel
         }
 
         //добавить запись об одном ходе раунда в бд
-        //public void AddInDb(string _actionName)
-        //{
-        //    string a = "adsas";
+        public void AddInDb(string _actionName)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                DBGame game = db.Games.Last();
+                DBPlayer player = db.Players.Where(p => p.Name == _myState.Name).Last();
 
-        //    using (ApplicationContext db = new ApplicationContext())
-        //    {
-        //        DBGame game = db.Games.Last();
-        //        DBPlayer player = db.Players.Where(p => p.Name == _myState.Name).Last();
-
-        //        db.Rounds.Add(new DBRound
-        //        {
-        //            Name = GetRoundName(),
-        //            Game = game.Id,
-        //            Player = player.Id,
-        //            ActionName = _actionName,
-        //            BetSize = _myState.PlayerBet
-        //            //DecisionTime
-        //        });
-        //        db.SaveChanges();
-        //    }
-        //}
+                db.Rounds.Add(new DBRound
+                {
+                    Name = GetRoundName(),
+                    Game = game.Id,
+                    Player = player.Id,
+                    ActionName = _actionName,
+                    BetSize = _myState.PlayerBet
+                    //DecisionTime
+                });
+                db.SaveChanges();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChange;
 
