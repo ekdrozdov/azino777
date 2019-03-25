@@ -41,7 +41,7 @@ namespace PokerCore.ViewModel
             _cardDeck.Shuffle();
             for (int i = 0; i < 5; i++)
             {
-                _boardCards[i].Item1 = null;
+                _boardCards[i].Item1 = _cardDeck.TakeCard();
                 _boardCards[i].Item2 = Visibility.Invisible;
             }
 
@@ -1161,7 +1161,10 @@ namespace PokerCore.ViewModel
                 List<Card> tmp = new List<Card>();
                 tmp.Add(_players[_curPlayer].MyState.HandCards.Item1);
                 tmp.Add(_players[_curPlayer].MyState.HandCards.Item2);
-                tmp.AddRange(_boardCards.Select(x => x.Item1).ToArray());
+                foreach(var i in _boardCards.Where(x => x.Item2 != Visibility.Invisible).ToArray())
+                {
+                    tmp.Add(i.Item1);
+                }
 
                 GameState aiState;
                 aiState = ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
@@ -1180,13 +1183,14 @@ namespace PokerCore.ViewModel
                         break;
 
                     case GameState.raise:
-                        if (_players[1].MyState.Cash == 0)
+                        if (_players[_curPlayer].MyState.Cash == 0)
                         {
-                            _players[1].Fold();
+                            //_players[_curPlayer].Fold();
+                            Disconnect(_curPlayer);
                             break;
                         }
 
-                        _players[1].Raise(((AI)_players[1]).GetOptimalRaise(_players[1].MyState.Cash, tmp));
+                        _players[_curPlayer].Raise(((AI)_players[_curPlayer]).GetOptimalRaise(_players[_curPlayer].MyState.Cash, tmp));
                         break;
                 }
             }

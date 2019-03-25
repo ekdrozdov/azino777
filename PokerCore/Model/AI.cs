@@ -116,6 +116,7 @@ namespace PokerCore.ViewModel
         public GameState GetOptimalMove(List<Card> cards)
         {
             int outs = GetOuts(cards);
+            //int outs = 6;
             if (outs >= 7)
             {
                 return GameState.raise;
@@ -153,6 +154,10 @@ namespace PokerCore.ViewModel
                 case 10:
                     res = (int)(cash * 0.5);
                     break;
+            }
+            if (outs > 10)
+            {
+                res = (int)(cash * 0.6);
             }
 
             return res;
