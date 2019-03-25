@@ -13,6 +13,7 @@ namespace PokerCore.ViewModel
     public class Poker : ReactiveObject
     {
         public Dictionary<int, Player> _players;
+		public Dictionary<int, Player> _bots_queue;
         GameRules _gameRules;
         //List<Card> _boardCards;
         //List<(Card, Visibility)> _boardCards;
