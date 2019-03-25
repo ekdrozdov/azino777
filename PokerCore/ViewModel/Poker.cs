@@ -763,7 +763,8 @@ namespace PokerCore.ViewModel
         {
             List<int> pretendents = new List<int>();
             foreach (KeyValuePair<int, Player> player in _players)
-                pretendents.Add(player.Key);
+                if (player.Value.MyState.State != PlayerGameState.Out)
+                    pretendents.Add(player.Key);
             List<int> winners;
             int personCash;
             bool findSomebody;
@@ -1069,7 +1070,7 @@ namespace PokerCore.ViewModel
                 else
                     foreach (KeyValuePair<int, Player> player in _players)
                     {
-                        if (player.Value.MyState.State == PlayerGameState.In && (player.Value.MyState.PlayerBet != bet || player.Value.MyState.PlayerBet == 0))
+                        if (player.Value.MyState.State == PlayerGameState.In && (player.Value.MyState.PlayerBet != bet))
                         {
                             lastStage = false;
                             break;
@@ -1078,6 +1079,7 @@ namespace PokerCore.ViewModel
 
                 if (lastStage)
                 {
+                    visibleCardCount = 0;
                     foreach ((Card, Visibility) card in _boardCards)
                         if (card.Item2 == Visibility.Visible)
                             visibleCardCount++;
