@@ -23,6 +23,8 @@ namespace PokerCore.Model
 
         public int BigBlind { get => _playerView.BigBlind; }
 
+        public int FirstRaiser { get => _playerView.FirstRaiser; set => _playerView.FirstRaiser = value; }
+
         public int CurrentRaise { get => _playerView.CurrentRaise; set => _playerView.CurrentRaise = value; }
 
         public int CurrentBet { get => _playerView.CurrentBet; set => _playerView.CurrentBet = value; }

@@ -77,6 +77,7 @@ namespace PokerCore.ViewModel
                     _table.CurrentBet += raise;
                     _myState.PlayerBet += BetDifferenсe + raise;
                     _myState.State = PlayerGameState.In;
+                    _table.FirstRaiser = _table.CurPlayer;
                 }
                 else
                     throw new Exception("У вас недостаточно средств, чтобы увеличить размер текущей ставки.");
@@ -95,7 +96,12 @@ namespace PokerCore.ViewModel
             _myState.State = PlayerGameState.AllIn;
             if (_myState.PlayerBet > _table.CurrentBet)
             {
-                _table.AddBank(_table.AllBank);
+                _table.AddBank(_table.AllBank); 
+                if (_myState.PlayerBet - _table.CurrentBet > _table.CurrentRaise)
+                {
+                    _table.CurrentRaise = _myState.PlayerBet - _table.CurrentBet;
+                    _table.FirstRaiser = _table.CurPlayer;
+                }
                 _table.CurrentBet = _myState.PlayerBet;
             }
             else
