@@ -116,7 +116,7 @@
                                     IsEnabled="{Binding ViewModel.ButtonActivity}"
                     Content="Fold" 
                     Click="button_fold_Click"
-                    HorizontalAlignment="Left" Height="20" Margin="438,609,0,0" VerticalAlignment="Top" Width="69">
+                    HorizontalAlignment="Left" Height="20" Margin="622,555,0,0" VerticalAlignment="Top" Width="69">
                 <!--<Button.Triggers>
                     <EventTrigger RoutedEvent="Button.Click">
                         <BeginStoryboard>
@@ -154,43 +154,80 @@
                     </EventTrigger>
                 </Button.Triggers>-->
             </Button>
-            <Button x:Name="button_add" 
+            <Button x:Name="button_bet" 
                                     IsEnabled="{Binding ViewModel.ButtonActivity}"
-                    Content="Call"
-                    Click="button_call"
-                    HorizontalAlignment="Left" Height="20" Margin="622,604,0,0" VerticalAlignment="Top" Width="69"/>
+                    Content="Bet"
+                    Click="button_bet_click"
+                    HorizontalAlignment="Left" Height="20" Margin="622,580,0,0" VerticalAlignment="Top" Width="69"/>
             <TextBox x:Name="textbox_number_of_money" 
                      Text="{Binding ViewModel.player0.PlayerBet, Mode=OneWay}" 
-                     HorizontalAlignment="Left" Height="20" Margin="641,631,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="30"/>
+                     HorizontalAlignment="Left" Height="20" Margin="623,625,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="68"/>
             <Button x:Name="button_out_to_menu" 
                     Content="Меню" 
                     Command="{Binding ShowMenuSett}"
                     HorizontalAlignment="Left" VerticalAlignment="Top" Width="75"/>
             <TextBlock x:Name="main_bank" HorizontalAlignment="Left" Margin="475,233,0,0" TextWrapping="Wrap" Text="Общий банк: " VerticalAlignment="Top"/>
-            <TextBox x:Name="money_in_main_bank" 
-                     IsReadOnly="True"
+            <TextBlock x:Name="money_in_main_bank" 
                      Text="{Binding ViewModel.AllBank, Mode=OneWay}"
                      HorizontalAlignment="Left" Height="23" Margin="550,232,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="78"/>
             <TextBlock x:Name="little_bland" HorizontalAlignment="Left" Margin="390,372,0,0" TextWrapping="Wrap" Text="Малый блайнд: " VerticalAlignment="Top"/>
-            <TextBox x:Name="money_in_little_bland" 
-                     IsReadOnly="True"
+            <TextBlock x:Name="money_in_little_bland" 
                      Text="{Binding ViewModel.SmallBlind, Mode=OneWay}"
                      HorizontalAlignment="Left" Height="23" Margin="478,371,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="62"/>
             <TextBlock x:Name="big_bland" HorizontalAlignment="Left" Margin="551,372,0,0" TextWrapping="Wrap" Text="Большой блайнд: " VerticalAlignment="Top"/>
-            <TextBox x:Name="money_in_big_bland" 
-                     IsReadOnly="True"
+            <TextBlock x:Name="money_in_big_bland" 
                      Text="{Binding ViewModel.BigBlind, Mode=OneWay}"
                      HorizontalAlignment="Left" Height="23" Margin="655,371,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="55"/>
-            <Ellipse x:Name="diller6" Visibility="{Binding ViewModel.DealerChip[6]}" HorizontalAlignment="Left" Height="25" Margin="843,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller7" Visibility="{Binding ViewModel.DealerChip[7]}" HorizontalAlignment="Left" Height="25" Margin="926,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller8" Visibility="{Binding ViewModel.DealerChip[8]}" HorizontalAlignment="Left" Height="25" Margin="926,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller9" Visibility="{Binding ViewModel.DealerChip[9]}" HorizontalAlignment="Left" Height="25" Margin="802,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller0" Visibility="{Binding ViewModel.DealerChip[0]}" HorizontalAlignment="Left" Height="26" Margin="556,523,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller5" Visibility="{Binding ViewModel.DealerChip[5]}" HorizontalAlignment="Left" Height="25" Margin="551,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller1" Visibility="{Binding ViewModel.DealerChip[1]}" HorizontalAlignment="Left" Height="25" Margin="267,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller4" Visibility="{Binding ViewModel.DealerChip[4]}" HorizontalAlignment="Left" Height="25" Margin="267,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller3" Visibility="{Binding ViewModel.DealerChip[3]}" HorizontalAlignment="Left" Height="25" Margin="122,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
-            <Ellipse x:Name="diller2" Visibility="{Binding ViewModel.DealerChip[2]}" HorizontalAlignment="Left" Height="25" Margin="122,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25"/>
+            <Ellipse x:Name="diller6" Visibility="{Binding ViewModel.DealerChip[6]}" HorizontalAlignment="Left" Height="25" Margin="843,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller7" Visibility="{Binding ViewModel.DealerChip[7]}" HorizontalAlignment="Left" Height="25" Margin="926,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller8" Visibility="{Binding ViewModel.DealerChip[8]}" HorizontalAlignment="Left" Height="25" Margin="926,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller9" Visibility="{Binding ViewModel.DealerChip[9]}" HorizontalAlignment="Left" Height="25" Margin="802,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller0" Visibility="{Binding ViewModel.DealerChip[0]}" HorizontalAlignment="Left" Height="26" Margin="556,523,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller5" Visibility="{Binding ViewModel.DealerChip[5]}" HorizontalAlignment="Left" Height="25" Margin="551,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller1" Visibility="{Binding ViewModel.DealerChip[1]}" HorizontalAlignment="Left" Height="25" Margin="267,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller4" Visibility="{Binding ViewModel.DealerChip[4]}" HorizontalAlignment="Left" Height="25" Margin="267,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller3" Visibility="{Binding ViewModel.DealerChip[3]}" HorizontalAlignment="Left" Height="25" Margin="122,224,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="diller2" Visibility="{Binding ViewModel.DealerChip[2]}" HorizontalAlignment="Left" Height="25" Margin="122,413,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/dealer.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
 
             <!-- Зеленые кнопки -->
             <Button x:Name="opp5"
@@ -513,35 +550,26 @@
                     </Rectangle.Fill>
                 </Rectangle>
             </Canvas>
-            <Button x:Name="button_check" 
-                                    IsEnabled="{Binding ViewModel.ButtonActivity}"
-                Content="Check"
-                Click="button_check_Click"
-                HorizontalAlignment="Left" Height="20" Margin="438,584,0,0" VerticalAlignment="Top" Width="69" RenderTransformOrigin="0.533,4.295"/>
-            <Button x:Name="button_allin" 
-                                    IsEnabled="{Binding ViewModel.ButtonActivity}"
-                    Content="AllIn"
-                    Click="button_allin_Click"
-                    HorizontalAlignment="Left" Height="20" Margin="438,559,0,0" VerticalAlignment="Top" Width="69" RenderTransformOrigin="0.533,4.295"/>
-            <Button x:Name="button_raise" 
-                Content="Raise"
-                IsEnabled="{Binding ViewModel.ButtonActivity}"
-                Click="button_raise_Click"
-                HorizontalAlignment="Left" Height="20" Margin="622,554,0,0" VerticalAlignment="Top" Width="69"/>
-            <TextBox x:Name="textbox_raise_cash" 
-                Text="{Binding ViewModel.player0.PlayerBet, Mode=OneWay}" 
-                HorizontalAlignment="Left" Height="20" Margin="641,579,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="30"/>
-            <TextBlock 
-                Text="Игрок с блайндами: "
-                HorizontalAlignment="Left" Margin="449,408,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <TextBlock
+                HorizontalAlignment="Left" Margin="449,408,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"><Run Text="Текущий игрок:"/><LineBreak/><Run/></TextBlock>
             <TextBlock 
                 x:Name="bland_user"
-                Text="BlandUser" 
+                Text="{Binding ViewModel.CurPlayer, Mode=OneWay}" 
                 HorizontalAlignment="Left" Margin="567,408,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
             <Button x:Name="button_startgame" 
                 Content="Start Turn"
                 Click="button_startgame_Click"
                 HorizontalAlignment="Left" Height="20" Margin="531,454,0,0" VerticalAlignment="Top" Width="69"/>
+            <TextBlock
+                HorizontalAlignment="Left" Margin="449,429,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"><Run Text="Текущи"/><Run Text="й "/><Run Text="Raise:"/><LineBreak/><Run/></TextBlock>
+            <TextBlock
+                HorizontalAlignment="Left" Margin="546,429,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16" Text="{Binding ViewModel.CurrentRaise, Mode=OneWay}"> </TextBlock>
+            <TextBlock
+                HorizontalAlignment="Left" Margin="623,604,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16" Text="Ваш ставка"/>
+            <TextBlock
+                HorizontalAlignment="Left" Margin="466,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" TextAlignment="Center"><Run Text="Current"/><LineBreak/><Run Text="Bet"/></TextBlock>
+            <TextBlock
+                HorizontalAlignment="Left" Margin="486,591,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" TextAlignment="Center" Text="{Binding ViewModel.player0.PlayerBet, Mode=OneWay}"></TextBlock>
 
         </Grid>
     </Grid>

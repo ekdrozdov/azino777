@@ -74,7 +74,7 @@ namespace PokerGraphics
             }
             catch (Exception ex)
             {
-                textbox_number_of_money.Text = "Ты шо дурак, введи целое число";
+                MessageBox.Show("Ты шо дурак, введи целое число");
                 grid_sett.Visibility = Visibility.Visible;
                 table.Visibility = Visibility.Collapsed;
             }
@@ -98,41 +98,22 @@ namespace PokerGraphics
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
-        private void button_call(object sender, RoutedEventArgs e)
+        private void button_bet_click(object sender, RoutedEventArgs e)
         {
             try
             {
-                ViewModel.Players[0].Bet(Convert.ToInt32(textbox_number_of_money.Text));
+                int curBet = Int32.Parse(textbox_number_of_money.Text);
+                if (curBet == pokerTable.player0.Cash)
+                    ViewModel.Players[0].AllIn();
+                else if (curBet < 0)
+                    throw new Exception("Ставка меньше нуля! Жулик!");
+                else if (curBet == 0)
+                    ViewModel.Players[0].Check();
+                else if (curBet + pokerTable.player0.PlayerBet == pokerTable.CurrentRaise)
+                    ViewModel.Players[0].Call();
+                else if (curBet + pokerTable.player0.PlayerBet > pokerTable.CurrentRaise)
+                    ViewModel.Players[0].Raise(pokerTable.CurrentRaise - curBet - pokerTable.player0.PlayerBet);
                 pokerTable.EndAction();
-
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
-        }
-        private void button_raise_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel.Players[0].Raise(Convert.ToInt32(textbox_raise_cash.Text));
-                pokerTable.EndAction();
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
-        }
-        private void button_check_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel.Players[0].Check();
-                pokerTable.EndAction();
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
-        }
-        private void button_allin_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel.Players[0].AllIn();
-                pokerTable.EndAction();
-
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -212,6 +193,7 @@ namespace PokerGraphics
             try
             {
                 ViewModel.GameStart();
+                button_startgame.Visibility = Visibility.Hidden;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

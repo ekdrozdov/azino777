@@ -100,6 +100,7 @@ namespace PokerCore.ViewModel
                 }
             //_gameStart = false;
             this.RaisePropertyChanged("PlayersCardVisibility");
+            this.RaisePropertyChanged("CurrentRaise");
         }
 
         #region Игроки
@@ -1163,10 +1164,7 @@ namespace PokerCore.ViewModel
                 List<Card> tmp = new List<Card>();
                 tmp.Add(_players[_curPlayer].MyState.HandCards.Item1);
                 tmp.Add(_players[_curPlayer].MyState.HandCards.Item2);
-                foreach(var i in _boardCards.Where(x => x.Item2 != Visibility.Invisible).ToArray())
-                {
-                    tmp.Add(i.Item1);
-                }
+                tmp.AddRange(_boardCards.Where(x => x.Item2 != Visibility.Invisible).Select(x => x.Item1));
 
                 GameState aiState;
                 aiState = ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
