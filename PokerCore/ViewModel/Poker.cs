@@ -32,6 +32,7 @@ namespace PokerCore.ViewModel
         public Poker(string name, int cash, int smallBlind, int bigBlind)
         {
             _players = new Dictionary<int, Player>();
+            _bots_queue = new Dictionary<int, Player>();
             _gameRules = new GameRules(10);
             _boardCards = new (Card, Visibility)[5];
             _dividedBanks = new List<(int, int)>();
@@ -66,6 +67,15 @@ namespace PokerCore.ViewModel
                 _boardCards[i].Item2 = Visibility.Invisible;
             }
 
+            foreach (var _new_bot in _bots_queue)
+            {
+                _players.Add(_players.Count, _new_bot.Value);
+				this.RaisePropertyChanged($"player{_new_bot.Value.MyState.Name}vis");
+                this.RaisePropertyChanged($"player{_new_bot.Value.MyState.Name}connected");
+                this.RaisePropertyChanged($"player{_new_bot.Value.MyState.Name}connectedvis");
+                this.RaisePropertyChanged($"player{_new_bot.Value.MyState.Name}");
+                _bots_queue.Remove(_new_bot.Key);
+            }
             for ( int i = 0; i < _players.Count; i++)
             {
                 (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
@@ -1261,20 +1271,22 @@ namespace PokerCore.ViewModel
                 return true;
             }
         }
-        public (bool, Player) TryConnectBot(int number, int cash)//не очень безопасно ну и ладно
+        public (bool, Player) TryConnectBot(int number, int cash)
         {
-            if (_players.Count < _gameRules.MaxPlayers)
+            if (_players.Count < _gameRules.MaxPlayers && (_players.Count + _bots_queue.Count) < _gameRules.MaxPlayers)
             {
                 Player player = new AI($"Bot{number.ToString()}", cash, this);
-                _players.Add(number, player);//////WARNING ПО ИДЕЕ ЕМУ СЕЙЧАС КАРТЫ НЕ НУЖНО ВЫДАВАТЬ
-                (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-                _players[number].MyState.HandCards = playerCards;
-                HandCards.Add((number, playerCards));
-                this.RaisePropertyChanged($"player{number}vis");
-                this.RaisePropertyChanged($"player{number}connected");
-                this.RaisePropertyChanged($"player{number}connectedvis");
-                this.RaisePropertyChanged($"player{number}");
-                return (true, player);
+                Player value;
+                if (_bots_queue.TryGetValue(number, out value))
+                {
+                    throw new Exception("В очереди уже есть бот с именем (" + number + ")!");
+                    return (false, null);
+                }
+                else
+                {
+                    _bots_queue.Add(_bots_queue.Count, player);                    
+                    return (true, player);
+                }
             }
             return (false, null);
         }
