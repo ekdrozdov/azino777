@@ -364,5 +364,8 @@
   <ItemGroup>
     <Resource Include="Resources\fold.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

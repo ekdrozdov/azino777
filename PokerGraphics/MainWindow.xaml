@@ -240,7 +240,11 @@
                     Click="button_add_5Bot"
                     Command="{Binding ''}"
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="543,88,0,0" VerticalAlignment="Top" Width="44" Height="45" Panel.ZIndex="3"/>
+                    HorizontalAlignment="Left" Margin="543,88,0,0" VerticalAlignment="Top" Width="44" Height="45" Panel.ZIndex="3">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <Button x:Name="opp4"
                     Visibility="{Binding ViewModel.player4connectedvis, Mode=OneWay}"
                     IsEnabled="{Binding ViewModel.player4connected, Mode=OneWay}"
@@ -249,7 +253,11 @@
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="257,88,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="257,88,0,0" VerticalAlignment="Top" Width="45" Height="45">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <Button x:Name="opp3"
                     Visibility="{Binding ViewModel.player3connectedvis, Mode=OneWay}"
                     IsEnabled="{Binding ViewModel.player3connected, Mode=OneWay}" 
@@ -258,7 +266,11 @@
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="46,214,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="46,214,0,0" VerticalAlignment="Top" Width="45" Height="45">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <Button x:Name="opp2"
                     Visibility="{Binding ViewModel.player2connectedvis, Mode=OneWay}"
                     IsEnabled="{Binding ViewModel.player2connected, Mode=OneWay}"
@@ -267,7 +279,11 @@
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="46,408,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="46,408,0,0" VerticalAlignment="Top" Width="45" Height="45">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <Button x:Name="opp1"
                     Visibility="{Binding ViewModel.player1connectedvis, Mode=OneWay}"
                     IsEnabled="{Binding ViewModel.player1connected, Mode=OneWay}"
@@ -276,7 +292,11 @@
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="257,565,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="257,565,0,0" VerticalAlignment="Top" Width="45" Height="45">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <Button x:Name="opp9"
                     Visibility="{Binding ViewModel.player9connectedvis, Mode=OneWay}"
                     IsEnabled="{Binding ViewModel.player9connected, Mode=OneWay}"
@@ -286,7 +306,11 @@
                     Content=""
                     Template="{StaticResource ell}"
                     CommandParameter="{Binding ''}"
-                    HorizontalAlignment="Left" Margin="794,565,0,0" VerticalAlignment="Top" Width="44" Height="45"/>
+                    HorizontalAlignment="Left" Margin="794,565,0,0" VerticalAlignment="Top" Width="44" Height="45">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <Button x:Name="opp8"
                     Visibility="{Binding ViewModel.player8connectedvis, Mode=OneWay}"
                     IsEnabled="{Binding ViewModel.player8connected, Mode=OneWay}"
@@ -295,7 +319,11 @@
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="998,408,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="998,408,0,0" VerticalAlignment="Top" Width="45" Height="45">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <Button x:Name="opp7"
                     Visibility="{Binding ViewModel.player7connectedvis, Mode=OneWay}"
                     IsEnabled="{Binding ViewModel.player7connected, Mode=OneWay}"
@@ -304,7 +332,11 @@
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="998,214,0,0" VerticalAlignment="Top" Width="45" Height="45"/>
+                    HorizontalAlignment="Left" Margin="998,214,0,0" VerticalAlignment="Top" Width="45" Height="45">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <Button x:Name="opp6"
                     Visibility="{Binding ViewModel.player6connectedvis, Mode=OneWay}"
                     IsEnabled="{Binding ViewModel.player6connected, Mode=OneWay}"
@@ -313,7 +345,11 @@
                     Panel.ZIndex="3"
                     Content=""
                     Template="{StaticResource ell}"
-                    HorizontalAlignment="Left" Margin="833,88,0,0" VerticalAlignment="Top" Width="44" Height="45"/>
+                    HorizontalAlignment="Left" Margin="833,88,0,0" VerticalAlignment="Top" Width="44" Height="45">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/add.png"/>
+                </Button.Background>
+            </Button>
             <!-- Конец зеленых кнопок -->
 
             <!--   Карты opp5   -->
