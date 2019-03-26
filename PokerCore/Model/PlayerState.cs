@@ -14,6 +14,7 @@ namespace PokerCore.Model
             _playersCardVisibility = new string[10];
             this.RaisePropertyChanged("FirstCardName");
             this.RaisePropertyChanged("SecondCardName");
+            this.RaisePropertyChanged("XamlFoldState");
         }
 
         string _name;
@@ -30,11 +31,13 @@ namespace PokerCore.Model
 
         PlayerGameState _state;
         public PlayerGameState State { get => _state; set => this.RaiseAndSetIfChanged(ref _state, value); }
+        public bool _isFold = false;
+        public bool FoldState { get => _isFold; set { this.RaiseAndSetIfChanged(ref _isFold, value); this.RaisePropertyChanged("XamlFoldState"); } }
+        public string XamlFoldState { get => _isFold ? "Visible" : "Hidden";  }
         string _dealer;
         public string Dealer { get => _dealer; set => this.RaiseAndSetIfChanged(ref _dealer, value); }//реализовать постановку этого флага
         string _current_player;
         public string CurrentPlayer { get => _current_player; set => this.RaiseAndSetIfChanged(ref _current_player, value); }//реализовать постановку этого флага
-
         (Card, Card) _handCards;
         public (Card, Card) HandCards
         {

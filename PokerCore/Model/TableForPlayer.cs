@@ -33,11 +33,13 @@ namespace PokerCore.Model
 
         public List<(int, int)> Banks { get => _playerView.DividedBanks; set => _playerView.DividedBanks = value; }
 
-        public Dictionary<int, Player> Players { get => _playerView.Players; }
+        public SortedDictionary<int, Player> Players { get => _playerView.Players; }
 
         public List<string> BoardCards { get => _playerView.BoardCards; }
 
         public (Card, Card) HandCards { get => _playerView.Players[CurPlayer].MyState.HandCards; }
+
+        public int CurTurn { get => _playerView.CurTurn; }
 
         public void AddBank(int bankBeforeBet)
         {

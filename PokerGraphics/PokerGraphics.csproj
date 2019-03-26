@@ -358,5 +358,11 @@
   <ItemGroup>
     <Resource Include="Resources\Dealer.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\back.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fold.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

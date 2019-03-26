@@ -7,6 +7,7 @@ using System.Reactive;
 //DEPRECATED
 namespace PokerCore
 {
+    enum GameTurn { preFlop = 0, Flop, Tern, River }
     public enum CardSuit { Spades, Diamonds, Hearts, Clubs };
     public enum CardRank
     {

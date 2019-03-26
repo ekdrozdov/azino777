@@ -107,13 +107,14 @@ namespace PokerGraphics
                     ViewModel.Players[0].AllIn();
                 else if (curBet < 0)
                     throw new Exception("Ставка меньше нуля! Жулик!");
-                else if (curBet == 0)
+                else if ((pokerTable.player0.PlayerBet - pokerTable.CurrentBet) == 0 && curBet == 0)
                     ViewModel.Players[0].Check();
-                else if (curBet + pokerTable.player0.PlayerBet == pokerTable.CurrentRaise)
+                else if (curBet + pokerTable.player0.PlayerBet == pokerTable.CurrentBet)
                     ViewModel.Players[0].Call();
-                else if (curBet + pokerTable.player0.PlayerBet > pokerTable.CurrentRaise)
-                    ViewModel.Players[0].Raise(pokerTable.CurrentRaise - curBet - pokerTable.player0.PlayerBet);
-                pokerTable.EndAction();
+                else if (curBet + pokerTable.player0.PlayerBet > pokerTable.CurrentBet)
+                    ViewModel.Players[0].Raise(curBet);
+                //pokerTable.EndAction();
+                pokerTable.NextCurrentPlayer();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

@@ -7,12 +7,15 @@ using System.Linq;
 using PokerCore.Model;
 //using PokerCore.Model.DataBase;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Reactive.Linq;
 
 namespace PokerCore.ViewModel
 {
     public class Poker : ReactiveObject
     {
-        public Dictionary<int, Player> _players;
+        public SortedDictionary<int, Player> _players;
+        public SortedDictionary<int, Player> _bots_queue;
         GameRules _gameRules;
         //List<Card> _boardCards;
         //List<(Card, Visibility)> _boardCards;
@@ -26,11 +29,41 @@ namespace PokerCore.ViewModel
         int _curRaise;
         int _allBank;
         int _firstRaiser;
+        bool _gateFlag = true;
+        bool _gameOn = false;
+        GameTurn _curTurn;
         List<(int, int)> _dividedBanks;
+
+        async Task SuperCommand()
+        {
+            if (typeof(Player) != _players[_curPlayer].GetType())
+            {
+                while (_players[_curPlayer].MyState.State != PlayerGameState.In && _players[_curPlayer].MyState.State != PlayerGameState.Check)
+                    _curPlayer = TakeNextKey(_curPlayer);
+
+                await Task.Delay(4000);
+
+                List<Card> tmp = new List<Card>();
+                tmp.Add(_players[_curPlayer].MyState.HandCards.Item1);
+                tmp.Add(_players[_curPlayer].MyState.HandCards.Item2);
+                tmp.AddRange(_boardCards.Where(x => x.Item2 != Visibility.Invisible).Select(x => x.Item1));
+
+                ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
+                _curPlayer = TakeNextKey(_curPlayer);
+                this.RaisePropertyChanged("CurPlayer");
+            }
+        }
+
+        public void NextCurrentPlayer()
+        {
+            _curPlayer = TakeNextKey(_curPlayer);
+            this.RaisePropertyChanged("CurPlayer");
+        }
 
         public Poker(string name, int cash, int smallBlind, int bigBlind)
         {
-            _players = new Dictionary<int, Player>();
+            _bots_queue = new SortedDictionary<int, Player>();
+            _players = new SortedDictionary<int, Player>();
             _gameRules = new GameRules(10);
             _boardCards = new (Card, Visibility)[5];
             _dividedBanks = new List<(int, int)>();
@@ -49,10 +82,18 @@ namespace PokerCore.ViewModel
             _dealer = 0;
             _bigBlind = bigBlind;
             _smallBlind = smallBlind;
+
+            this.WhenAnyValue(t => t.CurPlayer).ObserveOn(RxApp.MainThreadScheduler).Subscribe(async x =>
+            {
+                await SuperCommand();
+                if (_gateFlag) _gateFlag = false;
+                else EndAction();
+            });
         }
 
         public void GameStart()
         {
+            _gameOn = true;
             _cardDeck = new CardDeck();
             _cardDeck.Shuffle();
             for (int i = 0; i < 5; i++)
@@ -61,21 +102,33 @@ namespace PokerCore.ViewModel
                 _boardCards[i].Item2 = Visibility.Invisible;
             }
 
-            for ( int i = 0; i < _players.Count; i++)
+            foreach (var _new_bot in _bots_queue)
+            {
+                _players.Add(_new_bot.Key, _new_bot.Value);
+                this.RaisePropertyChanged($"player{_new_bot.Key}vis");
+                this.RaisePropertyChanged($"player{_new_bot.Key}connected");
+                this.RaisePropertyChanged($"player{_new_bot.Key}connectedvis");
+                this.RaisePropertyChanged($"player{_new_bot.Key}");
+                _bots_queue.Remove(_new_bot.Key);
+            }
+
+            for ( int i = 0,play = 0; i < _players.Count; i++)
             {
                 (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-                _players[i].MyState.HandCards = playerCards;
-                _players[i].MyState.State = PlayerGameState.In;
-                HandCards.Add((i, playerCards));
+
+                _players[play].MyState.HandCards = playerCards;
+                _players[play].MyState.State = PlayerGameState.In;
+                HandCards.Add((play, playerCards));
 
                 // set visibility of player cards
                 for (int j = 0; j < i; j++)
-                    _players[i].MyState.PlayersCardVisibility[j] = "Hidden";
-                _players[i].MyState.PlayersCardVisibility[i] = "Visible";
+                    _players[play].MyState.PlayersCardVisibility[j] = "Hidden";
+                _players[play].MyState.PlayersCardVisibility[i] = "Visible";
                 for (int j = i + 1; j < _players.Count; j++)
-                    _players[i].MyState.PlayersCardVisibility[j] = "Hidden";
+                    _players[play].MyState.PlayersCardVisibility[j] = "Hidden";
                 for (int j = _players.Count; j < 10; j++)
-                    _players[i].MyState.PlayersCardVisibility[j] = "Collapsed";
+                    _players[play].MyState.PlayersCardVisibility[j] = "Collapsed";
+                play = TakeNextKey(play);
             }
 
             _allBank = 0;
@@ -89,13 +142,16 @@ namespace PokerCore.ViewModel
             _firstRaiser = _curPlayer;
             _curPlayer = TakeNextKey(_curPlayer);
             _curRaise = _bigBlind;
-                while (_curPlayer != 0)
-                {
-                    BotAction();
-                    _curPlayer = TakeNextKey(_curPlayer);
-                }
+            _curTurn = GameTurn.preFlop;
+            //    while (_curPlayer != 0)
+            //    {
+            //        BotAction();
+            //        _curPlayer = TakeNextKey(_curPlayer);
+            //    }
             this.RaisePropertyChanged("PlayersCardVisibility");
             this.RaisePropertyChanged("CurrentRaise");
+            this.RaisePropertyChanged("CurPlayer");
+            this.RaisePropertyChanged("FoldStatuses");
         }
 
         #region Игроки
@@ -192,6 +248,21 @@ namespace PokerCore.ViewModel
         #endregion
 
         #region Поля стола
+        public string[] FoldStatuses
+        {
+            get
+            {
+                string[] ans = new string[10];
+                for (int i = 0; i < 10; i++)
+                    if (_players.ContainsKey(i))
+                        ans[i] = _players[i].MyState.XamlFoldState;
+                    else
+                        ans[i] = "Hidden";
+                return ans;
+            }
+        }
+        public int CurTurn { get => (int)_curTurn; }
+
         public int FirstRaiser { get => _firstRaiser; set => this.RaiseAndSetIfChanged(ref _firstRaiser, value); }
 
         public int Dealer { get => _dealer; }
@@ -214,7 +285,7 @@ namespace PokerCore.ViewModel
 
         public GameRules Rules { get => _gameRules; }
 
-        public Dictionary<int, Player> Players { get => _players; }
+        public SortedDictionary<int, Player> Players { get => _players; }
 
         public string[] DealerChip
         {
@@ -244,9 +315,7 @@ namespace PokerCore.ViewModel
                 int visibleCardCount = 0;
                 foreach ((Card, Visibility) card in _boardCards)
                     if (card.Item2 == Visibility.Visible)
-                    {
                         opened.Add(card.Item1.GetTextureName());
-                    } 
                     else opened.Add("Resources/"+"cardBack_blue1.png");
                 //Card[] opened = new Card[visibleCardCount];
                 //for (int i = 0; i < visibleCardCount; i++)
@@ -752,10 +821,6 @@ namespace PokerCore.ViewModel
         }
 
         #endregion
-        public void AddBank()
-        {
-
-        }
 
         public void BankDivision()
         {
@@ -811,98 +876,135 @@ namespace PokerCore.ViewModel
 
         public void EndAction()
         {
-            (Card, Card) playerCards;
-            int visibleCardCount = 0;
-            System.Type type = typeof(Player);
-            bool botTurn = true;
-            bool lastStage = true;
-            int bet = 0;
-            int smth = 0;
-            int inPlayers = 0;
-            
-            do
+            if(_curPlayer == _firstRaiser)
             {
-                inPlayers = 0;
-                foreach (KeyValuePair<int, Player> player in _players)
-                    if (player.Value.MyState.State == PlayerGameState.In)
-                        inPlayers++;
-                if (inPlayers == 0)
-                    lastStage = true;
-                else
+                _curTurn = (GameTurn)(((int)_curTurn+1) % 4);
+                switch (_curTurn)
                 {
-                    _curPlayer = TakeNextKey(_curPlayer);
-                    smth = _curPlayer;
-                    while (_players[smth].MyState.State == PlayerGameState.Out)
-                        smth = TakeNextKey(smth);
-                    if (_firstRaiser == _curPlayer)
-                        lastStage = true;
-                    else
-                        lastStage = false;
+                    //preFlop может появиться только если мы закончили последний раунд торгов, а значит это конец игры
+                    case GameTurn.preFlop:
+                        BankDivision();
 
-                    while (_players[_curPlayer].MyState.State != PlayerGameState.In && _players[_curPlayer].MyState.State != PlayerGameState.Check)
-                        _curPlayer = TakeNextKey(_curPlayer);
+                        foreach (KeyValuePair<int, Player> player in _players)
+                            if (player.Value.MyState.Cash < _bigBlind)
+                                Disconnect(player.Key);
+
+                        foreach (KeyValuePair<int, Player> player in _players)
+                            player.Value.MyState.FoldState = false;
+
+                        _dealer = TakeNextKey(_dealer);
+                        _gameOn = false;
+                        break;
+                    case GameTurn.Flop:
+                        for (int i = 0; i < 3; i++)
+                            _boardCards[i].Item2 = Visibility.Visible;
+                        break;
+                    case GameTurn.Tern:
+                        _boardCards[3].Item2 = Visibility.Visible;
+                        break;
+                    case GameTurn.River:
+                        _boardCards[4].Item2 = Visibility.Visible;
+                        break;
+                    default:
+                        break;
                 }
-                if (lastStage)
-                {
-                    visibleCardCount = 0;
-                    foreach ((Card, Visibility) card in _boardCards)
-                        if (card.Item2 == Visibility.Visible)
-                            visibleCardCount++;
-                        else break;
-                    switch (visibleCardCount)
-                    {
-                        case 0:
-                            // Lay out 3 cards on board
-                            for (int i = 0; i < 3; i++)
-                                _boardCards[i].Item2 = Visibility.Visible;
-
-                            NewStageStart();
-                            if (type == _players[_curPlayer].GetType())
-                                botTurn = false;
-                            else
-                                BotAction();
-                            break;
-
-                        case 5:
-                            // determinate the winners and give them cash
-                            BankDivision();
-                            
-
-
-                            // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
-                            foreach (KeyValuePair<int, Player> player in _players)
-                                if (player.Value.MyState.Cash < _bigBlind)
-                                    Disconnect(player.Key);
-
-                            _dealer = TakeNextKey(_dealer);
-                            GameStart();
-
-                            botTurn = false;
-                            break;
-
-                        default:
-                            // Lay out 1 card on board 
-                            _boardCards[visibleCardCount].Item2 = Visibility.Visible;
-                            NewStageStart();
-
-                            if (type == _players[_curPlayer].GetType())
-                                botTurn = false;
-                            else
-                                BotAction();
-                            break;
-                    }
-                }
-                else
-                {
-                    if (type == _players[_curPlayer].GetType() && _players[_curPlayer].MyState.State == PlayerGameState.In)
-                        botTurn = false;
-                    else
-                        BotAction();
-                }
-            } while (botTurn);
-            this.RaisePropertyChanged("DealerChip"); 
+            }
+            this.RaisePropertyChanged("DealerChip");
             this.RaisePropertyChanged("BoardCards");
             this.RaisePropertyChanged("ButtonActivity");
+
+            //(Card, Card) playerCards;
+            //int visibleCardCount = 0;
+            //System.Type type = typeof(Player);
+            //bool botTurn = true;
+            //bool lastStage = true;
+            //int bet = 0;
+            //int smth = 0;
+            //int inPlayers = 0;
+
+            //do
+            //{
+            //    inPlayers = 0;
+            //    foreach (KeyValuePair<int, Player> player in _players)
+            //        if (player.Value.MyState.State == PlayerGameState.In)
+            //            inPlayers++;
+            //    if (inPlayers == 0)
+            //        lastStage = true;
+            //    else
+            //    {
+            //        _curPlayer = TakeNextKey(_curPlayer);
+            //        smth = _curPlayer;
+            //        while (_players[smth].MyState.State == PlayerGameState.Out)
+            //            smth = TakeNextKey(smth);
+            //        if (_firstRaiser == _curPlayer)
+            //            lastStage = true;
+            //        else
+            //            lastStage = false;
+
+            //        while (_players[_curPlayer].MyState.State != PlayerGameState.In && _players[_curPlayer].MyState.State != PlayerGameState.Check)
+            //            _curPlayer = TakeNextKey(_curPlayer);
+            //    }
+            //    if (lastStage)
+            //    {
+            //        visibleCardCount = 0;
+            //        foreach ((Card, Visibility) card in _boardCards)
+            //            if (card.Item2 == Visibility.Visible)
+            //                visibleCardCount++;
+            //            else break;
+            //        switch (visibleCardCount)
+            //        {
+            //            case 0:
+            //                // Lay out 3 cards on board
+            //                for (int i = 0; i < 3; i++)
+            //                    _boardCards[i].Item2 = Visibility.Visible;
+
+            //                NewStageStart();
+            //                if (type == _players[_curPlayer].GetType())
+            //                    botTurn = false;
+            //                else
+            //                    BotAction();
+            //                break;
+
+            //            case 5:
+            //                // determinate the winners and give them cash
+            //                BankDivision();
+
+
+
+            //                // give each player new cards if he have cash snd  set state of each player to InGame, else cick him 
+            //                foreach (KeyValuePair<int, Player> player in _players)
+            //                    if (player.Value.MyState.Cash < _bigBlind)
+            //                        Disconnect(player.Key);
+
+            //                _dealer = TakeNextKey(_dealer);
+            //                GameStart();
+
+            //                botTurn = false;
+            //                break;
+
+            //            default:
+            //                // Lay out 1 card on board 
+            //                _boardCards[visibleCardCount].Item2 = Visibility.Visible;
+            //                NewStageStart();
+
+            //                if (type == _players[_curPlayer].GetType())
+            //                    botTurn = false;
+            //                else
+            //                    BotAction();
+            //                break;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (type == _players[_curPlayer].GetType() && _players[_curPlayer].MyState.State == PlayerGameState.In)
+            //            botTurn = false;
+            //        else
+            //            BotAction();
+            //    }
+            //} while (botTurn);
+            //this.RaisePropertyChanged("DealerChip"); 
+            //this.RaisePropertyChanged("BoardCards");
+            //this.RaisePropertyChanged("ButtonActivity");
         }
 
         void BotAction()
@@ -915,34 +1017,34 @@ namespace PokerCore.ViewModel
                 tmp.AddRange(_boardCards.Where(x => x.Item2 != Visibility.Invisible).Select(x => x.Item1));
 
                 GameState aiState;
-                aiState = ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
-                switch (aiState)
-                {
-                    case GameState.call:
-                        if (_curBet == 0)
-                            _players[_curPlayer].Check();
-                        else _players[_curPlayer].Call();
-                        break;
+                //aiState = ((AI)_players[_curPlayer]).GetOptimalMove(tmp);
+                //switch (aiState)
+                //{
+                //    case GameState.call:
+                //        if (_curBet == 0)
+                //            _players[_curPlayer].Check();
+                //        else _players[_curPlayer].Call();
+                //        break;
 
-                    case GameState.check:
-                        _players[_curPlayer].Check();
-                        break;
+                //    case GameState.check:
+                //        _players[_curPlayer].Check();
+                //        break;
 
-                    case GameState.fold:
-                        _players[_curPlayer].Fold();
-                        break;
+                //    case GameState.fold:
+                //        _players[_curPlayer].Fold();
+                //        break;
 
-                    case GameState.raise:
-                        if (_players[_curPlayer].MyState.Cash == 0)
-                        {
-                            _players[_curPlayer].Fold();
-                            break;
-                        }
+                //    case GameState.raise:
+                //        if (_players[_curPlayer].MyState.Cash == 0)
+                //        {
+                //            _players[_curPlayer].Fold();
+                //            break;
+                //        }
 
                
-                        _players[_curPlayer].Raise(((AI)_players[_curPlayer]).GetOptimalRaise(_players[_curPlayer].MyState.Cash, tmp));
-                        break;
-                }
+                //        _players[_curPlayer].Raise(((AI)_players[_curPlayer]).GetOptimalRaise(_players[_curPlayer].MyState.Cash, tmp));
+                //        break;
+                //}
             }
         }
 
@@ -1024,20 +1126,38 @@ namespace PokerCore.ViewModel
                 return true;
             }
         }
-        public (bool, Player) TryConnectBot(int number, int cash)//не очень безопасно ну и ладно
+        public (bool, Player) TryConnectBot(int number, int cash)
         {
-            if (_players.Count < _gameRules.MaxPlayers)
+            if (_players.Count < _gameRules.MaxPlayers && (_players.Count + _bots_queue.Count) < _gameRules.MaxPlayers)
             {
                 Player player = new AI($"Bot{number.ToString()}", cash, this);
-                _players.Add(number, player);//////WARNING ПО ИДЕЕ ЕМУ СЕЙЧАС КАРТЫ НЕ НУЖНО ВЫДАВАТЬ
-                (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
-                _players[number].MyState.HandCards = playerCards;
-                HandCards.Add((number, playerCards));
-                this.RaisePropertyChanged($"player{number}vis");
-                this.RaisePropertyChanged($"player{number}connected");
-                this.RaisePropertyChanged($"player{number}connectedvis");
-                this.RaisePropertyChanged($"player{number}");
-                return (true, player);
+
+                if (!_gameOn)
+                {
+                    _players.Add(number, player);//////WARNING ПО ИДЕЕ ЕМУ СЕЙЧАС КАРТЫ НЕ НУЖНО ВЫДАВАТЬ
+                    (Card, Card) playerCards = (_cardDeck.TakeCard(), _cardDeck.TakeCard());
+                    _players[number].MyState.HandCards = playerCards;
+                    HandCards.Add((number, playerCards));
+                    this.RaisePropertyChanged($"player{number}vis");
+                    this.RaisePropertyChanged($"player{number}connected");
+                    this.RaisePropertyChanged($"player{number}connectedvis");
+                    this.RaisePropertyChanged($"player{number}");
+                    return (true, player);
+                }
+                else
+                {
+                    Player value;
+                    if (_bots_queue.TryGetValue(number, out value))
+                    {
+                        throw new Exception("В очереди уже есть бот с именем (" + number + ")!");
+                        return (false, null);
+                    }
+                    else
+                    {
+                        _bots_queue.Add(number, player);
+                        return (true, player);
+                    }
+                }
             }
             return (false, null);
         }

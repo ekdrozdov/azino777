@@ -29,7 +29,10 @@
         </PathGeometry>
     </Window.Resources>
     <Grid>
-        <Grid Visibility="{Binding ShowMenu}" Background="Gray" x:Name="menu">
+        <Grid Visibility="Hidden" x:Name="menu">
+            <Grid.Background>
+                <ImageBrush ImageSource="Resources/back.jpg"/>
+            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="59*"/>
                 <RowDefinition Height="25*"/>
@@ -43,22 +46,24 @@
                 <ColumnDefinition Width="200*"/>
                 <ColumnDefinition Width="200*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="4,2,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Name: " VerticalAlignment="Top" Height="16" Width="38"/>
+            <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="85,66,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Name: " VerticalAlignment="Top" Height="17" Width="56" Foreground="Black" FontSize="16"/>
             <TextBox x:Name="textbox_name" 
                      Text="{Binding ViewModel.player0.Name, Mode=TwoWay}"
-                     Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="42,1,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="111"/>
+                     Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="141,66,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="111"/>
             <Button x:Name="button_start" 
                     Content="Start"
-                    Click="button_start_Click"
-                    Grid.Column="1" 
-                    HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" Width="198" Height="43"/>
+                    Click="button_start_Click" 
+                    HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="198" Height="44" Margin="85,55,0,0" Grid.Column="1" Foreground="White" Background="#FF590000" BorderBrush="#FF040404"/>
             <Button x:Name="button_exit" 
                     Content="Exit" 
                     Click="button_exit_Click"
-                    Grid.Column="1" HorizontalAlignment="Left" Height="37" Grid.Row="4" VerticalAlignment="Top" Width="198"/>
+                    Grid.Column="1" HorizontalAlignment="Left" Height="37" Grid.Row="4" VerticalAlignment="Top" Width="198" Margin="85,43,0,0" BorderBrush="#FF0F0F0F" Foreground="White" Background="#FF4F0000"/>
 
         </Grid>
-        <Grid Visibility="{Binding ShowMenuSett}" x:Name="grid_sett" Background="Gray">
+        <Grid Visibility="Hidden" x:Name="grid_sett">
+            <Grid.Background>
+                <ImageBrush ImageSource="Resources/back.jpg"/>
+            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="59*"/>
                 <RowDefinition Height="25*"/>
@@ -72,18 +77,16 @@
                 <ColumnDefinition Width="200*"/>
                 <ColumnDefinition Width="200*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" TextWrapping="Wrap" 
+            <TextBlock HorizontalAlignment="Left" Margin="73,9,0,0" Grid.Row="3" TextWrapping="Wrap" 
                        Text="Начальный банк: " 
-                       VerticalAlignment="Top"/>
+                       VerticalAlignment="Top" Grid.Column="1" Foreground="Black" FontSize="16"/>
             <TextBox x:Name="textbox_first_bank" 
-                     Text="{Binding ViewModel.player0.Cash, Mode=TwoWay}"
-                     Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="112,9,0,0" Grid.Row="2" TextWrapping="Wrap"  VerticalAlignment="Top" Width="43"/>
+                     Text="{Binding ViewModel.player0.Cash, Mode=TwoWay}" HorizontalAlignment="Left" Height="23" Margin="208,9,0,0" Grid.Row="3" TextWrapping="Wrap"  VerticalAlignment="Top" Width="80" Grid.Column="1"/>
             <Button x:Name="button_done" 
                     Content="Готово" 
-                    Click="button_done_Click"
-                    Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="198" Height="37"/>
+                    Click="button_done_Click" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="215" Height="37" Margin="73,62,0,0" Grid.Column="1" Background="#FF780000" BorderBrush="Black" Foreground="White"/>
         </Grid>
-        <Grid x:Name="table" Visibility="{Binding ShowTable}" Height="689" VerticalAlignment="Top">
+        <Grid x:Name="table" Visibility="Visible" Height="689" VerticalAlignment="Top" Margin="-6,-4,6,0">
             <Grid.Background>
                 <ImageBrush ImageSource="{DynamicResource ImageSource1}"/>
             </Grid.Background>
@@ -559,18 +562,73 @@
             <Button x:Name="button_startgame" 
                 Content="Start Turn"
                 Click="button_startgame_Click"
-                HorizontalAlignment="Left" Height="20" Margin="531,454,0,0" VerticalAlignment="Top" Width="69"/>
+                HorizontalAlignment="Left" Height="20" Margin="531,470,0,0" VerticalAlignment="Top" Width="69"/>
             <TextBlock
                 HorizontalAlignment="Left" Margin="449,429,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"><Run Text="Текущи"/><Run Text="й "/><Run Text="Raise:"/><LineBreak/><Run/></TextBlock>
             <TextBlock
-                HorizontalAlignment="Left" Margin="546,429,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16" Text="{Binding ViewModel.CurrentRaise, Mode=OneWay}"> </TextBlock>
+                HorizontalAlignment="Left" Margin="546,429,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16" Text="{Binding ViewModel.CurrentRaise, Mode=OneWay}"></TextBlock>
             <TextBlock
                 HorizontalAlignment="Left" Margin="623,604,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16" Text="Ваш ставка"/>
             <TextBlock
-                HorizontalAlignment="Left" Margin="466,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" TextAlignment="Center"><Run Text="Current"/><LineBreak/><Run Text="Bet"/></TextBlock>
+                HorizontalAlignment="Left" Margin="466,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" TextAlignment="Center"><Run Text="Моя "/><LineBreak/><Run Text="Ставка"/></TextBlock>
             <TextBlock
                 HorizontalAlignment="Left" Margin="486,591,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" TextAlignment="Center" Text="{Binding ViewModel.player0.PlayerBet, Mode=OneWay}"></TextBlock>
+            <TextBlock
+                HorizontalAlignment="Left" Margin="449,450,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"><Run Text="Текущи"/><Run Text="й Bet"/><Run Text=":"/><LineBreak/><Run/></TextBlock>
+            <TextBlock
+                HorizontalAlignment="Left" Margin="536,450,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="16" Text="{Binding ViewModel.CurrentBet, Mode=OneWay}"></TextBlock>
 
+            <Ellipse x:Name="fold6" Visibility="{Binding ViewModel.FoldStatuses[6]}" HorizontalAlignment="Left" Height="25" Margin="873,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold7" Visibility="{Binding ViewModel.FoldStatuses[7]}" HorizontalAlignment="Left" Height="25" Margin="926,254,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold8" Visibility="{Binding ViewModel.FoldStatuses[8]}" HorizontalAlignment="Left" Height="25" Margin="926,383,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold9" Visibility="{Binding ViewModel.FoldStatuses[9]}" HorizontalAlignment="Left" Height="25" Margin="772,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold0" Visibility="{Binding ViewModel.FoldStatuses[0]}" HorizontalAlignment="Left" Height="26" Margin="526,523,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold5" Visibility="{Binding ViewModel.FoldStatuses[5]}" HorizontalAlignment="Left" Height="25" Margin="581,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold1" Visibility="{Binding ViewModel.FoldStatuses[1]}" HorizontalAlignment="Left" Height="25" Margin="237,524,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold4" Visibility="{Binding ViewModel.FoldStatuses[4]}" HorizontalAlignment="Left" Height="25" Margin="297,145,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold3" Visibility="{Binding ViewModel.FoldStatuses[3]}" HorizontalAlignment="Left" Height="25" Margin="122,254,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name="fold2" Visibility="{Binding ViewModel.FoldStatuses[2]}" HorizontalAlignment="Left" Height="25" Margin="122,438,0,0" Stroke="White" StrokeThickness="3" VerticalAlignment="Top" Width="25">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="Resources/fold.png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            
         </Grid>
     </Grid>
 </Window>

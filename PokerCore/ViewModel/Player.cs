@@ -15,7 +15,6 @@ namespace PokerCore.ViewModel
     {
         PlayerState _myState;
         public PlayerState MyState { get => _myState; set=> this.RaiseAndSetIfChanged(ref _myState, value); }
-
         protected TableForPlayer _table;
 
         public Player(string name, int cash, Poker hz)
@@ -33,8 +32,8 @@ namespace PokerCore.ViewModel
         {
             _myState.PlayerBet = 0;
             _myState.State = PlayerGameState.Out;
-
-            //AddInDb("Fold");
+            _myState.FoldState = true;
+            
         }
 
         public void Call()
@@ -49,19 +48,13 @@ namespace PokerCore.ViewModel
             }
             else
                 throw new Exception("У вас недостаточно средств, чтобы сделать ставку.");
-
-            //AddInDb("Call");
         }
 
         public void Check()
         {
-         //   if (_table.CurrentBet == 0)
-                _myState.PlayerBet = 0;
+            //_myState.PlayerBet = 0;
             _myState.State = PlayerGameState.Check;
-        //    else
-         //       throw new Exception("Вы не можете сделать чек, ставки уже сделаны.");
 
-            //AddInDb("Check");
         }
 
         public void Raise(int raise)
@@ -84,8 +77,6 @@ namespace PokerCore.ViewModel
             }
             else
                 throw new Exception("Вы не увеличили размер текущей ставки.");
-
-            //AddInDb("Raise");
         }
 
         public void AllIn()
@@ -106,8 +97,6 @@ namespace PokerCore.ViewModel
             }
             else
                 _table.AddBank(_table.AllBank - _table.CurrentBet + _myState.PlayerBet);
-
-            //AddInDb("AllIn");
         }
 
         public void Bet(int bet)
@@ -122,8 +111,6 @@ namespace PokerCore.ViewModel
             }
             else
                 throw new Exception("Cтавка уже была сделана.");
-
-            //AddInDb("Bet");
         }
 
         //получение названия текущего раунда для добавления в бд
@@ -143,29 +130,6 @@ namespace PokerCore.ViewModel
 
             return RoundName;
         }
-
-        //добавить запись об одном ходе раунда в бд
-        //public void AddInDb(string _actionName)
-        //{
-        //    string a = "adsas";
-
-        //    using (ApplicationContext db = new ApplicationContext())
-        //    {
-        //        DBGame game = db.Games.Last();
-        //        DBPlayer player = db.Players.Where(p => p.Name == _myState.Name).Last();
-
-        //        db.Rounds.Add(new DBRound
-        //        {
-        //            Name = GetRoundName(),
-        //            Game = game.Id,
-        //            Player = player.Id,
-        //            ActionName = _actionName,
-        //            BetSize = _myState.PlayerBet
-        //            //DecisionTime
-        //        });
-        //        db.SaveChanges();
-        //    }
-        //}
 
         public event PropertyChangedEventHandler PropertyChange;
 
